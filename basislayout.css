@@ -1,0 +1,247 @@
+.basis {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+	text-decoration: none;
+}
+
+.form {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+	text-decoration: none;
+	background-color: #D6DFE9; /*lichtblauw*/
+}
+
+.update {
+	font-size: 10px;
+	color: #FF0000; /*red*/
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	background-color: #FFFFFF;
+	margin: 0px;
+	padding: 0px;
+	color: #000000;
+
+}
+#header {
+	background-image: url(../picture_library/background/blokje.gif);
+	
+}
+
+
+#content {
+	width: auto;
+	min-width: 120px;
+	position: relative;
+	background-color: #FFFFFF;
+	padding: 10px;
+	margin-top: 0px;
+	margin-right: 180px;
+	margin-bottom: 20px;
+	margin-left: 170px;
+	z-index: 3;
+	min-height: 560px;  /* was height: 70%; */
+	_height: 70%; /* underscore-hack http://www.philledgerwood.com/?p=14 */
+	border-top: 1px none #4B6599;
+	border-right: 1px solid #4B6599;
+	border-bottom: 1px solid #4B6599;
+	border-left: 1px solid #4B6599;
+	
+}
+
+	
+#subnavright {
+	padding: 10px 0px 10px 10px;/*test was 10px*/
+	position: absolute;
+	width: 150px;
+	right: 20px;
+	top: 145px;
+	z-index: 2;
+	height: 100%;
+	
+}
+
+#subnavleft {
+	position: absolute;
+	z-index: 1;
+	height: 100%;
+	width: 150px;
+	left: 10px;
+	top: 145px;
+	
+}
+
+#footer {
+	position: absolute;
+	left: 180px;
+	display: table-footer-group; 
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-style: normal;
+	color: #000000;
+}
+	
+b.subnavlist {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #CC9900;
+	line-height: 17px;
+}
+
+
+h1 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	line-height:17px;
+	font-weight: bold;
+	color: #CC9900;
+	text-align: left;
+	word-spacing: normal;
+	letter-spacing: 1pt;
+	}
+	
+h1.h1center {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	line-height:17px;
+	font-weight: bold;
+	color: #CC9900;
+	text-align: center;
+	word-spacing: normal;
+	letter-spacing: 1pt;
+	font-variant: normal;
+	}	
+	
+p.smallcaps {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	padding: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 16px;
+	margin-left: 0px;
+	font-variant: small-caps;
+	}
+	
+ul.subnavlist {
+	list-style-type: square;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #4B6599;
+	text-decoration: none;
+	text-align: left; 
+	}
+
+li.subnavlist {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #34466B;
+	text-decoration: none;
+	list-style-type: square;
+	list-style-position: outside;
+	}
+	
+li.subnavlist a
+	{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #4B6599;
+	text-decoration: none;
+	}
+	
+li.subnavlist a:hover
+	{
+	color: #6699FF;
+	text-decoration: underline;
+	}
+	
+ul.topnavigatie {
+	padding: 0.2em 0;
+	margin: 0;
+	list-style-type: none;
+	background-color: #036;
+	color: #000000;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	text-align: center;
+	}
+	
+li.topnavigatie {display: inline;}
+
+li.topnavigatie a
+	{
+	text-decoration: none;
+	background-color: #036;
+	color: #FFF;
+	padding: .2em 1em;
+	border-right: 1px solid #FFF;
+	} 
+
+li.topnavigatie a:hover
+	{
+	background-color: #369;
+	color: #FFF;
+	text-decoration: none;
+	} 
+
+a {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #4B6599;
+	text-decoration: none;
+	font-style: normal;
+	font-weight: normal;
+	}
+	
+a:hover {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #6699FF;
+	text-decoration: underline;
+
+}
+hr {
+	color: #CC9900;
+	background-position: left;
+	text-align: left;
+	background-color: #CC9900;
+
+}
+
+hr.a {border: none 0; 
+	border-top: 1px dashed #CC9900;/*the border*/
+	width: 100%;
+	text-align: left;
+	height: 1px;/*whatever the total width of the border-top and border-bottom equal*/
+	}
+
+em {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #4B6599;
+	text-decoration: none;
+
+}
+
+.scrollTable table
+{
+	border-collapse: collapse;
+}
+.scrollTable table td, .scrollTable table th
+{
+	vertical-align: top;
+	text-align: left;
+	margin: 0px;
+	padding-left: 1px;
+	padding-right: 1px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	white-space: nowrap;
+	border-top: solid 1px #aaaaaa;
+	border-bottom: solid 1px #aaaaaa;
+	border-left: solid 1px #aaaaaa;
+	border-right: solid 1px #aaaaaa;
+}
