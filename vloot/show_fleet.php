@@ -3,11 +3,7 @@
 
 <?php
 
-$link = mysql_connect("rdbms.strato.de", "U521746", "H9u7n1z1e");
-if (!mysql_select_db("DB521746", $link)) {
-	echo "Fout: database niet gevonden.<br />";
-	exit();
-}
+include_once("../include.php");
 
 // Categorie-selectie door gebruiker
 $cat_to_show = 'Skiffs en C1en';
