@@ -24,9 +24,13 @@ setlocale(LC_TIME, 'nl_NL');
 <p><a href='../index.php'>Naar BIS&gt;&gt;</a><br />
 <a href='./bis_logout.php'>Uitloggen&gt;&gt;</a></p>
 
-<p><strong>Mededelingen</strong><br />
-De inschrijving sluit &eacute;&eacute;n week voorafgaand aan de cursus.</p>
-
+<p><strong>Mededelingen</strong></p>
+<ul>
+	<li>De inschrijving sluit &eacute;&eacute;n week voorafgaand aan de cursus.</li>
+	<li>Opgave betekent deelname.</li>
+	<li>U kunt zich tot uiterlijk een week voor de start van de cursus terugtrekken. Stuur daarvoor een e-mail aan <a href="mailto:instructie@hunze.nl">instructie@hunze.nl</a>.
+</ul>
+	
 <p><strong>Kies een cursus:</strong></p>
 <select name="course" id="course" onchange='ChangeInfo();'>
 <option value=0 selected="selected">&nbsp;</option>
