@@ -35,7 +35,10 @@ if ($_GET['id']) { // bestaande boot
 		$type = $row['Type'];
 		$roeigraad = $row['Roeigraad'];
 	}
-}	
+} else {
+	// Default gewicht = '-'
+	$gewicht = "-";
+}
 
 // init
 if (!$_POST['cancel'] && !$_POST['insert']) {

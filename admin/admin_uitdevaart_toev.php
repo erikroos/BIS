@@ -83,7 +83,7 @@ if ($_POST['submit']) {
 			// mensen mailen die deze boot hadden ingeschreven
 			$datepart_query = "";
 			if ($enddate_db) $datepart_query = "AND Datum <= '$enddate_db' ";
-			$query2 = "SELECT Email, Datum, Begintijd FROM ".$opzoektabel." WHERE Datum >= '$startdate_db' ".$datepart_query."AND Boot_ID = '$boot_id' AND Spits=0;";
+			$query2 = "SELECT Email, Datum, Begintijd FROM ".$opzoektabel." WHERE Boot_ID = '$boot_id' AND Datum >= '$startdate_db' ".$datepart_query." AND Spits=0 AND Verwijderd=0;";
 			$result2 = mysql_query($query2);
 			if ($result2) {
 				while ($row = mysql_fetch_assoc($result2)) {
