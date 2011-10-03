@@ -85,9 +85,10 @@ if ((!$_POST['insert'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
 	// boot
 	echo "<tr><td>Boot/ergometer:</td>";
 	echo "<td><select name=\"boat_id\">";
-	echo "<option value=0 ";
-	if ($boat_id == 0) echo "selected=\"selected\"";
-	echo ">algemeen</option>";
+	// optie 'algemeen' verwijderd op verzoek van Karel Engbers d.d. 03-10-2011
+	//echo "<option value=0 ";
+	//if ($boat_id == 0) echo "selected=\"selected\"";
+	//echo ">algemeen</option>";
 	$query = "SELECT ID, Naam, Type FROM boten WHERE Datum_eind IS NULL AND Type<>\"soc\" ORDER BY Naam;";
 	$boats_result = mysql_query($query);
 	if (!$boats_result) {

@@ -27,7 +27,7 @@ include_once("../include.php");
 				"bPaginate": true,
 				"sPaginationType": "full_numbers",
 				"bLengthChange": true,
-				"bAutoWidth": false,
+				"bAutoWidth": true,
 				"bFilter": true,
 				"bSort": true,
 				"aaSorting": [[ 0, "desc" ]],
