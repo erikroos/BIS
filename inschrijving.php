@@ -427,7 +427,7 @@ if ($_POST['submit']){
 	if (!$fail) {
 		if ($fail_partial_cnt > 0) echo "Een of meer van de inschrijvingen in uw blok zijn mislukt.<br />";
 		if ($koudwaterprotocol && ($themonth < 4 || $themonth > 9) && $cat_to_show != "Ergometers en bak") {
-			echo "<p style='font-size:150%'><strong>LET OP!</strong> Wees in de winter voorzichtig i.v.m. het koude water. Heeft u het <a href='../downloads/Koudwaterprotocol.pdf' target='_blank'>koudwater-protocol</a> al gelezen?</p>";
+			echo "<p style='font-size:150%'><strong>LET OP!</strong> Wees in de winter voorzichtig i.v.m. het koude water. Heeft u het <a href='../drupal/sites/default/files/Koudwaterprotocol.pdf' target='_blank'>koudwater-protocol</a> al gelezen?</p>";
 		}
 		echo "<a href=\"./index.php?date_to_show=$date&amp;start_time_to_show=$start_time&amp;cat_to_show=$cat_to_show&amp;grade_to_show=$grade_to_show\">Klik hier om terug te gaan naar het inschrijfblad&gt;&gt;</a><br />";
 		// link t.b.v. nog een inschrijving met dezelfde gegevens, m.u.v. boot
