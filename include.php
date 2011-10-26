@@ -7,12 +7,15 @@ if (file_exists($filename_basis)) {
 } else {
 	$filename = "../".$filename_basis; // probeer een dir lager
 	if (!file_exists($filename)) {
-		$filename = "bis/".$filename_basis; // probeer in BIS-dir (tbv page 15 en 22)
+		$filename = "../../".$filename_basis; // probeer nóg een dir lager
 		if (!file_exists($filename)) {
-			$filename = "../bis/".$filename_basis; // probeer in BIS-dir (tbv page 15 en 22)
+			$filename = "bis/".$filename_basis; // probeer in BIS-dir (tbv page 15 en 22)
 			if (!file_exists($filename)) {
-				echo "Fout: configuratiebestand niet gevonden.<br>";
-				exit();
+				$filename = "../bis/".$filename_basis; // probeer in BIS-dir (tbv page 15 en 22)
+				if (!file_exists($filename)) {
+					echo "Fout: configuratiebestand niet gevonden.<br>";
+					exit();
+				}
 			}
 		}
 	}
