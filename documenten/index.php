@@ -26,17 +26,6 @@ setlocale(LC_TIME, 'nl_NL');
 
 <p><em>Alle documenten zijn in het PDF-formaat en openen in een nieuw venster.</em></p>
 
-<strong>Ledenlijsten 2011</strong>
-<ul>
-	<li><a href='Alleleden2011.pdf' target='_blank'>Alle leden&gt;&gt;</a></li>
-	<li><a href='Alleledenachternaam.pdf' target='_blank'>Alle leden op achternaam&gt;&gt;</a></li>
-	<li><a href='Alleledenvoornaam.pdf' target='_blank'>Alle leden op voornaam&gt;&gt;</a></li>
-	<li><a href='Alleledenadressen.pdf' target='_blank'>Alle adressen&gt;&gt;</a></li>
-	<li><a href='Jeugdleden.pdf' target='_blank'>Jeugdleden&gt;&gt;</a></li>
-	<li><a href='Donateurs.pdf' target='_blank'>Donateurs&gt;&gt;</a></li>
-	<li><a href='Diplomalijst.pdf' target='_blank'>Diplomalijst&gt;&gt;</a></li>
-</ul>
-
 <strong>Jaarvergadering 2011</strong>
 <ul>
 	<li><a href='uitnodiging2011.pdf' target='_blank'>Uitnodiging 2011&gt;&gt;</a></li>
