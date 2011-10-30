@@ -1,43 +1,38 @@
 <?php
 
-include("../../include.php"); // for DB connection
+include("../include.php"); // for DB connection
+//include("rest_request.php");
 
-// handle request, TODO: put into method
+// handle request
 $request_method = strtolower($_SERVER['REQUEST_METHOD']);
-$return_obj = new RestRequest();
+// TODO: authenticatie
 $data = array();
 if ($request_method == 'post') {
 	$data = $_POST;
+	// TODO: maak inschrijving
 } else {
-	die(sendResponse(405));
+	if ($request_method == 'get') {
+		$data = $_GET;
+		$record_list = getEntityRecords($data['entity']);
+		sendResponse(200, json_encode($record_list), 'application/json');
+	} else {
+		die(sendResponse(405));
+	}
 }
-$return_obj->setMethod($request_method);
-$return_obj->setRequestVars($data);
-if(isset($data['data'])) {
-	$return_obj->setData(json_decode($data['data']));
-} else {
-	die(sendResponse(400));
-}
-$boat_list = getBoats();
-if($data->getHttpAccept == 'json') {
-	sendResponse(200, json_encode($boat_list), 'application/json');
-} else {
-	die(sendResponse(405));
-}
-// end of handle request
 
-public function getBoats() {
-	$boats = array();
-	$query = "SELECT Naam FROM boten;";
+function getEntityRecords($entity) {
+	$records = array();
+	$query = "SELECT * FROM ".$entity.";";
 	$result = mysql_query($query);
 	if ($result) {
 		while ($row = mysql_fetch_assoc($result)) {
-		array_push($boats, $row['Naam']);
+			array_push($records, $row);
+		}
 	}
-	return $boats;
+	return $records;
 }
 
-public static function getStatusCodeMessage($status)
+function getStatusCodeMessage($status)
 {
 	// these could be stored in a .ini file and loaded
 	// via parse_ini_file()... however, this will suffice
@@ -89,7 +84,7 @@ public static function getStatusCodeMessage($status)
 	return (isset($codes[$status])) ? $codes[$status] : '';
 }
 
-public static function sendResponse($status = 200, $body = '', $content_type = 'text/html')
+function sendResponse($status = 200, $body = '', $content_type = 'text/html')
 {
 	$status_header = 'HTTP/1.1 ' . $status . ' ' . getStatusCodeMessage($status);
 	// set the status
@@ -152,55 +147,4 @@ public static function sendResponse($status = 200, $body = '', $content_type = '
 	}
 }
 
-class RestRequest
-{
-	private $request_vars;
-	private $data;
-	private $http_accept;
-	private $method;
-
-	public function __construct()
-	{
-		$this->request_vars		= array();
-		$this->data				= '';
-		$this->http_accept		= (strpos($_SERVER['HTTP_ACCEPT'], 'json')) ? 'json' : 'xml';
-		$this->method			= 'get';
-	}
-
-	public function setData($data)
-	{
-		$this->data = $data;
-	}
-
-	public function setMethod($method)
-	{
-		$this->method = $method;
-	}
-
-	public function setRequestVars($request_vars)
-	{
-		$this->request_vars = $request_vars;
-	}
-
-	public function getData()
-	{
-		return $this->data;
-	}
-
-	public function getMethod()
-	{
-		return $this->method;
-	}
-
-	public function getHttpAccept()
-	{
-		return $this->http_accept;
-	}
-
-	public function getRequestVars()
-	{
-		return $this->request_vars;
-	}
-}
-	
 ?>
