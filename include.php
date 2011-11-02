@@ -226,6 +226,32 @@ function InRange($ddmmyyyy, $nr_of_days) {
 	return false;
 }
 
+function getPass($user_, $link_, $database_host_, $login_database_user_, $login_database_pass_, $login_database_, $database_) {
+	// TODO: doe iets aan al deze globale variabelen die echter in
+	// deze functie niet bekend zijn en dus meegegeven moeten worden
+
+	// Tijdelijk Drupal-DB selecteren
+	$link_drupal = mysql_connect($database_host_, $login_database_user_, $login_database_pass_);
+	if (!mysql_select_db($login_database_, $link_drupal)) {
+		echo mysql_error()."<br />";
+	}
+	
+	$query = "SELECT pass FROM users WHERE name='$user_';";
+	$result = mysql_query($query);
+	if ($result) {
+		$row = mysql_fetch_assoc($result);
+		$pass_db = $row['pass'];
+	}
+	
+	// Terug naar BIS-DB
+	mysql_close($link_drupal);
+	if (!mysql_select_db($database_, $link_)) {
+		echo mysql_error()."<br />";
+	}
+	
+	return $pass_db;
+}
+
 function ValidateLogin($user_, $pass_, $link_, $database_host_, $login_database_user_, $login_database_pass_, $login_database_, $database_) {
 
 	// TODO: doe iets aan al deze globale variabelen die echter in

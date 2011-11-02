@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>BotenInschrijfSysteem API-documentatie</title>
+    <link type="text/css" href="bis.css" rel="stylesheet" />
+</head>
+<body>
+
+<p>Het BotenInschijfSysteem biedt een eenvoudige RESTful API voor bijvoorbeeld gebruik door apps.</p>
+
+<p>Op api/index.php kunnen twee soorten requests worden uitgevoerd: GET en POST.</p>
+
+<p>Met <strong>GET</strong> kunnen de diverse database-tabellen (entiteiten) worden uitgevraagd. Voorbeeld: http://www.hunze.nl/test_bis/api/index.php?entity=types</p>
+<p>De uit te vragen tabellen zijn:
+<ul>
+	<li>bestuursleden</li>
+	<li>boten</li>
+	<li>inschrijvingen</li>
+	<li>inschrijvingen_oud</li>
+ 	<li>mededelingen</li>
+	<li>roeigraden</li>
+	<li>types</li>
+ 	<li>uitdevaart</li>
+</ul></p>
+<p>De gegevens worden als key-value-paren in JSON-formaat teruggegeven. Voorbeeld: {"ID":"1","Type":"1x","Categorie":"Skiffs en C1en","Roeisoort":"scull"}</p>
+
+<p>Met een <strong>POST</strong>-request kunt u een inschrijving aan de database proberen toe te voegen.</p>
+
+<p>In de toekomst dient elk request vergezeld te gaan van de juiste authenticatie.</p>
+
+</body>
+</html>

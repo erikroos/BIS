@@ -1,23 +1,74 @@
 <?php
 
-include("../include.php"); // for DB connection
-//include("rest_request.php");
+include_once("../include.php"); // for DB connection
 
-// handle request
 $request_method = strtolower($_SERVER['REQUEST_METHOD']);
-// TODO: authenticatie
-$data = array();
 if ($request_method == 'post') {
-	$data = $_POST;
-	// TODO: maak inschrijving
+	if (validateAuth($_POST, $link, $database_host, $login_database_user, $login_database_pass, $login_database, $database)) {
+		handlePostRequest($_POST);
+	} else {
+		die(sendResponse(401));
+	}
 } else {
 	if ($request_method == 'get') {
-		$data = $_GET;
-		$record_list = getEntityRecords($data['entity']);
-		sendResponse(200, json_encode($record_list), 'application/json');
+		if ($_GET['getAuth'] == 1) {
+			sendResponse(200, initAuth());
+		} else {
+			if (validateAuth($_GET, $link, $database_host, $login_database_user, $login_database_pass, $login_database, $database)) {
+				handleGetRequest($_GET);
+			} else {
+				die(sendResponse(401));
+			}
+		}
 	} else {
 		die(sendResponse(405));
 	}
+}
+exit;
+
+function initAuth() {
+	$salt = "tgft%R!FGCgf"; // TODO in conf-file
+	$ip = $_SERVER['REMOTE_ADDR'];
+	$timestamp = floor(time() / 3600);
+	return md5($ip.$salt.$timestamp);
+}
+
+function validateAuth($data, $link_, $database_host_, $login_database_user_, $login_database_pass_, $login_database_, $database_) {
+	// Reconstruct passcode
+	$salt = "tgft%R!FGCgf"; // TODO in conf-file
+	$ip = $_SERVER['REMOTE_ADDR'];
+	$timestamp = floor(time() / 3600);
+	$passcode = md5($ip.$salt.$timestamp);
+	// Get username -> password from DB (md5)
+	$password = getPass($data['username'], $link_, $database_host_, $login_database_user_, $login_database_pass_, $login_database_, $database_);
+	// Compare reconstructed passkey to passkey from request
+	if (md5($passcode.$password) == $data['passkey']) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function handleGetRequest($data) {
+	if ($data['entity'] == "bestuursleden" ||
+		$data['entity'] == "boten" ||
+		$data['entity'] == "inschrijvingen" ||
+		$data['entity'] == "inschrijvingen_oud" ||
+		$data['entity'] == "mededelingen" ||
+		$data['entity'] == "roeigraden" ||
+		$data['entity'] == "types" ||
+		$data['entity'] == "uitdevaart")
+	{
+		$record_list = getEntityRecords($data['entity']);
+		sendResponse(200, json_encode($record_list), 'application/json');
+	} else {
+		die(sendResponse(403));
+	}
+}
+
+function handlePostRequest($data) {
+	// TODO
+	sendResponse(200, "POST wordt nog niet ondersteund");
 }
 
 function getEntityRecords($entity) {
