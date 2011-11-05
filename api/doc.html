@@ -2,15 +2,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
     <title>BotenInschrijfSysteem API-documentatie</title>
-    <link type="text/css" href="bis.css" rel="stylesheet" />
+	<link type="text/css" href="../basislayout.css" rel="stylesheet" />
+    <link type="text/css" href="../bis.css" rel="stylesheet" />
 </head>
 <body>
 
+<h1>Documentatie BIS-API</h1>
+
 <p>Het BotenInschijfSysteem biedt een eenvoudige RESTful API voor bijvoorbeeld gebruik door apps.</p>
 
-<p>Op api/index.php kunnen twee soorten requests worden uitgevoerd: GET en POST.</p>
+<p>Op http://www.hunze.nl/bis/api/index.php kunnen twee soorten requests worden uitgevoerd: GET en POST.</p>
 
-<p>Met <strong>GET</strong> kunnen de diverse database-tabellen (entiteiten) worden uitgevraagd. Voorbeeld: http://www.hunze.nl/test_bis/api/index.php?entity=types</p>
+<p>Met <strong>GET</strong> kunnen de diverse database-tabellen (entiteiten) worden uitgevraagd. Voorbeeld (zonder de noodzakelijke authenticatie): http://www.hunze.nl/bis/api/index.php?entity=types</p>
 <p>De uit te vragen tabellen zijn:
 <ul>
 	<li>bestuursleden</li>
@@ -22,11 +25,17 @@
 	<li>types</li>
  	<li>uitdevaart</li>
 </ul></p>
-<p>De gegevens worden als key-value-paren in JSON-formaat teruggegeven. Voorbeeld: {"ID":"1","Type":"1x","Categorie":"Skiffs en C1en","Roeisoort":"scull"}</p>
+<p>De gegevens worden als key-value-paren in JSON-formaat teruggegeven. Voorbeeld van zo'n paar: {"ID":"1","Type":"1x","Categorie":"Skiffs en C1en","Roeisoort":"scull"}</p>
 
 <p>Met een <strong>POST</strong>-request kunt u een inschrijving aan de database proberen toe te voegen.</p>
 
-<p>In de toekomst dient elk request vergezeld te gaan van de juiste authenticatie.</p>
+<p>Elk request dient vergezeld te gaan van de juiste <strong>authenticatie</strong>. De procedure hiervoor is als volgt:</p>
+<ul>
+	<li>Doe eerst het volgende GET-request: http://www.hunze.nl/bis/api/index.php?getAuth=1</li>
+	<li>U krijgt nu een unieke passcode terug. Deze is geldig tot het volgende hele uur.</li>
+	<li>Zet uw wachtwoord van de Hunzesite om naar MD5 en plak dit aan de passcode vast. Zet dit geheel ook nog een keer om naar MD5. Dit levert uw passkey op.
+	<li>Nu kunt u elk request (GET of POST) vergezeld laten gaan van uw username (niet ge&euml;ncrypt) en uw zojuist gemaakte passkey. Een voorbeeld van een GET-request op de boten: http://www.hunze.nl/bis/api/index.php?username=pietje&passkey=e7bfdd24e9e1e2d56b4c8c5c7d513c98&entity=boten</i>
+</ul>
 
 </body>
 </html>

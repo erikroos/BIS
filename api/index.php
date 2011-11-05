@@ -1,10 +1,10 @@
 <?php
 
-include_once("../include.php"); // for DB connection
+include_once("../include.php"); // for global vars
 
 $request_method = strtolower($_SERVER['REQUEST_METHOD']);
 if ($request_method == 'post') {
-	if (validateAuth($_POST, $link, $database_host, $login_database_user, $login_database_pass, $login_database, $database)) {
+	if (validateAuth($_POST, $database_host, $login_database_user, $login_database_pass, $login_database, $database)) {
 		handlePostRequest($_POST);
 	} else {
 		die(sendResponse(401));
@@ -14,8 +14,8 @@ if ($request_method == 'post') {
 		if ($_GET['getAuth'] == 1) {
 			sendResponse(200, initAuth());
 		} else {
-			if (validateAuth($_GET, $link, $database_host, $login_database_user, $login_database_pass, $login_database, $database)) {
-				handleGetRequest($_GET);
+			if (validateAuth($_GET, $database_host, $login_database_user, $login_database_pass, $login_database, $database)) {
+				handleGetRequest($_GET, $database_host, $database_user, $database_pass, $database);
 			} else {
 				die(sendResponse(401));
 			}
@@ -33,14 +33,14 @@ function initAuth() {
 	return md5($ip.$salt.$timestamp);
 }
 
-function validateAuth($data, $link_, $database_host_, $login_database_user_, $login_database_pass_, $login_database_, $database_) {
+function validateAuth($data, $database_host_, $login_database_user_, $login_database_pass_, $login_database_, $database_) {
 	// Reconstruct passcode
 	$salt = "tgft%R!FGCgf"; // TODO in conf-file
 	$ip = $_SERVER['REMOTE_ADDR'];
 	$timestamp = floor(time() / 3600);
 	$passcode = md5($ip.$salt.$timestamp);
 	// Get username -> password from DB (md5)
-	$password = getPass($data['username'], $link_, $database_host_, $login_database_user_, $login_database_pass_, $login_database_, $database_);
+	$password = getPass($data['username'], $database_host_, $login_database_user_, $login_database_pass_, $login_database_, $database_);
 	// Compare reconstructed passkey to passkey from request
 	if (md5($passcode.$password) == $data['passkey']) {
 		return true;
@@ -49,7 +49,26 @@ function validateAuth($data, $link_, $database_host_, $login_database_user_, $lo
 	}
 }
 
-function handleGetRequest($data) {
+function getPass($user_, $database_host_, $login_database_user_, $login_database_pass_, $login_database_, $database_) {
+	
+	// Drupal-DB selecteren
+	$link_drupal = mysql_connect($database_host_, $login_database_user_, $login_database_pass_);
+	if (!mysql_select_db($login_database_, $link_drupal)) {
+		echo mysql_error()."<br />";
+	}
+	
+	$query = "SELECT pass FROM users WHERE name='$user_';";
+	$result = mysql_query($query);
+	if ($result) {
+		$row = mysql_fetch_assoc($result);
+		$pass_db = $row['pass'];
+	}
+	
+	mysql_close($link_drupal);
+	return $pass_db;
+}
+
+function handleGetRequest($data, $database_host_, $database_user_, $database_pass_, $database_) {
 	if ($data['entity'] == "bestuursleden" ||
 		$data['entity'] == "boten" ||
 		$data['entity'] == "inschrijvingen" ||
@@ -59,7 +78,7 @@ function handleGetRequest($data) {
 		$data['entity'] == "types" ||
 		$data['entity'] == "uitdevaart")
 	{
-		$record_list = getEntityRecords($data['entity']);
+		$record_list = getEntityRecords($data['entity'], $database_host_, $database_user_, $database_pass_, $database_);
 		sendResponse(200, json_encode($record_list), 'application/json');
 	} else {
 		die(sendResponse(403));
@@ -71,8 +90,13 @@ function handlePostRequest($data) {
 	sendResponse(200, "POST wordt nog niet ondersteund");
 }
 
-function getEntityRecords($entity) {
+function getEntityRecords($entity, $database_host_, $database_user_, $database_pass_, $database_) {
 	$records = array();
+	$link = mysql_connect($database_host_, $database_user_, $database_pass_);
+	if (!mysql_select_db($database_, $link)) {
+		echo "Fout: database niet gevonden.<br>";
+		exit();
+	}
 	$query = "SELECT * FROM ".$entity.";";
 	$result = mysql_query($query);
 	if ($result) {
@@ -80,6 +104,7 @@ function getEntityRecords($entity) {
 			array_push($records, $row);
 		}
 	}
+	mysql_close($link);
 	return $records;
 }
 
