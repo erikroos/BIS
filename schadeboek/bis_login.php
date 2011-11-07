@@ -2,11 +2,14 @@
 include_once("../include.php");
 
 extract ($_REQUEST);
-if (isset($login) && $login == $loginnaam && isset($password) && $password == $loginwachtwoord) {
-	session_start();
-	$_SESSION['authorized_bis'] = 'yes';
-	header("Location: ./index.php");
-	exit();
+if (isset($login) && isset($password)) {
+	if (ValidateLogin($login, $password, $link, $database_host, $login_database_user, $login_database_pass, $login_database, $database)) {
+		session_start();
+		$_SESSION['authorized_bis'] = 'yes';
+		$_SESSION['login'] = $login;
+		header("Location: ./index.php");
+		exit();
+	}
 }
 ?>
 
