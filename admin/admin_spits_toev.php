@@ -6,7 +6,15 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes') {
 	exit();
 }
 
-include_once("../include.php");
+include_once("../include_globalVars.php");
+include_once("../include_helperMethods.php");
+
+$link = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $link)) {
+	echo "Fout: database niet gevonden.<br>";
+	exit();
+}
+
 setlocale(LC_TIME, 'nl_NL');
 ?>
 
@@ -15,7 +23,7 @@ setlocale(LC_TIME, 'nl_NL');
 <head>
     <title><? echo $systeemnaam; ?> - Admin - Vlootbeheer - Uit de Vaart toevoegen</title>
     <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
-	<script language="JavaScript" src="../kalender.js"></script>
+	<script language="JavaScript" src="../scripts/kalender.js"></script>
 </head>
 <body>
 <div style="margin-left:10px; margin-top:10px">
@@ -214,14 +222,14 @@ if ((!$_POST['submit'] && !$_POST['cancel']) || $fail) {
 	if ($fail_msg_date) echo "<td colspan=2><em>$fail_msg_date</em></td></tr><tr>";
 	echo "<td>Startdatum (dd-mm-jjjj):</td>";
 	echo "<td><input type='text' name='startdate' id='startdate' size='8' maxlength='10' value='$startdate'>";
-	echo "&nbsp;<a href=\"javascript:show_calendar('form.startdate');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='../kalender.gif' alt='kalender' width='19' height='17' border='0'></a></td>";
+	echo "&nbsp;<a href=\"javascript:show_calendar('form.startdate');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='../res/kalender.gif' alt='kalender' width='19' height='17' border='0'></a></td>";
 	if ($fail_msg_startdate) echo "<td><em>$fail_msg_startdate</em></td>";
 	echo "</tr><tr>";
 	
 	// einddatum
 	echo "<td>Einddatum (dd-mm-jjjj):</td>";
 	echo "<td><input type='text' name='enddate' id='enddate' size='8' maxlength='10' value='$enddate'>";
-	echo "&nbsp;<a href=\"javascript:show_calendar('form.enddate');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='../kalender.gif' alt='kalender' width='19' height='17' border='0'></a></td>";
+	echo "&nbsp;<a href=\"javascript:show_calendar('form.enddate');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='../res/kalender.gif' alt='kalender' width='19' height='17' border='0'></a></td>";
 	if ($fail_msg_enddate) echo "<td><em>$fail_msg_enddate</em></td>";
 	echo "</tr><tr>";
 	
@@ -318,6 +326,8 @@ if ((!$_POST['submit'] && !$_POST['cancel']) || $fail) {
 	echo "<input type=\"submit\" name=\"cancel\" value=\"Annuleren\" /></p>";
 	echo "</form>";
 }
+
+mysql_close($link);
 
 ?>
 

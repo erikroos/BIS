@@ -6,8 +6,16 @@ if (!isset($_SESSION['authorized_bis']) || $_SESSION['authorized_bis'] != 'yes')
 	exit();
 }
 
-include_once("include.php");
+include_once("include_globalVars.php");
+include_once("include_helperMethods.php");
+
 setlocale(LC_TIME, 'nl_NL');
+
+$link = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $link)) {
+	echo "Fout: database niet gevonden.<br>";
+	exit();
+}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -15,7 +23,7 @@ setlocale(LC_TIME, 'nl_NL');
 <head>
     <title><? echo $systeemnaam; ?> - inschrijving maken/bewerken</title>
     <link type="text/css" href="<? echo $csslink; ?>" rel="stylesheet" />
-	<script type="text/javascript" src="kalender.js"></script>
+	<script type="text/javascript" src="scripts/kalender.js"></script>
 </head>
 <body>
 <?php
@@ -311,21 +319,17 @@ if ($_POST['submit']){
 	}
 	
 	$controle = 0;
-	if ($mpb == "Societeit") {
-		$controle = 4;
-	} else {
-		if ($duration > 120) {
-			if ($mpb == "") $fail_msg_mpb = "U schrijft voor langer dan 2 uur in. Hiervoor is MPB benodigd.";
-			$controle = 1;
-		}
-		if (!InRange($date, 3)) {
-			 if ($mpb == "") $fail_msg_mpb = "U schrijft meer dan 3 dagen vantevoren in. Hiervoor is MPB benodigd.";
-			 $controle = 2;
-		}
-		if ($grade == "MPB") {
-			if ($mpb == "") $fail_msg_mpb = "U schrijft een MPB-boot in. Hiervoor is MPB benodigd.";
-			$controle = 3;
-		}
+	if ($duration > 120) {
+		if ($mpb == "") $fail_msg_mpb = "U schrijft voor langer dan 2 uur in. Hiervoor is MPB benodigd.";
+		$controle = 1;
+	}
+	if (!InRange($date, 3)) {
+		 if ($mpb == "") $fail_msg_mpb = "U schrijft meer dan 3 dagen vantevoren in. Hiervoor is MPB benodigd.";
+		 $controle = 2;
+	}
+	if ($grade == "MPB") {
+		if ($mpb == "") $fail_msg_mpb = "U schrijft een MPB-boot in. Hiervoor is MPB benodigd.";
+		$controle = 3;
 	}
 	
 	$fail_partial_cnt = 0;
@@ -559,7 +563,7 @@ if ((!$_POST['submit'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
 	// datum
 	echo "<td>Datum (dd-mm-jjjj):</td>";
 	echo "<td><input type='text' onchange='ChangeInfo();' name='date' id='date' size='8' maxlength='10' value='$date' />";
-	echo "&nbsp;<a href=\"javascript:show_calendar('form.date');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='kalender.gif' alt='kalender' width='19' height='17' border='0' /></a></td>";
+	echo "&nbsp;<a href=\"javascript:show_calendar('form.date');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='res/kalender.gif' alt='kalender' width='19' height='17' border='0' /></a></td>";
 	if ($fail_msg_date) echo "<td><em>$fail_msg_date</em></td>";
 	echo "</tr><tr>";
 	
@@ -636,10 +640,12 @@ if ((!$_POST['submit'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
 	echo "</form>";
 }
 
+mysql_close($link);
+
 ?>
 </div>
 
-<script type="text/javascript" src="ajax_inschrijving.js"></script>
+<script type="text/javascript" src="../scripts/ajax_inschrijving.js"></script>
 
 </body>
 </html>

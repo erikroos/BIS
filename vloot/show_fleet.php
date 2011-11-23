@@ -1,9 +1,20 @@
-<link href="../../../CSS/basislayout.css" rel="stylesheet" type="text/css">
+<?php
+
+include_once("../include_globalVars.php");
+include_once("../include_helperMethods.php");
+
+$link = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $link)) {
+	echo "Fout: database niet gevonden.<br>";
+	exit();
+}
+
+?>
+
+<link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
 <h1><strong>De vloot</strong></h1>
 
 <?php
-
-include_once("../include.php");
 
 // Categorie-selectie door gebruiker
 $cat_to_show = 'Skiffs en C1en';
@@ -103,3 +114,7 @@ if (!$boats_result) {
 		echo "</table>";
 	}
 }
+
+mysql_close($link);
+
+?>

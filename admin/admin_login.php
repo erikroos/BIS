@@ -1,5 +1,5 @@
 <?php
-include("../include.php");
+include_once("../include_globalVars.php");
 
 extract ($_REQUEST);
 if ((isset($login) && $login == "admin" && isset($password) && $password == $login_admin_admin_wachtwoord) ||

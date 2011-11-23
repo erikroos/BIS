@@ -6,7 +6,8 @@ if (!isset($_SESSION['authorized_bis']) || $_SESSION['authorized_bis'] != 'yes')
 	exit();
 }
 
-include("../include.php");
+include_once("../include_globalVars.php");
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -26,7 +27,7 @@ echo "<p><a href='bis_login.php'>Klik hier om opnieuw in te loggen&gt;&gt;</a><b
 echo "<a href='".$homepage."'>Klik hier om naar ".$homepagenaam." te gaan&gt;&gt;</a></p>";
 echo "</div>";
 
-mysql_close($link);
 ?>
+
 </body>
 </html>

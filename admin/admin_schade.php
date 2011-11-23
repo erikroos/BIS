@@ -6,7 +6,15 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes' || $_SES
 	exit();
 }
 
-include_once("../include.php");
+include_once("../include_globalVars.php");
+include_once("../include_helperMethods.php");
+
+$link = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $link)) {
+	echo "Fout: database niet gevonden.<br>";
+	exit();
+}
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -14,7 +22,6 @@ include_once("../include.php");
 <head>
     <title><? echo $systeemnaam; ?> - Werkstroom materiaalcommissie</title>
     <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
-	<script language="JavaScript" src="../kalender.js"></script>
 </head>
 <body>
 <div style="margin-left:10px; margin-top:10px">
@@ -89,6 +96,9 @@ while ($row = mysql_fetch_assoc($result)) {
 	$c++;
 }
 echo "</table>";
+
+mysql_close($link);
+
 ?>
 
 </div>

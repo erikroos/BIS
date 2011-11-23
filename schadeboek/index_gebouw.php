@@ -6,7 +6,15 @@ if (!isset($_SESSION['authorized_bis']) || $_SESSION['authorized_bis'] != 'yes')
 	exit();
 }
 
-include_once("../include.php");
+include_once("../include_globalVars.php");
+include_once("../include_helperMethods.php");
+
+$link = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $link)) {
+	echo "Fout: database niet gevonden.<br>";
+	exit();
+}
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -16,11 +24,11 @@ include_once("../include.php");
     <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
 	<!-- Datatables -->
 	<style type="text/css" title="currentStyle"> 
-		@import "datatables/demo_page.css";
-		@import "datatables/demo_table.css";
+		@import "../scripts/datatables/demo_page.css";
+		@import "../scripts/datatables/demo_table.css";
 	</style> 
-	<script type="text/javascript" language="javascript" src="datatables/jquery.js"></script> 
-	<script type="text/javascript" language="javascript" src="datatables/jquery.dataTables.js"></script> 
+	<script type="text/javascript" language="javascript" src="../scripts/datatables/jquery.js"></script> 
+	<script type="text/javascript" language="javascript" src="../scripts/datatables/jquery.dataTables.js"></script> 
 	<script type="text/javascript" charset="utf-8"> 
 		$(document).ready(function() {
 			$('#schades').dataTable( {
@@ -84,6 +92,8 @@ while ($row = mysql_fetch_assoc($result)) {
 	$c++;
 }
 echo "</tbody></table>";
+
+mysql_close($link);
 
 ?>
 </div>

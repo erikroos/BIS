@@ -1,6 +1,6 @@
 <?php
 
-include_once("../include.php"); // for global vars
+include_once("../include_globalVars.php");
 
 $request_method = strtolower($_SERVER['REQUEST_METHOD']);
 if ($request_method == 'post') {
@@ -92,6 +92,7 @@ function handlePostRequest($data) {
 
 function getEntityRecords($entity, $database_host_, $database_user_, $database_pass_, $database_) {
 	$records = array();
+	// BIS-DB selecteren
 	$link = mysql_connect($database_host_, $database_user_, $database_pass_);
 	if (!mysql_select_db($database_, $link)) {
 		echo "Fout: database niet gevonden.<br>";
@@ -110,9 +111,6 @@ function getEntityRecords($entity, $database_host_, $database_user_, $database_p
 
 function getStatusCodeMessage($status)
 {
-	// these could be stored in a .ini file and loaded
-	// via parse_ini_file()... however, this will suffice
-	// for an example
 	$codes = Array(
 		100 => 'Continue',
 		101 => 'Switching Protocols',
@@ -203,7 +201,6 @@ function sendResponse($status = 200, $body = '', $content_type = 'text/html')
 		// servers don't always have a signature turned on (this is an apache directive "ServerSignature On")
 		$signature = ($_SERVER['SERVER_SIGNATURE'] == '') ? $_SERVER['SERVER_SOFTWARE'] . ' Server at ' . $_SERVER['SERVER_NAME'] . ' Port ' . $_SERVER['SERVER_PORT'] : $_SERVER['SERVER_SIGNATURE'];
 
-		// this should be templatized in a real-world solution
 		$body = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 					<html>
 						<head>

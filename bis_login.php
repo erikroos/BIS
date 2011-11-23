@@ -1,9 +1,10 @@
 <?php
-include_once("include.php");
+include_once("include_globalVars.php");
+include_once("include_helperMethods.php");
 
 extract ($_REQUEST);
 if (isset($login) && isset($password)) {
-	if (ValidateLogin($login, $password, $link, $database_host, $login_database_user, $login_database_pass, $login_database, $database)) {
+	if (ValidateLogin($login, $password, $database_host, $login_database_user, $login_database_pass, $login_database)) {
 		session_start();
 		$_SESSION['authorized_bis'] = 'yes';
 		$_SESSION['login'] = $login;

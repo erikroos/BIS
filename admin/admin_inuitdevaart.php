@@ -6,7 +6,15 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes') {
 	exit();
 }
 
-include_once("../include.php");
+include_once("../include_globalVars.php");
+include_once("../include_helperMethods.php");
+
+$link = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $link)) {
+	echo "Fout: database niet gevonden.<br>";
+	exit();
+}
+
 setlocale(LC_TIME, 'nl_NL');
 ?>
 
@@ -20,8 +28,6 @@ setlocale(LC_TIME, 'nl_NL');
 <div style="margin-left:10px; margin-top:10px">
 
 <?php
-
-$fail = FALSE;
 
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_vloot.php'>Terug naar vlootbeheer</a>] [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
@@ -60,6 +66,8 @@ while ($row = mysql_fetch_assoc($result)) {
 }
 echo "</table>";
 echo "<p><em>NB: Meldingen die over datum zijn, worden automatisch be&euml;indigd.</em></p>";
+
+mysql_close($link);
 
 ?>
 

@@ -1,5 +1,12 @@
 <?php
-include_once("../include.php");
+include_once("../include_globalVars.php");
+include_once("../include_helperMethods.php");
+
+$link = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $link)) {
+	echo "Fout: database niet gevonden.<br>";
+	exit();
+}
 
 $mode = $_GET['mode'];
 $table = 'schades';
@@ -29,6 +36,8 @@ while ($row = mysql_fetch_assoc($r)) {
 header("Content-type: application/vnd.ms-excel");
 header("Content-disposition: attachment; filename=".date("Ydm")."_".$table.".xls");
 echo $csv;
+
+mysql_close($link);
 
 exit;
 

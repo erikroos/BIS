@@ -6,7 +6,15 @@ if (!isset($_SESSION['authorized_bis']) || $_SESSION['authorized_bis'] != 'yes')
 	exit();
 }
 
-include_once("../include.php");
+include_once("../include_globalVars.php");
+include_once("../include_helperMethods.php");
+
+$link = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $link)) {
+	echo "Fout: database niet gevonden.<br>";
+	exit();
+}
+
 setlocale(LC_TIME, 'nl_NL');
 ?>
 
@@ -153,6 +161,8 @@ if ((!$_POST['insert'] && !$_POST['cancel']) || $fail) {
 	echo "<input type=\"submit\" name=\"cancel\" value=\"Annuleren\" /></p>";
 	echo "</form>";
 }
+
+mysql_close($link);
 
 ?>
 </div>

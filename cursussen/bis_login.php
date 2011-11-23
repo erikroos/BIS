@@ -1,5 +1,5 @@
 <?php
-include_once("../include.php");
+include_once("../include_globalVars.php");
 
 extract ($_REQUEST);
 if (isset($login) && isset($password)) {
@@ -26,7 +26,7 @@ if (isset($login) && isset($password)) {
 		<table>
 		<tr>
 		  <td>Login-naam:</td>
-		  <td><input type="text" name="login" value="<? echo $loginnaam; ?>" /></td>
+		  <td><input type="text" name="login" /></td>
 		  <td><em><? echo $loginnaam_hulp; ?></em></td>
 		</tr>
 		<tr>

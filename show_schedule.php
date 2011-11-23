@@ -1,6 +1,14 @@
 <?php
-include_once('./include.php');
+include_once("include_globalVars.php");
+include_once("include_helperMethods.php");
+
 setlocale(LC_TIME, 'nl_NL');
+
+$link = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $link)) {
+	echo "Fout: database niet gevonden.<br>";
+	exit();
+}
 
 if ($_GET['date_to_show']) {
 	$date_to_show = $_GET['date_to_show'];
@@ -262,5 +270,7 @@ echo "</tr>";
 echo "</table>"; // einde omhullende tabel
 echo "</div>";
 } // behoort bij IF aantal boten in selectie > 0
+
+mysql_close($link);
 
 ?>

@@ -6,9 +6,17 @@ if (!isset($_SESSION['authorized_bis']) || $_SESSION['authorized_bis'] != 'yes')
 	exit();
 }
 
-include_once("include.php");
+include_once("include_globalVars.php");
+include_once("include_helperMethods.php");
 if ($toonweer) include_once("../xmlnews.php");
+
 setlocale(LC_TIME, 'nl_NL');
+
+$link = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $link)) {
+	echo "Fout: database niet gevonden.<br>";
+	exit();
+}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -201,6 +209,8 @@ echo "</div>";
 echo "<div id='ScheduleInfo' style='clear:left'>";
 require_once("./show_schedule.php");
 echo "</div>";
+
+mysql_close($link);
 
 ?>
 

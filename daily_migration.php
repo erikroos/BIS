@@ -1,7 +1,15 @@
 <?php
 
-include_once("include.php");
+include_once("include_globalVars.php");
+include_once("include_helperMethods.php");
+
 setlocale(LC_TIME, 'nl_NL');
+
+$link = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $link)) {
+	echo "Fout: database niet gevonden.<br>";
+	exit();
+}
 
 // mail is sent after 00:05 everyday, so get values for yesterday
 $yday_ts = strtotime('-1 days');
@@ -105,4 +113,5 @@ mysql_query("UNLOCK TABLES;");
 //SendEmail("bis@hunze.nl", "Resultaat nightly migration van $yesterday_sh", $message);
 
 mysql_close($link);
+
 ?>

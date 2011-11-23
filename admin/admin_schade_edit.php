@@ -6,7 +6,15 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes' || $_SES
 	exit();
 }
 
-include_once("../include.php");
+include_once("../include_globalVars.php");
+include_once("../include_helperMethods.php");
+
+$link = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $link)) {
+	echo "Fout: database niet gevonden.<br>";
+	exit();
+}
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -14,7 +22,7 @@ include_once("../include.php");
 <head>
     <title><? echo $systeemnaam; ?> - Werkstroom materiaalcommissie - Bekijken/bewerken</title>
     <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
-	<script language="JavaScript" src="../kalender.js"></script>
+	<script language="JavaScript" src="../scripts/kalender.js"></script>
 </head>
 <body>
 <div style="margin-left:10px; margin-top:10px">
@@ -179,7 +187,7 @@ if ((!$_POST['insert'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
 	// datum gereed
 	echo "<td>Datum gereed (dd-mm-jjjj):</td>";
 	echo "<td><input type='text' name='date_ready_sh' id='date_ready_sh' size='8' maxlength='10' value='$date_ready_sh'>";
-	echo "&nbsp;<a href=\"javascript:show_calendar('form.date_ready_sh');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='../kalender.gif' alt='kalender' width='19' height='17' border='0'></a></td>";
+	echo "&nbsp;<a href=\"javascript:show_calendar('form.date_ready_sh');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='../res/kalender.gif' alt='kalender' width='19' height='17' border='0'></a></td>";
 	echo "</tr><tr>";
 	
 	// noodreparatie
@@ -201,6 +209,8 @@ if ((!$_POST['insert'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
 	
 	echo "<p><em>NB: Verwijderen alleen gebruiken ingeval van bijv. een onzin-melding. Anders de melding na afhandeling via de werkstroom archiveren.</em></p>";
 }
+
+mysql_close($link);
 
 ?>
 

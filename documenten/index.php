@@ -6,9 +6,11 @@ if (!isset($_SESSION['authorized_bis']) || $_SESSION['authorized_bis'] != 'yes')
 	exit();
 }
 
-include_once("../include.php");
+include_once("../include_globalVars.php");
 include_once("../mail.php");
+
 setlocale(LC_TIME, 'nl_NL');
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

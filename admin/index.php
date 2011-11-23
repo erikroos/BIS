@@ -6,7 +6,8 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes') {
 	exit();
 }
 
-include_once("../include.php");
+include_once("../include_globalVars.php");
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -41,6 +42,7 @@ echo "<a href='./admin_bestuur.php'>Beheer bestuursleden</a>";
 echo "</p>";
 
 echo "</div>";
+
 ?>
 
 </div>
