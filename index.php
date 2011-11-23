@@ -12,8 +12,8 @@ if ($toonweer) include_once("../xmlnews.php");
 
 setlocale(LC_TIME, 'nl_NL');
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
+$bisdblink = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $bisdblink)) {
 	echo "Fout: database niet gevonden.<br>";
 	exit();
 }
@@ -24,9 +24,9 @@ if (!mysql_select_db($database, $link)) {
 <head>
     <title><? echo $systeemnaam; ?></title>
     <link type="text/css" href="<? echo $csslink; ?>" rel="stylesheet" />
-	<link type="text/css" href="bis.css" rel="stylesheet" />
-	<script type="text/javascript" src="./kalender.js"></script>
-	<script type="text/javascript" src="./Script.js"></script>
+	<link type="text/css" href="css/bis.css" rel="stylesheet" />
+	<script type="text/javascript" src="scripts/kalender.js"></script>
+	<script type="text/javascript" src="scripts/Script.js"></script>
 </head>
 <body>
 <script type="text/javascript" src="./wz_tooltip.js"></script>
@@ -111,7 +111,7 @@ echo "<strong>Pas het inschrijfblad aan:</strong><br />";
 echo "<table><tr>";
 echo "<td>Datum (dd-mm-jjjj):</td>";
 echo "<td><input type='text' name='date_to_show' size='8' maxlength='10' value='$date_to_show' onchange='ChangeInfo();' id='date_to_show' />";
-echo "&nbsp;<a href=\"javascript:show_calendar('form.date_to_show');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='kalender.gif' width='19' height='17' border='0' alt='Kalender' /></a><br />";
+echo "&nbsp;<a href=\"javascript:show_calendar('form.date_to_show');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='res/kalender.gif' width='19' height='17' border='0' alt='Kalender' /></a><br />";
 echo "<input style=\"font-size:9px\" type=\"button\" name=\"change_date\" value=\"&lt;\" onclick=\"ChangeDate(-1); ChangeInfo();\" />";
 echo "<input style=\"font-size:9px\" type=\"button\" name=\"change_date\" value=\"&gt;\" onclick=\"ChangeDate(1); ChangeInfo();\" />";
 echo "<input style=\"font-size:9px\" type=\"button\" name=\"reset_date\" value=\"vandaag\" onclick=\"ResetDate(); ChangeInfo();\" />";
@@ -177,7 +177,7 @@ $result = mysql_query($query);
 if (!$result) {
 	echo "Ophalen van bestuursmededelingen mislukt.".mysql_error();
 } else {
-	$rows_aff = mysql_affected_rows($link);
+	$rows_aff = mysql_affected_rows($bisdblink);
 	if ($rows_aff > 0) {
 		$row = mysql_fetch_assoc($result);
 		$note_datum = DBdateToDate($row['Datum']);
@@ -206,14 +206,14 @@ if ($toonweer) { // optionele weerinfo
 
 echo "</div>";
 
+mysql_close($bisdblink);
+
 echo "<div id='ScheduleInfo' style='clear:left'>";
 require_once("./show_schedule.php");
 echo "</div>";
 
-mysql_close($link);
-
 ?>
 
-<script type="text/javascript" src="./dates_and_ajax.js"></script>
+<script type="text/javascript" src="scripts/dates_and_ajax.js"></script>
 </body>
 </html>

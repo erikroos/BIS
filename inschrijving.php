@@ -11,8 +11,8 @@ include_once("include_helperMethods.php");
 
 setlocale(LC_TIME, 'nl_NL');
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
+$bisdblink = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $bisdblink)) {
 	echo "Fout: database niet gevonden.<br>";
 	exit();
 }
@@ -48,7 +48,7 @@ if ($id > 0) { // bestaande/gelijksoortige inschrijving: haal de var'en op t.b.v
 	$query = "SELECT * FROM ".$opzoektabel." WHERE Volgnummer='$id';";
 	$result = mysql_query($query);
 	if ($result) {
-		$rows_aff = mysql_affected_rows($link);
+		$rows_aff = mysql_affected_rows($bisdblink);
 		if ($rows_aff > 0) {
 			$row = mysql_fetch_assoc($result);
 			if ($_POST['date']) { 
@@ -179,11 +179,21 @@ if (!$end_time) {
 	$end_time_mins = $end_time_fields[1];
 }
 
+// disconnect from DB
+mysql_close($bisdblink);
+
 // Blok waarin bestaande inschrijvingen getoond worden
 echo "<div id=\"AvailabilityInfo\">";
 require_once('./show_availability.php');
 echo "</div>";
 //
+
+// reconnect
+$bisdblink = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $bisdblink)) {
+	echo "Fout: database niet gevonden.<br>";
+	exit();
+}
 
 echo "<div style=\"margin-left:10px; margin-right:10px\">";
 // CONTROLE EN VERWERKING VAN INSCHRIJVING
@@ -314,7 +324,7 @@ if ($_POST['submit']){
 	if (!$result) {
 		die("Ophalen van Uit de Vaart-informatie mislukt.". mysql_error());
 	} else {
-		$rows_aff = mysql_affected_rows($link);
+		$rows_aff = mysql_affected_rows($bisdblink);
 		if ($rows_aff > 0) $fail_msg_boat = "Deze boot is op deze dag uit de vaart.";
 	}
 	
@@ -351,7 +361,7 @@ if ($_POST['submit']){
 			die("Het controleren van uw inschrijving is mislukt.". mysql_error());
 			$fail = TRUE;
 		} else {
-			$rows_aff = mysql_affected_rows($link);
+			$rows_aff = mysql_affected_rows($bisdblink);
 			if ($rows_aff > 0) {
 				if ($e == 0) {
 					$fail_msg3 = "Uw inschrijving van $boat is mislukt omdat deze conflicteert met een al bestaande inschrijving.";
@@ -640,12 +650,12 @@ if ((!$_POST['submit'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
 	echo "</form>";
 }
 
-mysql_close($link);
+mysql_close($bisdblink);
 
 ?>
 </div>
 
-<script type="text/javascript" src="../scripts/ajax_inschrijving.js"></script>
+<script type="text/javascript" src="scripts/ajax_inschrijving.js"></script>
 
 </body>
 </html>

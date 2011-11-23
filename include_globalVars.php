@@ -76,6 +76,13 @@ if ($theminute_quarts == 60) {
 	}
 }
 
+// connect to DB for following queries
+$link = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $link)) {
+	echo "Fout: database niet gevonden.<br>";
+	exit();
+}
+
 // stop alle MPB-gevende bestuursleden in een array
 $mpb_array = array();
 $mpb_array_sh = array();
@@ -127,5 +134,7 @@ $grade_array = array();
 while ($row = mysql_fetch_assoc($result)) {
 	array_push($grade_array, $row['Roeigraad']);
 }
+
+mysql_close($link);
 
 ?>
