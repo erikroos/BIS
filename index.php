@@ -29,7 +29,7 @@ if (!mysql_select_db($database, $bisdblink)) {
 	<script type="text/javascript" src="scripts/Script.js"></script>
 </head>
 <body>
-<script type="text/javascript" src="./wz_tooltip.js"></script>
+<script type="text/javascript" src="scripts/wz_tooltip.js"></script>
 <?php
 
 $date_to_show = 0;
