@@ -1,48 +1,59 @@
 <?php
 
 include_once("../include_globalVars.php");
+include_once("../inschrijving_methods.php");
+
+setlocale(LC_TIME, 'nl_NL');
 
 $request_method = strtolower($_SERVER['REQUEST_METHOD']);
 if ($request_method == 'post') {
-	if (validateAuth($_POST, $database_host, $login_database_user, $login_database_pass, $login_database, $database)) {
-		handlePostRequest($_POST);
+	if (validateToken($_POST)) {
+		if ($_POST['delete'] == 1) {
+			handleDeleteRequest($_POST, $database_host, $database_user, $database_pass, $database, $opzoektabel);
+		} else {
+			handlePostRequest($_POST, $database_host, $database_user, $database_pass, $database, $opzoektabel);
+		}
 	} else {
 		die(sendResponse(401));
 	}
 } else {
 	if ($request_method == 'get') {
-		if ($_GET['getAuth'] == 1) {
-			sendResponse(200, initAuth());
+		if ($_GET['getToken'] == 1) {
+			if (validateApiLogin($_GET, $database_host, $login_database_user, $login_database_pass, $login_database, $database)) {
+				sendResponse(200, makeToken());
+			} else {
+				die(sendResponse(401));
+			}
 		} else {
-			if (validateAuth($_GET, $database_host, $login_database_user, $login_database_pass, $login_database, $database)) {
+			if (validateToken($_GET)) {
 				handleGetRequest($_GET, $database_host, $database_user, $database_pass, $database);
 			} else {
 				die(sendResponse(401));
 			}
 		}
-	} else {
-		die(sendResponse(405));
 	}
 }
 exit;
 
-function initAuth() {
-	$salt = "tgft%R!FGCgf"; // TODO in conf-file
+function makeToken() {
 	$ip = $_SERVER['REMOTE_ADDR'];
 	$timestamp = floor(time() / 3600);
 	return md5($ip.$salt.$timestamp);
 }
 
-function validateAuth($data, $database_host_, $login_database_user_, $login_database_pass_, $login_database_, $database_) {
-	// Reconstruct passcode
-	$salt = "tgft%R!FGCgf"; // TODO in conf-file
-	$ip = $_SERVER['REMOTE_ADDR'];
-	$timestamp = floor(time() / 3600);
-	$passcode = md5($ip.$salt.$timestamp);
+function validateApiLogin($data, $database_host_, $login_database_user_, $login_database_pass_, $login_database_, $database_) {
 	// Get username -> password from DB (md5)
 	$password = getPass($data['username'], $database_host_, $login_database_user_, $login_database_pass_, $login_database_, $database_);
-	// Compare reconstructed passkey to passkey from request
-	if (md5($passcode.$password) == $data['passkey']) {
+	// Compare password from DB to password from request
+	if ($password == $data['password']) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function validateToken($data) {
+	if (makeToken() == $data['token']) {
 		return true;
 	} else {
 		return false;
@@ -73,24 +84,51 @@ function handleGetRequest($data, $database_host_, $database_user_, $database_pas
 		$data['entity'] == "boten" ||
 		$data['entity'] == "inschrijvingen" ||
 		$data['entity'] == "inschrijvingen_oud" ||
+		$data['entity'] == "test_inschrijvingen" ||
+		$data['entity'] == "test_inschrijvingen_oud" ||
 		$data['entity'] == "mededelingen" ||
 		$data['entity'] == "roeigraden" ||
 		$data['entity'] == "types" ||
 		$data['entity'] == "uitdevaart")
 	{
-		$record_list = getEntityRecords($data['entity'], $database_host_, $database_user_, $database_pass_, $database_);
+		$record_list = getEntityRecords($data['entity'], $data['date'], $database_host_, $database_user_, $database_pass_, $database_);
 		sendResponse(200, json_encode($record_list), 'application/json');
 	} else {
 		die(sendResponse(403));
 	}
 }
 
-function handlePostRequest($data) {
-	// TODO
-	sendResponse(200, "POST wordt nog niet ondersteund");
+function handlePostRequest($data, $database_host_, $database_user_, $database_pass_, $database_, $opzoektabel_) {
+	$fail_msg = "";
+	$res_id = $data['res_id'];
+	$boat_id = $data['boat_id'];
+	$name = $data['name'];
+	$team_name = $data['team_name'];
+	$email = $data['email'];
+	$mpb = $data['mpb'];
+	$date = $data['date'];
+	$start_time_hrs = $data['start_time_hrs'];
+	$start_time_mins = $data['start_time_mins'];
+	$end_time_hrs = $data['end_time_hrs'];
+	$end_time_mins = $data['end_time_mins'];
+	$ergo_lo = $data['ergo_lo'];
+	if ($ergo_lo == "") $ergo_lo = 0;
+	$ergo_hi = $data['ergo_hi'];
+	if ($ergo_hi == "") $ergo_hi = 0;
+	$response = makeReservation($database_host_, $database_user_, $database_pass_, $database_, $opzoektabel_, $fail_msg, true, $res_id, 0, $boat_id, $name, $team_name, $email, $mpb, $date, $start_time_hrs, $start_time_mins, $end_time_hrs, $end_time_mins, $ergo_lo, $ergo_hi);
+	if ($fail_msg != "") {
+		sendResponse(200, "<p>".$fail_msg."</p>");
+	} else {
+		sendResponse(200, $response);
+	}
 }
 
-function getEntityRecords($entity, $database_host_, $database_user_, $database_pass_, $database_) {
+function handleDeleteRequest($data, $database_host_, $database_user_, $database_pass_, $database_, $opzoektabel_) {
+	$res_id = $data['res_id'];
+	sendResponse(200, deleteReservation($database_host_, $database_user_, $database_pass_, $database_, $opzoektabel_, $res_id));
+}
+
+function getEntityRecords($entity, $date, $database_host_, $database_user_, $database_pass_, $database_) {
 	$records = array();
 	// BIS-DB selecteren
 	$link = mysql_connect($database_host_, $database_user_, $database_pass_);
@@ -98,7 +136,18 @@ function getEntityRecords($entity, $database_host_, $database_user_, $database_p
 		echo "Fout: database niet gevonden.<br>";
 		exit();
 	}
-	$query = "SELECT * FROM ".$entity.";";
+	$where = "";
+	if ($entity == "inschrijvingen" ||
+		$entity == "inschrijvingen_oud" ||
+		$entity == "test_inschrijvingen" ||
+		$entity == "test_inschrijvingen_oud") {
+		if (!$date) {
+			die(sendResponse(400, "<p>Fout: geen datum opgegeven</p>"));
+		} else {
+			$where = " WHERE Datum='$date'";
+		}
+	}
+	$query = "SELECT * FROM ".$entity.$where.";";
 	$result = mysql_query($query);
 	if ($result) {
 		while ($row = mysql_fetch_assoc($result)) {

@@ -202,7 +202,10 @@ while ($boats_array[$boatnr]) {
 					if ($span_size < 0) $span_size = 0;
 					for ($t = $latest_end_time_blocks; $t < $latest_end_time_blocks + $span_size; $t++) {
 						$t_time = BlocksToTime($t);
-						echo "<td bgcolor=\"#FFFFFF\" onclick=\"window.location.href='inschrijving.php?id=0&amp;boat_id=$boat_ids_array[$boatnr]&amp;date=$date_to_show&amp;cat_to_show=$cat_to_show&amp;grade_to_show=$grade_to_show&amp;time_to_show=$t_time'\"";
+						echo "<td bgcolor=\"#FFFFFF\"";
+						if (InRange($date_to_show, 10)) {
+							echo " onclick=\"window.location.href='inschrijving.php?id=0&amp;boat_id=$boat_ids_array[$boatnr]&amp;date=$date_to_show&amp;cat_to_show=$cat_to_show&amp;grade_to_show=$grade_to_show&amp;time_to_show=$t_time'\"";
+						}
 						if ($t == $start_block || ($t / 4) == floor($t / 4)) {
 							echo " style=\"border-left: solid 2px #aaaaaa\"";
 						}
@@ -244,7 +247,10 @@ while ($boats_array[$boatnr]) {
 		// wit totaan einde regel 
 		for ($t = $latest_end_time_blocks; $t < 72; $t++) {
 			$t_time = BlocksToTime($t);
-			echo "<td bgcolor=\"#FFFFFF\" onclick=\"window.location.href='inschrijving.php?id=0&amp;boat_id=$boat_ids_array[$boatnr]&amp;date=$date_to_show&amp;cat_to_show=$cat_to_show&amp;grade_to_show=$grade_to_show&amp;time_to_show=$t_time'\"";
+			echo "<td bgcolor=\"#FFFFFF\"";
+			if (InRange($date_to_show, 10)) {
+				echo " onclick=\"window.location.href='inschrijving.php?id=0&amp;boat_id=$boat_ids_array[$boatnr]&amp;date=$date_to_show&amp;cat_to_show=$cat_to_show&amp;grade_to_show=$grade_to_show&amp;time_to_show=$t_time'\"";
+			}
 			if ($t == $start_block || ($t / 4) == floor($t / 4)) {
 				echo " style=\"border-left: solid 2px #aaaaaa\"";
 			}

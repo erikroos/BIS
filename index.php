@@ -32,6 +32,28 @@ if (!mysql_select_db($database, $bisdblink)) {
 <script type="text/javascript" src="scripts/wz_tooltip.js"></script>
 <?php
 
+// stop alle bootcategorieën in een array
+$query = "SELECT DISTINCT Categorie FROM types ORDER BY Categorie;";
+$result = mysql_query($query);
+if (!$result) {
+	die("Ophalen van categorieën mislukt.". mysql_error());
+}
+$cat_array = array();
+while ($row = mysql_fetch_assoc($result)) {
+	array_push($cat_array, $row['Categorie']);
+}
+
+// stop alle roeigraden in een array
+$query = "SELECT Roeigraad FROM roeigraden WHERE ToonInBIS=1 ORDER BY ID;";
+$result = mysql_query($query);
+if (!$result) {
+	die("Ophalen van roeigraden mislukt.". mysql_error());
+}
+$grade_array = array();
+while ($row = mysql_fetch_assoc($result)) {
+	array_push($grade_array, $row['Roeigraad']);
+}
+
 $date_to_show = 0;
 if ($_GET['date_to_show']) {
 	$date_to_show = $_GET['date_to_show'];

@@ -245,3 +245,8 @@ em {
 	border-left: solid 1px #aaaaaa;
 	border-right: solid 1px #aaaaaa;
 }
+
+.containerDiv {
+	margin-left: 10px;
+	margin-right: 10px;
+}

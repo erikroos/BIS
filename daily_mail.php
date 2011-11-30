@@ -1,6 +1,7 @@
 <?php
 
 include_once("include_globalVars.php");
+include_once("include_boardMembers.php");
 include_once("include_helperMethods.php");
 
 setlocale(LC_TIME, 'nl_NL');

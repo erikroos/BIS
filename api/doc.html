@@ -2,40 +2,76 @@
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
     <title>BotenInschrijfSysteem API-documentatie</title>
-	<link type="text/css" href="../basislayout.css" rel="stylesheet" />
-    <link type="text/css" href="../bis.css" rel="stylesheet" />
+	<link type="text/css" href="../css/basislayout.css" rel="stylesheet" />
+    <link type="text/css" href="../css/bis.css" rel="stylesheet" />
 </head>
 <body>
 
+<div class="containerDiv">
+
 <h1>Documentatie BIS-API</h1>
 
-<p>Het BotenInschijfSysteem biedt een eenvoudige RESTful API voor bijvoorbeeld gebruik door apps.</p>
+<p>Het BotenInschijfSysteem biedt een eenvoudige API voor bijvoorbeeld gebruik door apps.</p>
+
+<p>Hebt u vragen over of suggesties voor deze API? Stuur dan een e-mail aan <a href="mailto:bis@hunze.nl">bis@hunze.nl</a>.</p>
 
 <p>Op http://www.hunze.nl/bis/api/index.php kunnen twee soorten requests worden uitgevoerd: GET en POST.</p>
 
-<p>Met <strong>GET</strong> kunnen de diverse database-tabellen (entiteiten) worden uitgevraagd. Voorbeeld (zonder de noodzakelijke authenticatie): http://www.hunze.nl/bis/api/index.php?entity=types</p>
-<p>De uit te vragen tabellen zijn:
+<p>Met <strong>GET</strong> kunnen de diverse database-tabellen (entiteiten) worden uitgevraagd. Voorbeeld (zonder de noodzakelijke authenticatie):<br />http://www.hunze.nl/bis/api/index.php?entity=types</p>
+<p>De uit te vragen tabellen zijn:</p>
 <ul>
 	<li>bestuursleden</li>
 	<li>boten</li>
-	<li>inschrijvingen</li>
-	<li>inschrijvingen_oud</li>
+	<li>inschrijvingen (u moet een extra parameter meegeven, date = &lt;de datum waarvan u de inschrijvingen wilt zien (yyyy-mm-dd)&gt;)</li>
+	<li>inschrijvingen_oud (u moet een extra parameter meegeven, date = &lt;de datum waarvan u de inschrijvingen wilt zien (yyyy-mm-dd)&gt;)</li>
  	<li>mededelingen</li>
 	<li>roeigraden</li>
 	<li>types</li>
  	<li>uitdevaart</li>
-</ul></p>
-<p>De gegevens worden als key-value-paren in JSON-formaat teruggegeven. Voorbeeld van zo'n paar: {"ID":"1","Type":"1x","Categorie":"Skiffs en C1en","Roeisoort":"scull"}</p>
+</ul>
+<p>De gegevens worden in JSON-formaat als een lijst van tuples van key-value-paren teruggegeven. Voorbeeld van zo'n tuple:<br />{"ID":"1","Type":"1x","Categorie":"Skiffs en C1en","Roeisoort":"scull"}</p>
 
-<p>Met een <strong>POST</strong>-request kunt u een inschrijving aan de database proberen toe te voegen.</p>
+<p>Met een <strong>POST</strong>-request kunt u een inschrijving aan de database toevoegen, een bestaande inschrijving wijzigen of een bestaande inschrijving verwijderen. <em>NB: alle normale Hunze-regels betreffende inschrijvingen en MPB's gelden ook als u via de API inschrijft! Eventuele foutmeldingen krijgt u via de response terug.</em></p>
+<ul>
+	<li>Toevoegen: geef in de request-body (content-type: application/x-www-form-urlencoded en charset: UTF-8) de volgende parameters mee:
+		<ul>
+			<li>res_id = 0</li>
+			<li>boat_id = &lt;het ID van de gewenste boot&gt;</li>
+			<li>name = &lt;uw naam&gt;</li>
+			<li>team_name = &lt;uw ploegnaam (optioneel)&gt;</li>
+			<li>email = &lt;uw e-mailadres (optioneel)&gt;</li>
+			<li>mpb = &lt;de functie van het MPB-gevende bestuurslid, voorbeeld: Competitie-toer (optioneel)&gt;</li>
+			<li>date = &lt;de datum van de outing (dd-mm-yyyy)&gt;</li>
+			<li>start_time_hrs = &lt;de uren van de starttijd van de outing (6-23)&gt;</li>
+			<li>start_time_mins = &lt;de minuten van de starttijd van de outing (00, 15, 30 of 45)&gt;</li>
+			<li>end_time_hrs = &lt;de uren van de eindtijd van de outing (6-23)&gt;</li>
+			<li>end_time_mins = &lt;de minuten van de eindtijd van de outing (00, 15, 30 of 45)&gt;</li>
+			<li>ergo_lo = &lt;alleen als u meerdere Concept-ergometers tegelijk wilt inschrijven, het laagste nummer van het blok (1 - 5) (optioneel)&gt;</li>
+			<li>ergo_hi = &lt;alleen als u meerdere Concept-ergometers tegelijk wilt inschrijven, het hoogste nummer van het blok (2 - 6) (optioneel)&gt;</li>
+		</ul>
+	</li>
+	<li>Wijzigen: geef in de body de volgende parameters mee:
+		<ul>
+			<li>res_id = &lt;het ID van de te wijzigen inschrijving&gt;</li>
+			<li>Verder: zie 'Toevoegen' hierboven.</li>
+		</ul>
+	</li>
+	<li>Verwijderen: geef in de body de volgende parameters mee:
+		<ul>
+			<li>delete = 1</li>
+			<li>res_id = &lt;het ID van de te verwijderen inschrijving&gt;</li>
+		</ul>
+	</li>
+</ul>
 
 <p>Elk request dient vergezeld te gaan van de juiste <strong>authenticatie</strong>. De procedure hiervoor is als volgt:</p>
 <ul>
-	<li>Doe eerst het volgende GET-request: http://www.hunze.nl/bis/api/index.php?getAuth=1</li>
-	<li>U krijgt nu een unieke passcode terug. Deze is geldig tot het volgende hele uur.</li>
-	<li>Zet uw wachtwoord van de Hunzesite om naar MD5 en plak dit aan de passcode vast. Zet dit geheel ook nog een keer om naar MD5. Dit levert uw passkey op.
-	<li>Nu kunt u elk request (GET of POST) vergezeld laten gaan van uw username (niet ge&euml;ncrypt) en uw zojuist gemaakte passkey. Een voorbeeld van een GET-request op de boten: http://www.hunze.nl/bis/api/index.php?username=pietje&passkey=e7bfdd24e9e1e2d56b4c8c5c7d513c98&entity=boten</i>
+	<li>Doe eerst een GET-request met parameters getToken=1, username=&lt;uw gebruikersnaam van de Hunzesite&gt; en password=&lt;uw wachtwoord van de Hunzesite, omgezet met MD5&gt;. Voorbeeld:<br />http://www.hunze.nl/bis/api/index.php?getToken=1&amp;username=pietje&amp;password=e7bfdd24e9e1e2d56b4c8c5c7d513c98</li>
+	<li>U krijgt nu een uniek 'token' terug. Dit is geldig tot het volgende hele uur.</li>
+	<li>Nu kunt u elk request (GET of POST) vergezeld laten gaan van uw token. Een voorbeeld van een GET-request op de boten:<br />http://www.hunze.nl/bis/api/index.php?token=e7bfdd24e9e1e2d56b4c8c5c7d513c98&entity=boten</li>
 </ul>
+
+</div>
 
 </body>
 </html>

@@ -7,6 +7,7 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes') {
 }
 
 include_once("../include_globalVars.php");
+include_once("../include_boardMembers.php");
 include_once("../include_helperMethods.php");
 
 $link = mysql_connect($database_host, $database_user, $database_pass);
@@ -30,7 +31,7 @@ setlocale(LC_TIME, 'nl_NL');
 
 <?php
 
-$fail = FALSE;
+$fail = false;
 
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href=\"./admin_spits.php\">Terug naar het spitsrooster</a>] [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
@@ -143,7 +144,7 @@ if ($_POST['submit']) {
 	
 	// als niet gefaald, repeterend spitsblok invoeren
 	if ($fail_msg_startdate || $fail_msg_enddate || $fail_msg_date || $fail_msg_time || $fail_msg_pname || $fail_msg_email) {
-		$fail = TRUE;
+		$fail = true;
 	} else {
 		if ($spits_id) {
 			// wijzigen bestaand blok
