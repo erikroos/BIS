@@ -120,7 +120,7 @@ echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Schadeboek\" 
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Cursussen\" value=\"Cursussen\" onclick=\"window.location.href='cursussen/index.php'\" />";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Examens\" value=\"Examens\" onclick=\"window.location.href='examens/index.php'\" />";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Documenten\" value=\"Documenten\" onclick=\"window.location.href='documenten/index.php'\" />";
-echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Hulp\" value=\"Hulp\" onclick=\"window.location.href='bis_info.php'\" />";
+echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Info\" value=\"Info\" onclick=\"window.location.href='bis_info.php'\" />";
 echo "&nbsp;&copy;2008-".$theyear." Erik Roos&nbsp;<a href='mailto:".$mailadres."'>".$mailadres."</a>";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Uitloggen\" value=\"UIT\" onclick=\"window.location.href='bis_logout.php'\" />";
 echo "</div>";

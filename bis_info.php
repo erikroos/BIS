@@ -26,6 +26,9 @@ include_once("include_globalVars.php");
 <? echo "<a href='mailto:".$mailadres."'>".$mailadres."</a>"; ?>
 </p>
 
+<strong>API</strong>
+<p>Voor meer informatie over de BIS-API, zie <a href="api/doc.html">de documentatie</a>.</p>
+
 <strong>Algemeen - hoofdscherm</strong>
 <ul>
   <li>Klik op een boot-/ergometernaam om een inschrijving te maken. NB: grijsgekleurde boten zijn uit de vaart.</li>
