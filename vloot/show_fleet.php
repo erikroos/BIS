@@ -1,18 +1,19 @@
 <?php
 
-include_once("../include_globalVars.php");
-include_once("../include_helperMethods.php");
+// NOTE: these links are only suitable for use from within DRUPAL!
+include_once("../bis/include_globalVars.php");
+include_once("../bis/include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
+$bisdblink = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $bisdblink)) {
 	echo "Fout: database niet gevonden.<br>";
 	exit();
 }
 
 ?>
 
-<link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
-<h1><strong>De vloot</strong></h1>
+<!--link type="text/css" href="../<? //echo $csslink; ?>" rel="stylesheet" /-->
+<!--h1><strong>De vloot</strong></h1-->
 
 <?php
 
@@ -24,7 +25,7 @@ if ($_POST['cat_to_show']) {
 echo "<form name='form' action=\"$REQUEST_URI\" method=\"post\">";
 echo "Categorie:&nbsp;";
 echo "<select name=\"cat_to_show\" />";
-	$query = "SELECT DISTINCT Categorie FROM types WHERE Categorie<>'Societeit' ORDER BY Categorie;";
+	$query = "SELECT DISTINCT Categorie FROM types ORDER BY Categorie;";
 	$result = mysql_query($query);
 	if (!$result) {
 		die("Ophalen van categorie&euml;n mislukt.". mysql_error());
@@ -71,37 +72,23 @@ if (!$boats_result) {
 		echo "<th><div align=\"left\">Graad</div></th>";
 		echo "</tr>";
 		$c = 0;
+		$grade = "";
+		$bgcolor = "";
 		while ($row = mysql_fetch_assoc($boats_result)) {
 			$boats_array[$c] = $row['Naam'];
 			$boat_tmp = addslashes($boats_array[$c]);
 			$weight = $row['Gewicht'];
 			$type = $row['Type'];
-			$grade = $row['Roeigraad'];
-			switch ($grade) {
-				case "skiff-1":
-					$bgcolor = "#FFFF99";
-					break;
-				case "skiff-2":
-					$bgcolor = "#AAFFAA";
-					break;
-				case "skiff-3":
-					$bgcolor = "#737CA1";
-					break;
-				case "giek-1":
-					$bgcolor = "#FFFF99";
-					break;
-				case "giek-2":
-					$bgcolor = "#AAFFAA";
-					break;
-				case "giek-3":
-					$bgcolor = "#737CA1";
-					break;
-				case "MPB":
-					$bgcolor = "#FFC1C1";
-					break;
-				case "geen":
-					$bgcolor = "#FFFF99";
-					break;
+			if ($grade != $row['Roeigraad']) {
+				$grade = $row['Roeigraad'];
+				$query_color = "SELECT KleurInBIS FROM roeigraden WHERE Roeigraad='$grade';";
+				$result_color = mysql_query($query_color);
+				if (!$result_color) {
+					die("Ophalen van kleuren mislukt: ".mysql_error());
+				} else {
+					$row_color = mysql_fetch_assoc($result_color);
+					$bgcolor = $row_color['KleurInBIS'];
+				}
 			}
 			echo "<tr>";
 			echo "<th bgcolor=$bgcolor><div align=\"left\">$boats_array[$c]</div></th>";
@@ -115,6 +102,6 @@ if (!$boats_result) {
 	}
 }
 
-mysql_close($link);
+mysql_close($bisdblink);
 
 ?>
