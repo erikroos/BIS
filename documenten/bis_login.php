@@ -1,5 +1,6 @@
 <?php
 include_once("../include_globalVars.php");
+include_once("../include_helperMethods.php");
 
 extract ($_REQUEST);
 if (isset($login) && isset($password)) {
