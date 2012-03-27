@@ -29,33 +29,6 @@ if (!mysql_select_db($database, $link)) {
 	</style> 
 	<script type="text/javascript" language="javascript" src="../scripts/datatables/jquery.js"></script> 
 	<script type="text/javascript" language="javascript" src="../scripts/datatables/jquery.dataTables.js"></script> 
-	<script type="text/javascript" charset="utf-8"> 
-		$(document).ready(function() {
-			$('#schades').dataTable( {
-				"bPaginate": true,
-				"sPaginationType": "full_numbers",
-				"bLengthChange": true,
-				"bAutoWidth": false,
-				"bFilter": true,
-				"bSort": true,
-				"aaSorting": [[ 0, "desc" ]],
-				"oLanguage": {
-					"sLengthMenu": "Toon _MENU_ meldingen per pagina",
-					"sZeroRecords": "Niets gevonden",
-					"sInfo": "_START_ tot _END_ van _TOTAL_ meldingen",
-					"sInfoEmpty": "Er zijn geen meldingen om te tonen",
-					"sInfoFiltered": "(gefilterd uit _MAX_ meldingen)",
-					"sSearch": "Zoek:",
-					"oPaginate": {
-						"sFirst":    "Eerste",
-						"sPrevious": "Vorige",
-						"sNext":     "Volgende",
-						"sLast":     "Laatste"
-					}
-				}
-			} );
-		} );
-	</script> 
 </head>
 <body>
 <div style="margin-left:10px; margin-top:10px">
@@ -73,8 +46,8 @@ $result = mysql_query($query);
 if (!$result) {
 	die("Ophalen van schades mislukt.". mysql_error());
 }
-echo "<table id='schades' border=\"1\" cellpadding=\"6\" cellspacing=\"0\" bordercolor=\"#AAB8D5\">";
-echo "<thead><tr><th><div style=\"text-align:left\">Melddatum (jjjj-mm-dd)</div></th><th><div style=\"text-align:left\">Naam melder</div></th><th width=250><div style=\"text-align:left\">Omschrijving</div></th><th width=250><div style=\"text-align:left\">Terugkoppeling GebouwCie</div></th></tr></thead><tbody>";
+echo "<div style='width:700px'><table id='schades'>";
+echo "<thead><tr><th>Melddatum (jjjj-mm-dd)</th><th>Naam melder</th><th>Omschrijving</th><th>Terugkoppeling GebouwCie</th></tr></thead><tbody>";
 $c = 0;
 while ($row = mysql_fetch_assoc($result)) {
 	$date = $row['Datum'];
@@ -84,18 +57,53 @@ while ($row = mysql_fetch_assoc($result)) {
 	$feedback = $row['Feedback'];
 	if (!$feedback) $feedback = "&nbsp;";
 	echo "<tr>";
-	echo "<td><div style=\"text-align:left\">$date</div></td>";	
-	echo "<td><div style=\"text-align:left\">$name</div></td>";
-	echo "<td><div style=\"text-align:left\">$note</div></td>";
-	echo "<td><div style=\"text-align:left\">$feedback</div></td>";
+	echo "<td>$date</td>";	
+	echo "<td>$name</td>";
+	echo "<td>$note</td>";
+	echo "<td>$feedback</td>";
 	echo "</tr>";
 	$c++;
 }
-echo "</tbody></table>";
+echo "</tbody></table></div>";
 
 mysql_close($link);
 
 ?>
 </div>
 </body>
+
+<script type="text/javascript" charset="utf-8"> 
+	$(document).ready(function() {
+		$('#schades').dataTable( {
+			"bPaginate": true,
+		"sPaginationType": "full_numbers",
+		"bLengthChange": true,
+		"bAutoWidth": false,
+		"bFilter": true,
+		"bSort": true,
+		"aaSorting": [[ 0, "desc" ]],
+		"oLanguage": {
+			"sLengthMenu": "Toon _MENU_ meldingen per pagina",
+			"sZeroRecords": "Niets gevonden",
+			"sInfo": "_START_ tot _END_ van _TOTAL_ meldingen",
+			"sInfoEmpty": "Er zijn geen meldingen om te tonen",
+			"sInfoFiltered": "(gefilterd uit _MAX_ meldingen)",
+			"sSearch": "Zoek:",
+			"oPaginate": {
+				"sFirst":    "Eerste",
+				"sPrevious": "Vorige",
+				"sNext":     "Volgende",
+				"sLast":     "Laatste"
+			}
+		},
+		"aoColumns" : [
+			{"sWidth": '100px'},
+			{"sWidth": '100px'},
+			{"sWidth": '300px'},
+			{"sWidth": '200px'}
+		]
+	} );
+} );
+</script> 
+
 </html>
