@@ -45,7 +45,8 @@ function validateApiLogin($data, $database_host_, $login_database_user_, $login_
 	// Get username -> password from DB (md5)
 	$password = getPass($data['username'], $database_host_, $login_database_user_, $login_database_pass_, $login_database_, $database_);
 	// Compare password from DB to password from request
-	if ($password == $data['password']) {
+	// Note: getPass() returns empty string if username unknown in DB, so check for that!!
+	if ($password != "" && $password == $data['password']) {
 		return true;
 	} else {
 		return false;
