@@ -45,9 +45,9 @@ Voor T2 hoofdstuk 1 en 2 en alle bijlagen behalve H).</p>
   <li>Er kan per persoon per examen voor maximaal &eacute;&eacute;n te behalen graad worden ingeschreven.</li>
   <li>Er zal eerst theorie-examen (T-1 of T-2) gedaan moeten worden voordat je aan een praktijkexamen mag deelnemen.</li>
   <li>Inschrijven van boten en/of het regelen van roeiers bij een stuurexamen behoort tot de verantwoordelijkheid van de kandidaat.</li>
-  <li>Controleer het <a href=\"../../drupal/sites/default/files/Roei&examenreglement_2011.doc\" target=\"_blank\">Roei- en Examenreglement</a> op theorie- en exameneisen.</li>
-  <li>Op het <a href=\"../../drupal/sites/default/files/beoordelingalleexamens13_0.pdf\" target=\"_blank\">beoordelingsformulier</a> kunt u zien welke criteria de examinator hanteert bij het afnemen van het examen.</li>
-  <li>Je kunt hier de <a href=\"../../drupal/sites/default/files/Examenvragen.doc\" target=\"_blank\">examenvragen</a> T1 en T2 bekijken.</li>
+  <li>Controleer het <a href=\"../../sites/default/files/Roei&examenreglement_2011.doc\" target=\"_blank\">Roei- en Examenreglement</a> op theorie- en exameneisen.</li>
+  <li>Op het <a href=\"../../sites/default/files/beoordelingalleexamens13_0.pdf\" target=\"_blank\">beoordelingsformulier</a> kunt u zien welke criteria de examinator hanteert bij het afnemen van het examen.</li>
+  <li>Je kunt hier de <a href=\"../../sites/default/files/Examenvragen.doc\" target=\"_blank\">examenvragen</a> T1 en T2 bekijken.</li>
   <li>Zonder tegenbericht gaan examens altijd door.</li>
   <li>Enige dagen voor het examen ontvangt u een indeling van roeiers/tijdstippen/examinatoren.</li>
   <li>De duur van het theorie-examen is gemiddeld &#233;&#233;n uur.</li>
