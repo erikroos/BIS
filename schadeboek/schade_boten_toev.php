@@ -20,7 +20,7 @@ if (!mysql_select_db($database, $link)) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title>BotenInschrijfSysteem - Schadeboek Boten - Nieuwe schade melden</title>
+    <title>BotenInschrijfSysteem - Klachtenboek Boten - Nieuwe klacht/schademelding</title>
     <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
 </head>
 <body>
@@ -28,19 +28,19 @@ if (!mysql_select_db($database, $link)) {
 <?php
 
 // init
-if (!$_POST['cancel'] && !$_POST['insert']) {
+if (!isset($_POST['cancel']) && !isset($_POST['insert'])) {
 	$fail = FALSE;
 }
 
 // knop gedrukt
-if ($_POST['cancel']){
+if (isset($_POST['cancel'])){
 	unset($_POST['name'], $_POST['boat_id'], $_POST['note'], $name, $boat_id, $note);
 	$fail = FALSE;
-	echo "<p>De schade zal niet worden gemeld.<br>";
-	echo "<a href='index_boten.php'>Terug naar het schadeoverzicht voor de boten&gt;&gt;</a></p>";
+	echo "<p>De klacht zal niet worden gemeld.<br>";
+	echo "<a href='index_boten.php'>Terug naar het klachtenoverzicht voor de boten&gt;&gt;</a></p>";
 }
 
-if ($_POST['insert']){
+if (isset($_POST['insert'])){
 	$name = $_POST['name'];
 	$boat_id = $_POST['boat_id'];
 	// bootnaam
@@ -59,35 +59,35 @@ if ($_POST['insert']){
 		$fail_msg_name = "U dient een geldige voor- en achternaam op te geven. Let op: de apostrof (') wordt niet geaccepteerd.";
 	}
 	
-	if ($fail_msg_name) $fail = TRUE;
+	if (isset($fail_msg_name)) $fail = TRUE;
 	
-	if (!$fail) {
+	if (!isset($fail)) {
 		$query = "INSERT INTO `schades` (Datum, Naam, Boot_ID, Oms_lang) VALUES ('$today_db', '$name', '$boat_id', '$note');";
 		$result = mysql_query($query);
 		if (!$result) {
-			die("Invoeren schade mislukt.". mysql_error());
+			die("Invoeren klacht mislukt.". mysql_error());
 		} else {
 		    // mail aan matcom
-			$message = $name." heeft zojuist een schade gemeld betreffende '".$boat."'.<br>";
-			SendEmail("materiaal@hunze.nl", "Nieuwe schademelding", $message);
+			$message = $name." heeft zojuist een klacht gedaan betreffende '".$boat."'.<br>";
+			SendEmail("materiaal@hunze.nl", "Nieuwe klacht/schademelding", $message);
 			// feedback op scherm
-			echo "<p>Hartelijk dank voor uw melding! De schade is doorgegeven aan de Materiaalcommissie.<br>";
+			echo "<p>Hartelijk dank voor uw melding! De klacht is doorgegeven aan de Materiaalcommissie.<br>";
 			echo "Mocht u de melding nog nader willen toelichten of willen wijzigen, neemt u dan contact op via <a href='mailto:materiaal@hunze.nl'>e-mail</a>.<br>";
-			echo "<a href='index_boten.php'>Terug naar het schadeoverzicht voor de boten&gt;&gt;</a></p>";
+			echo "<a href='index_boten.php'>Terug naar het klachtenoverzicht voor de boten&gt;&gt;</a></p>";
 		}
 	}
 }
 
 // Formulier
-if ((!$_POST['insert'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
-	echo "<p><b>Schademelding invoeren</b></p>";
-	echo "<form name='form' action=\"$REQUEST_URI\" method=\"post\">";
+if ((!isset($_POST['insert']) && !isset($_POST['delete']) && !isset($_POST['cancel'])) || isset($fail)) {
+	echo "<p><b>Klacht/schademelding invoeren</b></p>";
+	echo "<form name='form' action=\"" . (isset($REQUEST_URI) ? $REQUEST_URI : "") . "\" method=\"post\">";
 	echo "<table>";
 	
 	// naam
 	echo "<tr><td>Naam:</td>";
-	echo "<td><input type=\"text\" name=\"name\" value=\"$name\" size=45 /></td>";
-	if ($fail_msg_name) echo "<td><em>$fail_msg_name</em></td>";
+	echo "<td><input type=\"text\" name=\"name\" value=\"" . (isset($name) ? $name : "") . "\" size=45 /></td>";
+	if (isset($fail_msg_name)) echo "<td><em>" . $fail_msg_name . "</em></td>";
 	echo "</tr>";
 	
 	// boot
@@ -107,7 +107,7 @@ if ((!$_POST['insert'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
 			$curr_boat = $row['Naam'];
 			$type = $row['Type'];
 			echo "<option value=".$curr_boat_id." ";
-			if ($boat_id == $curr_boat_id) echo "selected=\"selected\"";
+			if (isset($boat_id) && $boat_id == $curr_boat_id) echo "selected=\"selected\"";
 			echo ">".$curr_boat." (".$type.")</option>";
 		}
 	}
@@ -116,7 +116,7 @@ if ((!$_POST['insert'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
 	
 	// mededeling
 	echo "<tr><td>Omschrijving (max. 1000 tekens):</td>";
-	echo "<td><textarea name=\"note\" rows=4 cols=50/>$note</textarea></td>";
+	echo "<td><textarea name=\"note\" rows=4 cols=50/>" . (isset($note) ? $note : "") . "</textarea></td>";
 	echo "</tr>";
 	
 	// knoppen

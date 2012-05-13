@@ -10,20 +10,20 @@ if (!mysql_select_db($database, $link)) {
 	exit();
 }
 
-if ($_GET['date_to_show']) {
+if (isset($_GET['date_to_show'])) {
 	$date_to_show = $_GET['date_to_show'];
 }
 $date_to_show_db = DateToDBdate($date_to_show);
 
-if ($_GET['start_hrs_to_show']) $start_hrs_to_show = $_GET['start_hrs_to_show'];
-if ($_GET['start_mins_to_show']) $start_mins_to_show = $_GET['start_mins_to_show'];
+if (isset($_GET['start_hrs_to_show'])) $start_hrs_to_show = $_GET['start_hrs_to_show'];
+if (isset($_GET['start_mins_to_show'])) $start_mins_to_show = $_GET['start_mins_to_show'];
 if ($start_mins_to_show == 0) $start_mins_to_show = "00";
 $start_time_to_show = $start_hrs_to_show.":".$start_mins_to_show;
 $start_block = TimeToBlocks($start_time_to_show);
 
-if ($_GET['cat_to_show']) $cat_to_show = $_GET['cat_to_show'];
+if (isset($_GET['cat_to_show'])) $cat_to_show = $_GET['cat_to_show'];
 
-if ($_GET['grade_to_show']) $grade_to_show = $_GET['grade_to_show'];
+if (isset($_GET['grade_to_show'])) $grade_to_show = $_GET['grade_to_show'];
 
 echo "<div style=\"margin-left:10px; margin-right:10px\">";
 $date_tmp = strtotime($date_to_show_db);
@@ -162,7 +162,7 @@ echo "</tr>";
 
 // per rij bootnaam inlezen, inschrijvingen daarvan ophalen en intekenen
 $boatnr = 0;
-while ($boats_array[$boatnr]) {
+while (isset($boats_array[$boatnr])) {
 	echo "<tr><td><div>&nbsp;</div></td>";
 	$latest_end_time_blocks = $start_block;
 	if (!$available[$boatnr]) {

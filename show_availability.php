@@ -9,24 +9,24 @@ if (!mysql_select_db($database, $link)) {
 	exit();
 }
 
-if ($_GET['change']) {
-	if ($_GET['date']) {
+if (isset($_GET['change'])) {
+	if (isset($_GET['date'])) {
 		$date = $_GET['date'];
 		$date_db = DateToDBdate($date);
 	}
 	
-	if ($_GET['start_time_hrs']) $start_time_hrs = $_GET['start_time_hrs'];
-	if ($_GET['start_time_mins']) $start_time_mins = $_GET['start_time_mins'];
+	if (isset($_GET['start_time_hrs'])) $start_time_hrs = $_GET['start_time_hrs'];
+	if (isset($_GET['start_time_mins'])) $start_time_mins = $_GET['start_time_mins'];
 	$start_time = $start_time_hrs.":".$start_time_mins;
 	
-	if ($_GET['end_time_hrs']) $end_time_hrs = $_GET['end_time_hrs'];
-	if ($_GET['end_time_mins']) $end_time_mins = $_GET['end_time_mins'];
+	if (isset($_GET['end_time_hrs'])) $end_time_hrs = $_GET['end_time_hrs'];
+	if (isset($_GET['end_time_mins'])) $end_time_mins = $_GET['end_time_mins'];
 	$end_time = $end_time_hrs.":".$end_time_mins;
 	
-	if ($_GET['boat_id']) $boat_id = $_GET['boat_id'];
+	if (isset($_GET['boat_id'])) $boat_id = $_GET['boat_id'];
 	
 	$id = 0;
-	if ($_GET['id']) $id = $_GET['id'];
+	if (isset($_GET['id'])) $id = $_GET['id'];
 }
 
 echo "<div style=\"margin-left:0px; margin-right:0px; background-color:#FFFF99\">";

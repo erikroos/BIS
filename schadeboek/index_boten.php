@@ -20,7 +20,7 @@ if (!mysql_select_db($database, $link)) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title>BotenInschrijfSysteem - Schadeboek Boten</title>
+    <title>BotenInschrijfSysteem - Klachtenboek Boten</title>
     <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
 	<!-- Datatables -->
 	<style type="text/css" title="currentStyle"> 
@@ -35,16 +35,16 @@ if (!mysql_select_db($database, $link)) {
 
 <?php
 
-echo "<p><h1>Schadeboek Boten</h1></p>";
-echo "<p><a href='schade_boten_toev.php'>Nieuwe schade melden&gt;&gt;</a><br>";
+echo "<p><h1>Klachtenboek Boten</h1></p>";
+echo "<p><a href='schade_boten_toev.php'>Nieuwe klacht/schademelding&gt;&gt;</a><br>";
 echo "<a href='../index.php'>Naar BIS&gt;&gt;</a><br>";
 echo "<a href='./bis_logout.php'>Uitloggen&gt;&gt;</a></p>";
-echo "<p>Lijst van schades die bij de Materiaalcommissie in behandeling zijn:</p>";
+echo "<p>Lijst van klachten die bij de Materiaalcommissie in behandeling zijn:</p>";
 
 $query = "SELECT Datum, Naam, Boot_ID, Oms_lang, Feedback from schades;";
 $result = mysql_query($query);
 if (!$result) {
-	die("Ophalen van schades mislukt.". mysql_error());
+	die("Ophalen van klachten mislukt.". mysql_error());
 }
 echo "<div style='width:700px'><table id='schades'>";
 echo "<thead><tr><th>Melddatum (jjjj-mm-dd)</th><th>Naam melder</th><th>Boot/ergometer</th><th><div>Omschrijving</th><th>Terugkoppeling MatCie</th></tr></thead><tbody>";

@@ -31,10 +31,10 @@ function CheckEmail($email_to_check) {
 	//trim verwijdert returns etc.
 	$email_to_check = trim($email_to_check);
 	// check syntax
-	if (eregi("^[0-9a-z]([-_.~]?[0-9a-z])*@[0-9a-z]([-.]?[0-9a-z])*\\.[a-z]{2,4}$", $email_to_check))
+	if (preg_match("/^[0-9a-z]([-_.~]?[0-9a-z])*@[0-9a-z]([-.]?[0-9a-z])*\\.[a-z]{2,4}$/i", $email_to_check))
 	{
 		// pak domeinnaam
-		list ($username, $domain) = split('@', $email_to_check);
+		list ($username, $domain) = explode('@', $email_to_check);
 		// kijk of er MX records in de DNS staan
 		if (!checkdnsrr($domain, 'MX')) {
 			return false;
@@ -45,7 +45,7 @@ function CheckEmail($email_to_check) {
 }
 
 function check_phone_dutch($phone_to_check) {
-	return ereg ("^[0-9]{2}(([-][0-9][0-9])|([0-9][-][0-9])|([0-9][0-9][-]))[0-9]{6}$", $phone_to_check);
+	return preg_match("/^[0-9]{2}(([-][0-9][0-9])|([0-9][-][0-9])|([0-9][0-9][-]))[0-9]{6}$/", $phone_to_check);
 }
 
 function SendEmail($email_to, $subject, $message) {
@@ -73,7 +73,7 @@ function CheckName($name_to_check) {
 	// aardigheidje voor der Feico
 	if ($name_to_check == "F.P.J. Camphuis" || $name_to_check == "F.P.J.Camphuis" || $name_to_check == "F.P.J.C." || $name_to_check == "FPJC" || $name_to_check == "fpjc") return true;
 	
-	return ereg ("^[a-zA-Z][a-zבאגהחיטךכףעפצםלמןתשûü]+([ -][a-zA-Z][a-zבאגהחיטךכףעפצםלמןתשûü]+)*[ ][a-zA-Zבאגהחיטךכףעפצםלמןתשûü][a-zבאגהחיטךכףעפצםלמןתשûü]+([ -][a-zA-Zבאגהחיטךכףעפצםלמןתשûü][a-zבאגהחיטךכףעפצםלמןתשûü]+)*$", $name_to_check);
+	return preg_match("/^[a-zA-Z][a-zבאגהחיטךכףעפצםלמןתשûü]+([ -][a-zA-Z][a-zבאגהחיטךכףעפצםלמןתשûü]+)*[ ][a-zA-Zבאגהחיטךכףעפצםלמןתשûü][a-zבאגהחיטךכףעפצםלמןתשûü]+([ -][a-zA-Zבאגהחיטךכףעפצםלמןתשûü][a-zבאגהחיטךכףעפצםלמןתשûü]+)*$/", $name_to_check);
 }
 
 function InRange($ddmmyyyy, $nr_of_days) {

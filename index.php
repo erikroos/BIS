@@ -8,7 +8,7 @@ if (!isset($_SESSION['authorized_bis']) || $_SESSION['authorized_bis'] != 'yes')
 
 include_once("include_globalVars.php");
 include_once("include_helperMethods.php");
-if ($toonweer) include_once("../xmlnews.php");
+if ($toonweer) include_once("xmlnews.php");
 
 setlocale(LC_TIME, 'nl_NL');
 
@@ -55,7 +55,7 @@ while ($row = mysql_fetch_assoc($result)) {
 }
 
 $date_to_show = 0;
-if ($_GET['date_to_show']) {
+if (isset($_GET['date_to_show'])) {
 	$date_to_show = $_GET['date_to_show'];
 }
 if ($date_to_show == 0 || !CheckTheDate($date_to_show)) { // altijd sanity check
@@ -65,7 +65,7 @@ $date_to_show_db = DateToDBdate($date_to_show);
 
 $start_hrs_to_show = -1;
 $start_mins_to_show = -1;
-if ($_GET['start_time_to_show']) {
+if (isset($_GET['start_time_to_show'])) {
 	$start_time_to_show = $_GET['start_time_to_show'];
 	$start_time_fields = explode(":", $start_time_to_show);
 	$start_hrs_to_show = $start_time_fields[0];
@@ -73,7 +73,7 @@ if ($_GET['start_time_to_show']) {
 }
 if ($start_hrs_to_show == -1 || $start_mins_to_show == -1 ||
     !($start_hrs_to_show >= 6 && $start_hrs_to_show <= 23) ||
-	!(start_mins_to_show == 0 || start_mins_to_show == 15 || start_mins_to_show == 30 || start_mins_to_show == 45)
+	!($start_mins_to_show == 0 || $start_mins_to_show == 15 || $start_mins_to_show == 30 || $start_mins_to_show == 45)
 ) { // sanity check
 	if ($date_to_show == $today) {
 		if ($thehour_q < 6) {
@@ -93,7 +93,7 @@ $start_time_to_show = $start_hrs_to_show.":".$start_mins_to_show;
 $start_block = TimeToBlocks($start_time_to_show);
 
 $cat_to_show = $standaardcategorie;
-if ($_GET['cat_to_show']) {
+if (isset($_GET['cat_to_show'])) {
 	$cat_to_show = $_GET['cat_to_show'];
 }
 if (!in_array($cat_to_show, $cat_array)) { // sanity check
@@ -101,7 +101,7 @@ if (!in_array($cat_to_show, $cat_array)) { // sanity check
 }
 
 $grade_to_show = $standaardgraad;
-if ($_GET['grade_to_show']) {
+if (isset($_GET['grade_to_show'])) {
 	$grade_to_show = $_GET['grade_to_show'];
 }
 if (!in_array($grade_to_show, $grade_array)) { // sanity check
@@ -116,7 +116,7 @@ $date_sh = strftime('%A %d-%m-%Y', $date_tmp);
 echo "<strong>Welkom</strong>, ".$_SESSION['login']."<br />";
 echo "<strong>Het is vandaag: </strong><span style=\"font-style:italic\">$date_sh</span>";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"CurrAct\" value=\"Nu op water\" onclick=\"window.location.href='current_act.php'\" />";
-echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Schadeboek\" value=\"Schades\" onclick=\"window.location.href='schadeboek/index.php'\" />";
+echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Schadeboek\" value=\"Klachten\" onclick=\"window.location.href='schadeboek/index.php'\" />";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Cursussen\" value=\"Cursussen\" onclick=\"window.location.href='cursussen/index.php'\" />";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Examens\" value=\"Examens\" onclick=\"window.location.href='examens/index.php'\" />";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Documenten\" value=\"Documenten\" onclick=\"window.location.href='documenten/index.php'\" />";
@@ -128,7 +128,7 @@ echo "</div>";
 echo "<div style=\"padding-left:10px; padding-right:10px; background-color:#FFFF99; height:190px\">";
 echo "<div id='infobalkLinks'>";
 // Formulier voor selectie op vloot
-echo "<form name='form' action=\"$REQUEST_URI\" method=\"post\">";
+echo "<form name='form' action=\"". (isset($REQUEST_URI) ? $REQUEST_URI : ""). "\" method=\"post\">";
 echo "<strong>Pas het inschrijfblad aan:</strong><br />";
 echo "<table><tr>";
 echo "<td>Datum (dd-mm-jjjj):</td>";
