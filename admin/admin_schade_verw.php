@@ -20,7 +20,7 @@ if (!mysql_select_db($database, $link)) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title><? echo $systeemnaam; ?> - Werkstroom materiaalcommissie - Archiveren</title>
+    <title><? echo $systeemnaam; ?> - Werkstroom Materiaalcommissie - Archiveren</title>
     <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
 </head>
 <body>
@@ -31,9 +31,9 @@ if (!mysql_select_db($database, $link)) {
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
 $id = $_GET['id'];
-$mode = $_GET['mode'];
+if (isset($_GET['mode'])) $mode = $_GET['mode'];
 
-if ($mode) {
+if (isset($mode)) {
 	$source = "schades_oud";
 	$target = "schades";
 } else {
@@ -41,18 +41,18 @@ if ($mode) {
 	$target = "schades_oud";
 }
 
-$query = "INSERT INTO ".$target." SELECT * FROM ".$source." WHERE ID='$id';";
+$query = "INSERT INTO " . $target . " SELECT * FROM " . $source . " WHERE ID='$id';";
 $result = mysql_query($query);
 if (!$result) {
 	die("(De-)archiveren mislukt.". mysql_error());
 } else {
-	$query2 = "DELETE FROM ".$source." WHERE ID='$id';";
+	$query2 = "DELETE FROM " . $source . " WHERE ID='" . $id . "';";
 	$result2 = mysql_query($query2);
 	if (!$result2) {
 		die("De-)archiveren mislukt.". mysql_error());
 	} else {
 		echo "Schade succesvol ge(de)archiveerd.<br>";
-		echo "<a href='admin_schade.php?mode=$mode'>Terug naar de werkstroom&gt;&gt;</a></p>";
+		echo "<a href='admin_schade.php" . (isset($mode) ? "?mode=$mode" : "") . "'>Terug naar de werkstroom&gt;&gt;</a></p>";
 	}
 }
 

@@ -42,17 +42,26 @@ if (!isset($mode)) {
 } else {
 	echo "<p><a href='admin_schade.php'>Toon actuele schades&gt;&gt;</a><br>";
 }
-echo "<a href='admin_schade_export.php?mode=" . (isset($mode) ? $mode : "") . "'>Exporteer onderstaande als CSV-bestand&gt;&gt;</a></p>";
+echo "<a href='admin_schade_export.php?mode=" . (isset($mode) ? $mode : "") . "'>Exporteer onderstaande als Excel-bestand&gt;&gt;</a></p>";
 
 $source = "schades";
 if (isset($mode)) $source .= "_oud";
-$query = "SELECT ".$source.".ID AS ID, Datum, Datum_gew, ".$source.".Naam AS Meldernaam, Boot_ID, boten.Naam AS Bootnaam, Oms_lang, Actiehouder, Prio, Realisatie, Datum_gereed FROM ".$source." LEFT JOIN boten ON ".$source.".Boot_ID=boten.ID ORDER BY ".$sortby.";";
+$query = "SELECT ".$source.".ID AS ID, Datum, Datum_gew, ".$source.".Naam AS Meldernaam, Boot_ID, boten.Naam AS Bootnaam, Oms_lang, Actiehouder, Prio, Realisatie, Datum_gereed FROM ".$source." LEFT JOIN boten ON ".$source.".Boot_ID=boten.ID ORDER BY " . $sortby . (preg_match("/^Datum/", $sortby) ? " DESC" : "") . ";";
 $result = mysql_query($query);
 if (!$result) {
 	die("Ophalen van schades mislukt.". mysql_error());
 }
 echo "<br><table class=\"basis\" border=\"1\" cellpadding=\"6\" cellspacing=\"0\" bordercolor=\"#AAB8D5\">";
-echo "<tr><th><div style=\"text-align:left\"><a href='admin_schade.php?sortby=Datum'>Melddatum</a></div></th><th><div style=\"text-align:left\"><a href='admin_schade.php?sortby=Datum_gew'>Laatst gew.</a></div></th><th><div style=\"text-align:left\">Naam melder</div></th><th><div style=\"text-align:left\"><a href='admin_schade.php?sortby=boten.Naam'>Boot/ergometer</a></div></th><th><div style=\"text-align:left\">Omschrijving</div></th><th><div style=\"text-align:left\">Actiehouder</div></th><th><div style=\"text-align:left\"><a href='admin_schade.php?sortby=Prio'>Prio</a></div></th><th><div style=\"text-align:left\"><a href='admin_schade.php?sortby=Realisatie'>Real. (%)</a></div></th><th><div style=\"text-align:left\">Gereed</div></th><th><div style=\"text-align:left\">&nbsp;</div></th>";
+echo "<tr><th><div style=\"text-align:left\"><a href='admin_schade.php?sortby=Datum" . (isset($mode) ? ("&mode=" . $mode) : "") . "'>Melddatum</a></div></th>";
+echo "<th><div style=\"text-align:left\"><a href='admin_schade.php?sortby=Datum_gew" . (isset($mode) ? ("&mode=" . $mode) : "") . "'>Laatst gew.</a></div></th>";
+echo "<th><div style=\"text-align:left\">Naam melder</div></th>";
+echo "<th><div style=\"text-align:left\"><a href='admin_schade.php?sortby=boten.Naam" . (isset($mode) ? ("&mode=" . $mode) : "") . "'>Boot/ergometer</a></div></th>";
+echo "<th><div style=\"text-align:left\">Omschrijving</div></th>";
+echo "<th><div style=\"text-align:left\">Actiehouder</div></th>";
+echo "<th><div style=\"text-align:left\"><a href='admin_schade.php?sortby=Prio" . (isset($mode) ? ("&mode=" . $mode) : "") . "'>Prio</a></div></th>";
+echo "<th><div style=\"text-align:left\"><a href='admin_schade.php?sortby=Realisatie" . (isset($mode) ? ("&mode=" . $mode) : "") . "'>Real. (%)</a></div></th>";
+echo "<th><div style=\"text-align:left\">Gereed</div></th>";
+echo "<th><div style=\"text-align:left\">&nbsp;</div></th>";
 if (!isset($mode)) echo "<th><div style=\"text-align:left\">&nbsp;</div></th>";
 echo "</tr>";
 $c = 0;
