@@ -68,7 +68,7 @@ if (isset($_POST['insert'])){
 }
 
 // Formulier
-if ((!isset($_POST['insert']) && !isset($_POST['delete']) && !isset($_POST['cancel'])) || isset($fail)) {
+if ((!isset($_POST['insert']) && !isset($_POST['delete']) && !isset($_POST['cancel'])) || (isset($fail) && $fail == true)) {
 	echo "<p><b>Klacht/schademelding invoeren</b></p>";
 	echo "<form name='form' action=\"" . (isset($REQUEST_URI) ? $REQUEST_URI : "") . "\" method=\"post\">";
 	echo "<table>";

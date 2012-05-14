@@ -116,7 +116,7 @@ $date_sh = strftime('%A %d-%m-%Y', $date_tmp);
 echo "<strong>Welkom</strong>, ".$_SESSION['login']."<br />";
 echo "<strong>Het is vandaag: </strong><span style=\"font-style:italic\">$date_sh</span>";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"CurrAct\" value=\"Nu op water\" onclick=\"window.location.href='current_act.php'\" />";
-echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Schadeboek\" value=\"Klachten\" onclick=\"window.location.href='schadeboek/index.php'\" />";
+echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Schadeboek\" value=\"Schades en klachten\" onclick=\"window.location.href='schadeboek/index.php'\" />";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Cursussen\" value=\"Cursussen\" onclick=\"window.location.href='cursussen/index.php'\" />";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Examens\" value=\"Examens\" onclick=\"window.location.href='examens/index.php'\" />";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Documenten\" value=\"Documenten\" onclick=\"window.location.href='documenten/index.php'\" />";

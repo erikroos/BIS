@@ -20,7 +20,7 @@ if (!mysql_select_db($database, $link)) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title>BotenInschrijfSysteem - Klachtenboek Boten - Nieuwe klacht/schademelding</title>
+    <title>BotenInschrijfSysteem - Schadeboek Boten - Nieuwe schademelding</title>
     <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
 </head>
 <body>
@@ -36,8 +36,8 @@ if (!isset($_POST['cancel']) && !isset($_POST['insert'])) {
 if (isset($_POST['cancel'])){
 	unset($_POST['name'], $_POST['boat_id'], $_POST['note'], $name, $boat_id, $note);
 	$fail = FALSE;
-	echo "<p>De klacht zal niet worden gemeld.<br>";
-	echo "<a href='index_boten.php'>Terug naar het klachtenoverzicht voor de boten&gt;&gt;</a></p>";
+	echo "<p>De schade zal niet worden gemeld.<br>";
+	echo "<a href='index_boten.php'>Terug naar het schadeoverzicht voor de boten&gt;&gt;</a></p>";
 }
 
 if (isset($_POST['insert'])){
@@ -68,19 +68,19 @@ if (isset($_POST['insert'])){
 			die("Invoeren klacht mislukt.". mysql_error());
 		} else {
 		    // mail aan matcom
-			$message = $name." heeft zojuist een klacht gedaan betreffende '".$boat."'.<br>";
-			SendEmail("materiaal@hunze.nl", "Nieuwe klacht/schademelding", $message);
+			$message = $name." heeft zojuist een schade gemeld betreffende '".$boat."'.<br>";
+			SendEmail("materiaal@hunze.nl", "Nieuwe schademelding", $message);
 			// feedback op scherm
 			echo "<p>Hartelijk dank voor uw melding! De klacht is doorgegeven aan de Materiaalcommissie.<br>";
 			echo "Mocht u de melding nog nader willen toelichten of willen wijzigen, neemt u dan contact op via <a href='mailto:materiaal@hunze.nl'>e-mail</a>.<br>";
-			echo "<a href='index_boten.php'>Terug naar het klachtenoverzicht voor de boten&gt;&gt;</a></p>";
+			echo "<a href='index_boten.php'>Terug naar het schadeoverzicht voor de boten&gt;&gt;</a></p>";
 		}
 	}
 }
 
 // Formulier
-if ((!isset($_POST['insert']) && !isset($_POST['delete']) && !isset($_POST['cancel'])) || isset($fail)) {
-	echo "<p><b>Klacht/schademelding invoeren</b></p>";
+if ((!isset($_POST['insert']) && !isset($_POST['delete']) && !isset($_POST['cancel'])) || (isset($fail) && $fail == true)) {
+	echo "<p><b>Schademelding invoeren</b></p>";
 	echo "<form name='form' action=\"" . (isset($REQUEST_URI) ? $REQUEST_URI : "") . "\" method=\"post\">";
 	echo "<table>";
 	
