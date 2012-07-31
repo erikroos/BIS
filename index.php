@@ -17,6 +17,7 @@ if (!mysql_select_db($database, $bisdblink)) {
 	echo "Fout: database niet gevonden.<br>";
 	exit();
 }
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -108,35 +109,33 @@ if (!in_array($grade_to_show, $grade_array)) { // sanity check
 	$grade_to_show = $standaardgraad;
 }
 
-$fail = FALSE;
-
 echo "<div style=\"padding-left:15px; padding-right:15px; padding-top: 5px; padding-bottom: 5px; background-color:#FFFF99\">";
 $date_tmp = strtotime($today_db);
 $date_sh = strftime('%A %d-%m-%Y', $date_tmp);
-echo "<strong>Welkom</strong>, ".$_SESSION['login']."<br />";
-echo "<strong>Het is vandaag: </strong><span style=\"font-style:italic\">$date_sh</span>";
+echo "<strong>Welkom</strong>, " . $_SESSION['login'] . "<br />";
+echo "<strong>Het is vandaag: </strong><span style=\"font-style:italic\">" . $date_sh . "</span>";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"CurrAct\" value=\"Nu op water\" onclick=\"window.location.href='current_act.php'\" />";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Schadeboek\" value=\"Schades en klachten\" onclick=\"window.location.href='schadeboek/index.php'\" />";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Cursussen\" value=\"Cursussen\" onclick=\"window.location.href='cursussen/index.php'\" />";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Examens\" value=\"Examens\" onclick=\"window.location.href='examens/index.php'\" />";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Documenten\" value=\"Documenten\" onclick=\"window.location.href='documenten/index.php'\" />";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Info\" value=\"Info\" onclick=\"window.location.href='bis_info.php'\" />";
-echo "&nbsp;&copy;2008-".$theyear." Erik Roos&nbsp;<a href='mailto:".$mailadres."'>".$mailadres."</a>";
+echo "&nbsp;&copy;2008-" . $theyear . " Erik Roos&nbsp;<a href='mailto:" . $mailadres . "'>" . $mailadres . "</a>";
 echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Uitloggen\" value=\"UIT\" onclick=\"window.location.href='bis_logout.php'\" />";
 echo "</div>";
-
+// Yellow div surrounding top bar items
 echo "<div style=\"padding-left:10px; padding-right:10px; background-color:#FFFF99; height:190px\">";
-echo "<div id='infobalkLinks'>";
 // Formulier voor selectie op vloot
-echo "<form name='form' action=\"". (isset($REQUEST_URI) ? $REQUEST_URI : ""). "\" method=\"post\">";
+echo "<div id='infobalkLinks'>";
+echo "<form name='adjust'>";
 echo "<strong>Pas het inschrijfblad aan:</strong><br />";
 echo "<table><tr>";
 echo "<td>Datum (dd-mm-jjjj):</td>";
-echo "<td><input type='text' name='date_to_show' size='8' maxlength='10' value='$date_to_show' onchange='ChangeInfo();' id='date_to_show' />";
-echo "&nbsp;<a href=\"javascript:show_calendar('form.date_to_show');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='res/kalender.gif' width='19' height='17' border='0' alt='Kalender' /></a><br />";
-echo "<input style=\"font-size:9px\" type=\"button\" name=\"change_date\" value=\"&lt;\" onclick=\"ChangeDate(-1); ChangeInfo();\" />";
-echo "<input style=\"font-size:9px\" type=\"button\" name=\"change_date\" value=\"&gt;\" onclick=\"ChangeDate(1); ChangeInfo();\" />";
-echo "<input style=\"font-size:9px\" type=\"button\" name=\"reset_date\" value=\"vandaag\" onclick=\"ResetDate(); ChangeInfo();\" />";
+echo "<td><input type='text' name='date_to_show' size='8' maxlength='10' value='" . $date_to_show . "' onchange='ChangeInfo();' id='date_to_show' />";
+echo "&nbsp;<a href=\"javascript:show_calendar('adjust.date_to_show');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='res/kalender.gif' width='19' height='17' border='0' alt='Kalender' /></a><br />";
+echo "<input style=\"font-size:9px\" type=\"button\" name=\"change_date\" value=\"&lt;\" onclick=\"changeDate(-1); ChangeInfo();\" />";
+echo "<input style=\"font-size:9px\" type=\"button\" name=\"change_date\" value=\"&gt;\" onclick=\"changeDate(1); ChangeInfo();\" />";
+echo "<input style=\"font-size:9px\" type=\"button\" name=\"reset_date\" value=\"vandaag\" onclick=\"resetDate(); ChangeInfo();\" />";
 echo "</td></tr>";
 echo "<tr>";
 echo "<td>Vanaf tijdstip:</td>";
@@ -234,8 +233,14 @@ echo "<div id='ScheduleInfo' style='clear:left'>";
 require_once("./show_schedule.php");
 echo "</div>";
 
+// Divs for reservation "pop-up"
+echo "<div id='overlay'></div>";
+echo "<div id='inschrijving'></div>";
+
 ?>
 
 <script type="text/javascript" src="scripts/dates_and_ajax.js"></script>
+<script type="text/javascript" src="scripts/ajax_inschrijving.js"></script>
+
 </body>
 </html>

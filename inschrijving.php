@@ -15,20 +15,9 @@ setlocale(LC_TIME, 'nl_NL');
 
 $bisdblink = mysql_connect($database_host, $database_user, $database_pass);
 if (!mysql_select_db($database, $bisdblink)) {
-	echo "Fout: database niet gevonden.<br>";
+	echo "<p>Fout: database niet gevonden.</p>";
 	exit();
 }
-?>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" >
-<head>
-    <title><? echo $systeemnaam; ?> - inschrijving maken/bewerken</title>
-    <link type="text/css" href="<? echo $csslink; ?>" rel="stylesheet" />
-	<script type="text/javascript" src="scripts/kalender.js"></script>
-</head>
-<body>
-<?php
 
 $NR_OF_CONCEPTS = 6; // LET OP: aanpassen als het aantal Concept-ergo's verandert! (ivm blokinschrijving)
 $fail_msg = "";
@@ -40,7 +29,7 @@ $grade_to_show = $_GET['grade_to_show'];
 
 $id = $_GET['id']; // 0 indien nieuwe inschrijving
 if ($id < 0 || !is_numeric($id)) { // check op ID
-	echo "Er is iets misgegaan.";
+	echo "<p>Er is iets misgegaan.";
 	echo "<br /><a href=\"./index.php\">Ga terug naar BIS&gt;&gt;</a></p>";
 	exit();
 }
@@ -96,12 +85,12 @@ if ($id > 0) { // bestaande/gelijksoortige inschrijving: haal de var'en op t.b.v
 			}
 			$spits = $row['Spits'];
 		} else {
-			echo "Deze inschrijving bestaat niet.";
+			echo "<p>Deze inschrijving bestaat niet.";
 			echo "<br /><a href=\"./index.php\">Ga terug naar BIS&gt;&gt;</a></p>";
 			exit();
 		}
 	} else {
-		echo "De inschrijving kan niet gevonden worden.";
+		echo "<p>De inschrijving kan niet gevonden worden.";
 		echo "<br /><a href=\"./index.php\">Ga terug naar BIS&gt;&gt;</a></p>";
 		exit();
 	}
@@ -129,13 +118,13 @@ if ($id == 0) { // nieuwe inschrijving: haal de var'en op t.b.v. show_availabili
 
 // sanity check op boot
 if (!isset($again) && (!is_numeric($boat_id) || $boat_id < 0)) {
-	echo "Deze boot bestaat niet.";
+	echo "<p>Deze boot bestaat niet.";
 	echo "<br /><a href=\"./index.php\">Ga terug naar BIS&gt;&gt;</a></p>";
 	exit();
 }
 // sanity check op datum
 if (!CheckTheDate($date)) {
-	echo "Datum ($date) klopt niet.";
+	echo "<p>Datum ($date) klopt niet.";
 	echo "<br /><a href=\"./index.php\">Ga terug naar BIS&gt;&gt;</a></p>";
 	exit();
 } else {
@@ -192,44 +181,14 @@ echo "</div>";
 
 echo "<div style=\"margin-left:10px; margin-right:10px\">";
 
-// CONTROLE EN VERWERKING VAN INSCHRIJVING
-
-if (isset($_POST['cancel'])){
-	echo "<p>De inschrijving zal niet worden aangemaakt of gewijzigd.<br />";
-	echo "<a href=\"./index.php?date_to_show=$date&amp;start_time_to_show=$start_time&amp;cat_to_show=$cat_to_show&amp;grade_to_show=$grade_to_show\">Klik hier om terug te gaan naar het inschrijfblad&gt;&gt;</a></p>";
-}
-	
-if (isset($_POST['delete'])){
-	echo deleteReservation($database_host, $database_user, $database_pass, $database, $opzoektabel, $id);
-	echo "<br /><a href=\"./index.php?date_to_show=$date&amp;start_time_to_show=$start_time&amp;cat_to_show=$cat_to_show&amp;grade_to_show=$grade_to_show\">Klik hier om terug te gaan naar het inschrijfblad&gt;&gt;</a></p>";
-}
-	
-if (isset($_POST['submit'])){
-	$boat_id = $_POST['boat_id'];
-	$pname = $_POST['pname'];
-	$name = $_POST['name'];
-	$email = $_POST['email'];
-	$mpb = $_POST['mpb'];
-	$date = $_POST['date'];
-	$start_time_hrs = $_POST['start_time_hrs'];
-	$start_time_mins = $_POST['start_time_mins'];
-	$end_time_hrs = $_POST['end_time_hrs'];
-	$end_time_mins = $_POST['end_time_mins'];
-	$ergo_lo = $_POST['ergo_lo'];
-	if ($ergo_lo == "") $ergo_lo = 0;
-	$ergo_hi = $_POST['ergo_hi'];
-	if ($ergo_hi == "") $ergo_hi = 0;
-	echo makeReservation($database_host, $database_user, $database_pass, $database, $opzoektabel, $fail_msg, false, $id, $again, $boat_id, $pname, $name, $email, $mpb, $date, $start_time_hrs, $start_time_mins, $end_time_hrs, $end_time_mins, $ergo_lo, $ergo_hi);
-}
-
-// reconnect to DB
+// Reconnect to DB
 $bisdblink = mysql_connect($database_host, $database_user, $database_pass);
 if (!mysql_select_db($database, $bisdblink)) {
-	echo "Fout: database niet gevonden.<br>";
+	echo "<p>Fout: database niet gevonden.</p>";
 	exit();
 }
 
-// HET FORMULIER
+// The form (evaluation happens via AJAX)
 if ((!isset($_POST['submit']) && !isset($_POST['delete']) && !isset($_POST['cancel'])) || $fail_msg != "") {
 	echo "<h1>Inschrijving ";
 	if ($id && !$again) {
@@ -246,11 +205,11 @@ if ((!isset($_POST['submit']) && !isset($_POST['delete']) && !isset($_POST['canc
 		echo "<p><span class=\"update\">Uw inschrijving bevat de volgende fout(en):</span><br />";
 		echo "<em>$fail_msg</em></p>";
 	}
-	echo "<form name='form' action=\"". (isset($REQUEST_URI) ? $REQUEST_URI : "") . "\" method=\"post\">";
+	echo "<form name='resdetails'>";
 	echo "<table><tr>";
 	
 	// ID, tbv AJAX
-	echo "<td style=\"display:none\"><input type=\"hidden\" name=\"id\" id=\"id\" value=\"$id\" /></td></tr><tr>";
+	echo "<td style=\"display:none\"><input type=\"hidden\" name=\"id\" id=\"id\" value=\"" . $id . "\" /></td></tr><tr>";
 	
 	// Ergo-blokinschrijving, alleen bij een nieuwe inschrijving van Concepts
 	if (($id == 0 || $again) && substr($boat, 0, 7) == "Concept") {
@@ -279,29 +238,32 @@ if ((!isset($_POST['submit']) && !isset($_POST['delete']) && !isset($_POST['canc
 	}
 	
 	// Ingeval van blokinschrijving Concepts, geen mogelijkheid om andere boot te kiezen
-	if (substr($boat, 0, 7) == "Concept") $hide = " style=\"display:none\"";
+	if (substr($boat, 0, 7) == "Concept") {
+		$hide = " style=\"display:none\"";
+	}
+	// Boat
 	echo "<td" . (isset($hide) ? $hide : "") . ">Boot/ergometer:</td>";
-	echo "<td". (isset($hide) ? $hide : "") . "><select" . (isset($hide) ? $hide : "") . " name=\"boat_id\" onchange='ChangeInfo();' id=\"boat_id\">";
+	echo "<td". (isset($hide) ? $hide : "") . "><select" . (isset($hide) ? $hide : "") . " name=\"boat_id\" onchange='changeInfoIns();' id=\"boat_id\">";
 	echo "<option value=0 ";
 	if ($boat_id == 0) echo "selected=\"selected\"";
 	echo "></option>";
-	$query = "SELECT boten.ID AS ID, Naam, Gewicht, Type, boten.Roeigraad FROM boten JOIN roeigraden ON boten.Roeigraad=roeigraden.Roeigraad WHERE Datum_eind IS NULL ORDER BY Type, roeigraden.ID, Naam;";
+	$query = "SELECT boten.ID AS ID, Naam, Gewicht, `Type`, boten.Roeigraad FROM boten JOIN roeigraden ON boten.Roeigraad=roeigraden.Roeigraad WHERE Datum_eind IS NULL ORDER BY `Type`, roeigraden.ID, Naam;";
 	$boats_result = mysql_query($query);
 	if (!$boats_result) {
 		die("Ophalen van vlootinformatie mislukt.". mysql_error());
 	} else {
 		$t = 0;
 		while ($row = mysql_fetch_assoc($boats_result)) {
-			$curr_boat_id = $row[ID];
-			$curr_boat = $row[Naam];
-			$curr_weight = $row[Gewicht];
-			$curr_type = $row[Type];
+			$curr_boat_id = $row['ID'];
+			$curr_boat = $row['Naam'];
+			$curr_weight = $row['Gewicht'];
+			$curr_type = $row['Type'];
 			if ($curr_type != $curr_type_mem) {
 				if ($t) echo "</optgroup>";
 				echo "<optgroup label=\"".$curr_type."\">";
 			}
 			$curr_type_mem = $curr_type;
-			$curr_grade = $row[Roeigraad];
+			$curr_grade = $row['Roeigraad'];
 			echo "<option value=\"".$curr_boat_id."\" ";
 			if ($boat_id == $curr_boat_id) echo "selected=\"selected\"";
 			echo ">".$curr_boat." (".$curr_weight." kg, ".$curr_grade.")</option>";
@@ -314,17 +276,17 @@ if ((!isset($_POST['submit']) && !isset($_POST['delete']) && !isset($_POST['canc
 	
 	// persoonsnaam
 	echo "<td>Voor- en achternaam:</td>";
-	echo "<td><input type=\"text\" name=\"pname\" value=\"" . (isset($pname) ? $pname : "") . "\" size=\"30\" /></td>";
+	echo "<td><input type=\"text\" id=\"pname\" name=\"pname\" value=\"" . (isset($pname) ? $pname : "") . "\" size=\"30\" /></td>";
 	echo "</tr><tr>";
 	
 	// ploegnaam
 	echo "<td>Ploegnaam/omschrijving (optioneel):</td>";
-	echo "<td><input type=\"text\" name=\"name\" value=\"" . (isset($name) ? $name : "") . "\" size=\"30\" /></td>";
+	echo "<td><input type=\"text\" id=\"name\" name=\"name\" value=\"" . (isset($name) ? $name : "") . "\" size=\"30\" /></td>";
 	echo "</tr><tr>";
 	
 	// e-mailadres
 	echo "<td>E-mailadres (optioneel):</td>";
-	echo "<td><input type=\"text\" name=\"email\" value=\"" . (isset($email) ? $email : "") . "\" size=\"30\" /></td>";
+	echo "<td><input type=\"text\" id=\"email\" name=\"email\" value=\"" . (isset($email) ? $email : "") . "\" size=\"30\" /></td>";
 	echo "</tr><tr>";
 	
 	// mpb
@@ -342,20 +304,20 @@ if ((!isset($_POST['submit']) && !isset($_POST['delete']) && !isset($_POST['canc
 	
 	// datum
 	echo "<td>Datum (dd-mm-jjjj):</td>";
-	echo "<td><input type='text' onchange='ChangeInfo();' name='date' id='date' size='8' maxlength='10' value='$date' />";
-	echo "&nbsp;<a href=\"javascript:show_calendar('form.date');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='res/kalender.gif' alt='kalender' width='19' height='17' border='0' /></a></td>";
+	echo "<td><input type='text' onchange='changeInfoIns();' name='date' id='date' size='8' maxlength='10' value='" . $date . "' />";
+	echo "&nbsp;<a href=\"javascript:show_calendar('resdetails.date');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='res/kalender.gif' alt='kalender' width='19' height='17' border='0' /></a></td>";
 	echo "</tr><tr>";
 	
 	// begintijd
 	echo "<td>Begintijd</td>";
-	echo "<td><select name='start_time_hrs' onchange='ChangeInfo();' id='start_time_hrs'>";
+	echo "<td><select name='start_time_hrs' onchange='changeInfoIns();' id='start_time_hrs'>";
 		for ($t=6; $t<24; $t++) {
 			echo"<option value=\"".$t."\" ";
 			if ($start_time_hrs == $t) echo "selected=\"selected\"";
 			echo ">".$t."</option>";
 		}
 	echo "</select>";
-	echo "&nbsp;<select name='start_time_mins' onchange='ChangeInfo();' id='start_time_mins'>";
+	echo "&nbsp;<select name='start_time_mins' onchange='changeInfoIns();' id='start_time_mins'>";
 		echo "<option value=\"00\" ";
 		if ($start_time_mins == 0) echo "selected=\"selected\"";
 		echo ">00</option>";
@@ -373,14 +335,14 @@ if ((!isset($_POST['submit']) && !isset($_POST['delete']) && !isset($_POST['canc
 	
 	// eindtijd
 	echo "<td>Eindtijd:</td>";
-	echo "<td><select name='end_time_hrs' onchange='ChangeInfo();' id='end_time_hrs'>";
+	echo "<td><select name='end_time_hrs' onchange='changeInfoIns();' id='end_time_hrs'>";
 		for ($t=6; $t<24; $t++) {
 			echo"<option value=\"".$t."\" ";
 			if ($end_time_hrs == $t) echo "selected=\"selected\"";
 			echo ">".$t."</option>";
 		}
 	echo "</select>";
-	echo "&nbsp;<select name='end_time_mins' onchange='ChangeInfo();' id='end_time_mins'>";
+	echo "&nbsp;<select name='end_time_mins' onchange='changeInfoIns();' id='end_time_mins'>";
 		echo "<option value=\"00\" ";
 		if ($end_time_mins == 0) echo "selected=\"selected\"";
 		echo ">00</option>";
@@ -398,7 +360,7 @@ if ((!isset($_POST['submit']) && !isset($_POST['delete']) && !isset($_POST['canc
 	echo "</table>";
 	
 	// knoppen
-	echo "<p><input type=\"submit\" name=\"submit\" value=\"";
+	echo "<p><input type=\"button\" value=\"";
 	if ($id && !$again) {
 		echo "Opslaan";
 	} else {
@@ -408,20 +370,16 @@ if ((!isset($_POST['submit']) && !isset($_POST['delete']) && !isset($_POST['canc
 			echo "Inschrijven";
 		}
 	}
-	echo "\" /> ";
+	echo "\" onclick=\"makeRes(" . $id . ", ". (isset($again) ? $again : 0) . ", '" .
+		 $start_time . "', '" . $cat_to_show . "', '" . $grade_to_show . "');\" /> ";
 	if ($id) {
-		echo "<input type=\"submit\" name=\"delete\" value=\"Verwijderen\" /> ";
+		echo "<input type=\"button\" value=\"Verwijderen\" onclick=\"delRes(" . $id . ", '" . $start_time . 
+			 "', '" . $cat_to_show . "', '" . $grade_to_show . "');\" /> ";
 	}
-	echo "<input type=\"submit\" name=\"cancel\" value=\"Annuleren\" /></p>";
+	echo "<input type=\"button\" value=\"Annuleren\" onclick=\"window.location.href='index.php?date_to_show=" . $date . 
+		 "&start_time_to_show=" . $start_time . "&cat_to_show=" . $cat_to_show . "&grade_to_show=" . $grade_to_show . "'\" /></p>";
 	echo "</form>";
 }
 
+echo "</div>";
 mysql_close($bisdblink);
-
-?>
-</div>
-
-<script type="text/javascript" src="scripts/ajax_inschrijving.js"></script>
-
-</body>
-</html>
