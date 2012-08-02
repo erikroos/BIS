@@ -126,7 +126,7 @@ while ($row = mysql_fetch_assoc($boats_result)) {
 	}
 	echo "<tr><th ";
 	if ($available[$c] && InRange($date_to_show, 10)) {
-		echo "onclick=\"window.location.href='inschrijving.php?id=0&amp;boat_id=$boat_ids_array[$c]&amp;date=$date_to_show&amp;cat_to_show=$cat_to_show&amp;grade_to_show=$grade_to_show&amp;time_to_show=$start_time_to_show'\" onmouseover=\"this.style.backgroundColor='#FFFFFF';\" onmouseout=\"this.style.backgroundColor='$bgcolor'\" bgcolor=\"$bgcolor\">";
+		echo "onclick=\"showInschrijving(0, " . $boat_ids_array[$c] . ", '" . $date_to_show . "', '" . $cat_to_show . "', '" . $grade_to_show . "', '" . $start_time_to_show . "');\"  onmouseover=\"this.style.backgroundColor='#FFFFFF';\" onmouseout=\"this.style.backgroundColor='" . $bgcolor . "'\" bgcolor=\"" . $bgcolor . "\">";
 	} else {
 		echo "bgcolor=\"#999999\">";
 	}
@@ -169,7 +169,7 @@ while (isset($boats_array[$boatnr])) {
 		// boot uit de vaart: hele regel grijs
 		$span_size = 72 - $latest_end_time_blocks;
 		$info_to_show_sh = substr($reason[$boatnr], 0, (2 * $span_size) - 1);
-		echo "<td colspan=\"$span_size\" align=\"center\" bgcolor=\"#999999\" style=\"border-left: solid 2px #aaaaaa\"><div style=\"overflow:hidden\" align=\"center\" onmouseover=\"Tip('$reason[$boatnr]')\">$info_to_show_sh</div></td>";
+		echo "<td colspan=\"" . $span_size . "\" align=\"center\" bgcolor=\"#999999\" style=\"border-left: solid 2px #aaaaaa\"><div style=\"overflow:hidden\" align=\"center\" onmouseover=\"Tip('$reason[$boatnr]')\">$info_to_show_sh</div></td>";
 	} else {
 		$opzoektabel_tmp = $opzoektabel;
 		if (strtotime($date_to_show_db) - strtotime($today_db) < 0) $opzoektabel_tmp .= "_oud";
@@ -204,7 +204,7 @@ while (isset($boats_array[$boatnr])) {
 						$t_time = BlocksToTime($t);
 						echo "<td bgcolor=\"#FFFFFF\"";
 						if (InRange($date_to_show, 10)) {
-							echo " onclick=\"window.location.href='inschrijving.php?id=0&amp;boat_id=$boat_ids_array[$boatnr]&amp;date=$date_to_show&amp;cat_to_show=$cat_to_show&amp;grade_to_show=$grade_to_show&amp;time_to_show=$t_time'\"";
+							echo " onclick=\"showInschrijving(0, " . $boat_ids_array[$boatnr] . ", '" . $date_to_show . "', '" . $cat_to_show . "', '" . $grade_to_show . "', '" . $t_time . "');\"";
 						}
 						if ($t == $start_block || ($t / 4) == floor($t / 4)) {
 							echo " style=\"border-left: solid 2px #aaaaaa\"";
@@ -228,7 +228,7 @@ while (isset($boats_array[$boatnr])) {
 					$info_to_show = addslashes($info_to_show);
 					// Geef blok weer in geel/oranje en klikbaar (beschikbaar) of grijs (niet meer editbaar)
 					if ($available_ins && (($db_spits == 0 && InRange($date_to_show, 10)) || ($db_spits > 0 && InRange($date_to_show, 3)))) {
-						echo " onclick=\"window.location.href='inschrijving.php?id=$db_id&amp;cat_to_show=$cat_to_show&amp;grade_to_show=$grade_to_show'\"";
+						echo " onclick=\"showInschrijving(" . $db_id . ", 0, '', '" . $cat_to_show . "', '" . $grade_to_show . "', '');\"";
 						if ($db_spits > 0) {
 							echo " bgcolor=\"#FF6600\"";
 							$info_to_show .= " - Spitsblok nog te bevestigen";
@@ -238,7 +238,7 @@ while (isset($boats_array[$boatnr])) {
 					} else {
 						echo " bgcolor=\"#999999\"";
 					}
-					echo " onmouseover=\"Tip('$info_to_show')\" colspan=\"$span_size\"><div style=\"overflow:hidden\" align=\"center\">$info_to_show_sh</div></td>";
+					echo " onmouseover=\"Tip('" . $info_to_show . "')\" colspan=\"". $span_size . "\"><div style=\"overflow:hidden\" align=\"center\">" . $info_to_show_sh . "</div></td>";
 					// volgende witblok vanaf eindtijd huidige inschrijving!
 					$latest_end_time_blocks = $db_end_time_blocks;
 				} // end while (loop door alle inschrijvingen van de huidige boot)
@@ -249,7 +249,7 @@ while (isset($boats_array[$boatnr])) {
 			$t_time = BlocksToTime($t);
 			echo "<td bgcolor=\"#FFFFFF\"";
 			if (InRange($date_to_show, 10)) {
-				echo " onclick=\"window.location.href='inschrijving.php?id=0&amp;boat_id=$boat_ids_array[$boatnr]&amp;date=$date_to_show&amp;cat_to_show=$cat_to_show&amp;grade_to_show=$grade_to_show&amp;time_to_show=$t_time'\"";
+				echo " onclick=\"showInschrijving(0, " . $boat_ids_array[$boatnr] . ", '" . $date_to_show . "', '" . $cat_to_show . "', '" . $grade_to_show . "', '" . $t_time . "');\"";
 			}
 			if ($t == $start_block || ($t / 4) == floor($t / 4)) {
 				echo " style=\"border-left: solid 2px #aaaaaa\"";
