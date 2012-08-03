@@ -10,8 +10,7 @@ include_once("include_globalVars.php");
 include_once("include_helperMethods.php");
 if ($toonweer) include_once("xmlnews.php");
 
-//setlocale(LC_TIME, 'nl_NL');
-setlocale(LC_ALL, null); // werkt voor Xampp; ook op de server?? -> testen en dan uitrollen naar andere pagina's
+setlocale(LC_TIME, 'nl_NL');
 
 $bisdblink = mysql_connect($database_host, $database_user, $database_pass);
 if (!mysql_select_db($database, $bisdblink)) {
