@@ -24,9 +24,6 @@ if (isset($_GET['del'])){
 	$cat_to_show = $_GET['cat_to_show'];
 	$grade_to_show = $_GET['grade_to_show'];
 	echo deleteReservation($database_host, $database_user, $database_pass, $database, $opzoektabel, $id);
-	echo "<br /><a href=\"./index.php?date_to_show=" . $date . "&amp;start_time_to_show=" . $start_time . 
-		 "&amp;cat_to_show=" . $cat_to_show . "&amp;grade_to_show=" . $grade_to_show .
-		 "\">Klik hier om terug te gaan naar het inschrijfblad&gt;&gt;</a></p>";
 }
 	
 if (isset($_GET['make'])){

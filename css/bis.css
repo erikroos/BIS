@@ -1,3 +1,41 @@
+/*
+ * BIS specific style sheet
+ */
+ 
+.mainscreen {
+	padding-left:15px;
+	padding-right:15px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	background-color:#FFFF99;
+}
+
+.scrollTable table
+{
+	border-collapse: collapse;
+}
+.scrollTable table td, .scrollTable table th
+{
+	vertical-align: top;
+	text-align: left;
+	margin: 0px;
+	padding-left: 1px;
+	padding-right: 1px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	white-space: nowrap;
+	border-top: solid 1px #aaaaaa;
+	border-bottom: solid 1px #aaaaaa;
+	border-left: solid 1px #aaaaaa;
+	border-right: solid 1px #aaaaaa;
+}
+
+.containerDiv {
+	margin-left: 10px;
+	margin-right: 10px;
+	width: 600px;
+}
+
 #infobalkLinks {
 	position:relative;
 	float:left;
@@ -45,4 +83,83 @@
 	-moz-opacity: 0.6;
 	opacity:.60;
 	filter: alpha(opacity=60);
+}
+
+.italic {
+	font-style:italic;
+}
+
+.leftrightmargins {
+	margin-left:10px;
+	margin-right:10px;
+}
+
+.topbar {
+	margin-left:0px;
+	margin-right:0px;
+	overflow:hidden; /* So it will contain the header and closediv */
+	background-color:#FFFF99;
+}
+
+#topbar_mainscreen {
+	padding-left:10px;
+	padding-right:10px; 
+	background-color:#FFFF99;
+	height:190px;
+}
+
+.header {
+	margin-left:10px;
+	float:left;
+	background-color:#FFFF99;
+}
+
+.closediv {
+	margin-right:10px;
+	float:right;
+	background-color:#FFFF99;
+}
+
+#resscreen {
+	clear:both;
+}
+
+.successmsg {
+	clear:both;
+	margin-top:0px;
+	margin-left:0px;
+	margin-bottom:0px;
+	margin-top:0px;
+	padding-top:10px;
+	padding-left:10px;
+	padding-bottom:10px;
+	padding-right:10px;
+	background-color:#AAFFAA; /* greenish */
+}
+
+.failmsg {
+	clear:both;
+	margin-top:0px;
+	margin-left:0px;
+	margin-bottom:0px;
+	margin-top:0px;
+	padding-top:10px;
+	padding-left:10px;
+	padding-bottom:10px;
+	padding-right:10px;
+	background-color:#FFC1C1; /* reddish */
+}
+
+/* BUTTONS */
+
+.bisbtn {
+	/* TODO */
+}
+
+.smalltextbtn {
+	font-size:10px;
+}
+
+.smallertextbtn {
+	font-size:9px;
 }

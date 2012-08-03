@@ -1,3 +1,7 @@
+/*
+ * Old Hunze site style sheet (www.hunze.nl/oud)
+ */
+
 .basis {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 11px;
@@ -224,30 +228,4 @@ em {
 	color: #4B6599;
 	text-decoration: none;
 
-}
-
-.scrollTable table
-{
-	border-collapse: collapse;
-}
-.scrollTable table td, .scrollTable table th
-{
-	vertical-align: top;
-	text-align: left;
-	margin: 0px;
-	padding-left: 1px;
-	padding-right: 1px;
-	padding-top: 1px;
-	padding-bottom: 1px;
-	white-space: nowrap;
-	border-top: solid 1px #aaaaaa;
-	border-bottom: solid 1px #aaaaaa;
-	border-left: solid 1px #aaaaaa;
-	border-right: solid 1px #aaaaaa;
-}
-
-.containerDiv {
-	margin-left: 10px;
-	margin-right: 10px;
-	width: 600px;
 }

@@ -29,8 +29,8 @@ if (isset($_GET['change'])) {
 	if (isset($_GET['id'])) $id = $_GET['id'];
 }
 
-echo "<div style=\"margin-left:0px; margin-right:0px; background-color:#FFFF99\">";
-echo "<div style=\"margin-left:10px; margin-right:10px\">";
+echo "<div class='topbar'>";
+echo "<div class='leftrightmargins'>";
 
 // bootnaam
 if ($boat_id == 0) {

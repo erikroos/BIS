@@ -10,29 +10,29 @@ include_once("include_globalVars.php");
 include_once("include_helperMethods.php");
 if ($toonweer) include_once("xmlnews.php");
 
-setlocale(LC_TIME, 'nl_NL');
+//setlocale(LC_TIME, 'nl_NL');
+setlocale(LC_ALL, null); // werkt voor Xampp; ook op de server?? -> testen en dan uitrollen naar andere pagina's
 
 $bisdblink = mysql_connect($database_host, $database_user, $database_pass);
 if (!mysql_select_db($database, $bisdblink)) {
 	echo "Fout: database niet gevonden.<br>";
 	exit();
 }
-
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title><? echo $systeemnaam; ?></title>
-    <link type="text/css" href="<? echo $csslink; ?>" rel="stylesheet" />
+    <title><?php echo $systeemnaam; ?></title>
+    <link type="text/css" href="<?php echo $csslink; ?>" rel="stylesheet" />
 	<link type="text/css" href="css/bis.css" rel="stylesheet" />
 	<script type="text/javascript" src="scripts/kalender.js"></script>
 	<script type="text/javascript" src="scripts/Script.js"></script>
 </head>
 <body>
 <script type="text/javascript" src="scripts/wz_tooltip.js"></script>
-<?php
 
+<?php
 // stop alle bootcategorieën in een array
 $query = "SELECT DISTINCT Categorie FROM types ORDER BY Categorie;";
 $result = mysql_query($query);
@@ -109,90 +109,74 @@ if (!in_array($grade_to_show, $grade_array)) { // sanity check
 	$grade_to_show = $standaardgraad;
 }
 
-echo "<div style=\"padding-left:15px; padding-right:15px; padding-top: 5px; padding-bottom: 5px; background-color:#FFFF99\">";
 $date_tmp = strtotime($today_db);
 $date_sh = strftime('%A %d-%m-%Y', $date_tmp);
-echo "<strong>Welkom</strong>, " . $_SESSION['login'] . "<br />";
-echo "<strong>Het is vandaag: </strong><span style=\"font-style:italic\">" . $date_sh . "</span>";
-echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"CurrAct\" value=\"Nu op water\" onclick=\"window.location.href='current_act.php'\" />";
-echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Schadeboek\" value=\"Schades en klachten\" onclick=\"window.location.href='schadeboek/index.php'\" />";
-echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Cursussen\" value=\"Cursussen\" onclick=\"window.location.href='cursussen/index.php'\" />";
-echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Examens\" value=\"Examens\" onclick=\"window.location.href='examens/index.php'\" />";
-echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Documenten\" value=\"Documenten\" onclick=\"window.location.href='documenten/index.php'\" />";
-echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Info\" value=\"Info\" onclick=\"window.location.href='bis_info.php'\" />";
-echo "&nbsp;&copy;2008-" . $theyear . " Erik Roos&nbsp;<a href='mailto:" . $mailadres . "'>" . $mailadres . "</a>";
-echo "&nbsp;<input style=\"font-size:10px\" type=\"button\" name=\"Uitloggen\" value=\"UIT\" onclick=\"window.location.href='bis_logout.php'\" />";
-echo "</div>";
-// Yellow div surrounding top bar items
-echo "<div style=\"padding-left:10px; padding-right:10px; background-color:#FFFF99; height:190px\">";
-// Formulier voor selectie op vloot
-echo "<div id='infobalkLinks'>";
-echo "<form name='adjust'>";
-echo "<strong>Pas het inschrijfblad aan:</strong><br />";
-echo "<table><tr>";
-echo "<td>Datum (dd-mm-jjjj):</td>";
-echo "<td><input type='text' name='date_to_show' size='8' maxlength='10' value='" . $date_to_show . "' onchange='ChangeInfo();' id='date_to_show' />";
-echo "&nbsp;<a href=\"javascript:show_calendar('adjust.date_to_show');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='res/kalender.gif' width='19' height='17' border='0' alt='Kalender' /></a><br />";
-echo "<input style=\"font-size:9px\" type=\"button\" name=\"change_date\" value=\"&lt;\" onclick=\"changeDate(-1); ChangeInfo();\" />";
-echo "<input style=\"font-size:9px\" type=\"button\" name=\"change_date\" value=\"&gt;\" onclick=\"changeDate(1); ChangeInfo();\" />";
-echo "<input style=\"font-size:9px\" type=\"button\" name=\"reset_date\" value=\"vandaag\" onclick=\"resetDate(); ChangeInfo();\" />";
-echo "</td></tr>";
-echo "<tr>";
-echo "<td>Vanaf tijdstip:</td>";
-echo "<td><select name='start_hrs_to_show' onchange='ChangeInfo();' id='start_hrs_to_show'>";
-for ($t = 6; $t < 24; $t++) {
-	echo"<option value=\"".$t."\" ";
-	if ($start_hrs_to_show == $t) echo "selected=\"selected\"";
-	echo ">".$t."</option>";
-}
-echo "</select>";
-echo "&nbsp;<select name='start_mins_to_show' onchange='ChangeInfo();' id='start_mins_to_show'>";
-echo "<option value=\"00\" ";
-if ($start_mins_to_show == 0) echo "selected=\"selected\"";
-echo ">00</option>";
-echo "<option value=\"15\" ";
-if ($start_mins_to_show == 15) echo "selected=\"selected\"";
-echo ">15</option>";
-echo "<option value=\"30\" ";
-if ($start_mins_to_show == 30) echo "selected=\"selected\"";
-echo ">30</option>";
-echo "<option value=\"45\" ";
-if ($start_mins_to_show == 45) echo "selected=\"selected\"";
-echo ">45</option>";
-echo "</select></td>";
-echo "</tr>";
+?>
 
-echo "<tr>";
-echo "<td>Categorie:</td>";
-echo "<td><select name='cat_to_show' onchange='ChangeInfo();' id='cat_to_show'>";
-	foreach($cat_array as $cat_db) {
-		echo "<option value=\"$cat_db\" ";
-		if ($cat_to_show == $cat_db) echo "selected=\"selected\"";
-		echo ">$cat_db</option>";
-	}
-echo "</select></td>";
-echo "</tr>";
+<div class='mainscreen'>
+<strong>Welkom</strong>&nbsp;<?php echo $_SESSION['login']; ?> <br />
+<strong>Het is vandaag: </strong><span class='italic'><?php echo $date_sh?></span>
+&nbsp;<input class='smalltextbtn' type="button" name="CurrAct" value="Nu op water" onclick="window.location.href='current_act.php';" />
+&nbsp;<input class='smalltextbtn' type="button" name="Schadeboek" value="Schades en klachten" onclick="window.location.href='schadeboek/index.php';" />
+&nbsp;<input class='smalltextbtn' type="button" name="Cursussen" value="Cursussen" onclick="window.location.href='cursussen/index.php';" />
+&nbsp;<input class='smalltextbtn' type="button" name="Examens" value="Examens" onclick="window.location.href='examens/index.php';" />
+&nbsp;<input class='smalltextbtn' type="button" name="Documenten" value="Documenten" onclick="window.location.href='documenten/index.php';" />
+&nbsp;<input class='smalltextbtn' type="button" name="Info" value="Info" onclick="window.location.href='bis_info.php';" />
+&nbsp;&copy;2008-<?php echo $theyear; ?>&nbsp;Erik Roos&nbsp;<a href='mailto:<?php echo $mailadres; ?>'><?php echo $mailadres; ?></a>
+&nbsp;<input class='smalltextbtn' type="button" name="Uitloggen" value="UIT" onclick="window.location.href='bis_logout.php';" />
+</div>
+<div id='topbar_mainscreen'>
+<div id='infobalkLinks'>
+<form id='adjust' name='adjust'>
+<strong>Pas het inschrijfblad aan:</strong><br />
+<table><tr>
+<td>Datum (dd-mm-jjjj):</td>
+<td><input type='text' name='date_to_show' size='8' maxlength='10' value='<?php echo $date_to_show ?>' onchange="changeInfo();" id='date_to_show' />
+&nbsp;<a href="javascript:show_calendar('adjust.date_to_show');" onmouseover="window.status='Kalender';return true;" onmouseout="window.status='';return true;"><img src='res/kalender.gif' width='19' height='17' border='0' alt='Kalender' /></a><br />
+<input class='smallertextbtn' type="button" name="change_date" value="&lt;" onclick="changeDate(-1); changeInfo();" />
+<input class='smallertextbtn' type="button" name="change_date" value="&gt;" onclick="changeDate(1); changeInfo();" />
+<input class='smallertextbtn' type="button" name="reset_date" value="vandaag" onclick="resetDate(); changeInfo();" />
+</td></tr>
+<tr>
+<td>Vanaf tijdstip:</td>
+<td>
+<select name='start_hrs_to_show' onchange="changeInfo();" id='start_hrs_to_show'>
+<?php for ($t = 6; $t < 24; $t++): ?>
+	<option value="<?php echo $t ?>"<?php if ($start_hrs_to_show == $t): ?> selected="selected" <?php endif; ?>><?php echo $t; ?></option>
+<?php endfor; ?>
+</select>
+&nbsp;
+<select name='start_mins_to_show' onchange="changeInfo();" id='start_mins_to_show'>
+	<option value="00"<?php if ($start_mins_to_show == 0): ?> selected="selected" <?php endif; ?>>00</option>
+	<option value="15"<?php if ($start_mins_to_show == 15): ?> selected="selected" <?php endif; ?>>15</option>
+	<option value="30"<?php if ($start_mins_to_show == 30): ?> selected="selected" <?php endif; ?>>30</option>
+	<option value="45"<?php if ($start_mins_to_show == 45): ?> selected="selected" <?php endif; ?>>45</option>
+</select></td>
+</tr>
+<tr>
+<td>Categorie:</td>
+<td><select name='cat_to_show' onchange="changeInfo();" id='cat_to_show'>
+<?php foreach($cat_array as $cat_db): ?>
+	<option value="<?php echo $cat_db; ?>"<?php if ($cat_to_show == $cat_db): ?> selected="selected" <?php endif; ?>><?php echo $cat_db; ?></option>
+<?php endforeach; ?>
+</select></td>
+</tr>
+<tr>
+<td>Roeigraad:</td>
+<td>
+<select name='grade_to_show' onchange="changeInfo();" id='grade_to_show'>
+	<option value="alle" <?php if ($grade_to_show == "alle"): ?> selected="selected\" <?php endif; ?>>alle</option>
+	<?php foreach($grade_array as $grade_db): ?>
+		<option value="<?php echo $grade_db; ?>"<?php if ($grade_to_show == $grade_db): ?> selected="selected" <?php endif; ?>><?php echo $grade_db; ?></option>
+	<?php endforeach; ?>
+</select></td>
+</tr>
+</table>
+</form></div>
 
-echo "<tr>";
-echo "<td>Roeigraad:</td>";
-echo "<td><select name='grade_to_show' onchange='ChangeInfo();' id='grade_to_show'>";
-	echo "<option value=\"alle\" ";
-	if ($grade_to_show == "alle") echo "selected=\"selected\"";
-	echo ">alle</option>";
-	foreach($grade_array as $grade_db) {
-		echo "<option value=\"$grade_db\" ";
-		if ($grade_to_show == $grade_db) echo "selected=\"selected\"";
-		echo ">$grade_db</option>";
-	}
-echo "</select></td>";
-echo "</tr>";
-
-echo "</table>";
-echo "</form></div>"; // einde selectie-form
-
-// bestuursinfo
-echo "<div id='infobalkMidden'>";
-echo "<strong>Bestuursmededelingen</strong><br />";
+<div id='infobalkMidden'>
+<strong>Bestuursmededelingen</strong><br />
+<?php
 $query = "SELECT * FROM mededelingen ORDER BY Datum DESC LIMIT 1;"; // alleen recentste
 $result = mysql_query($query);
 if (!$result) {
@@ -216,31 +200,26 @@ if (!$result) {
 		echo "Op dit moment zijn er geen mededelingen.<br /><br />";
 	}
 }
-echo "</div>";
-
-if ($toonweer) { // optionele weerinfo
-	echo "<div id='infobalkRechts'>";
-	echo "<strong>Weer</strong><br />"; 
-	echo xmlnews('http://www.gyas.nl/media/output/weer.rss',3,'_blank','br', 0);
-	echo "</div>";
-}
-
-echo "</div>";
-
-mysql_close($bisdblink);
-
-echo "<div id='ScheduleInfo' style='clear:left'>";
-require_once("./show_schedule.php");
-echo "</div>";
-
-// Divs for reservation "pop-up"
-echo "<div id='overlay'></div>";
-echo "<div id='inschrijving'></div>";
-
 ?>
+</div>
+
+<?php if ($toonweer): ?>
+	<div id='infobalkRechts'>
+	<strong>Weer</strong><br />
+	<?php echo xmlnews('http://www.gyas.nl/media/output/weer.rss',3,'_blank','br', 0); ?>
+	</div>
+<?php endif; ?>
+</div>
+
+<?php mysql_close($bisdblink); ?>
+<div id='ScheduleInfo' style='clear:left'>
+	<?php require_once("./show_schedule.php"); ?>
+</div>
+
+<div id='overlay'></div>
+<div id='inschrijving'></div>
 
 <script type="text/javascript" src="scripts/dates_and_ajax.js"></script>
-<script type="text/javascript" src="scripts/ajax_inschrijving.js"></script>
 
 </body>
 </html>

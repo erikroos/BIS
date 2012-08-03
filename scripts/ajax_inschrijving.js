@@ -24,7 +24,6 @@ function changeInfoIns() {
 
 function setOutputIns() {
 	if (httpObject.readyState == 4 && httpObject.status == 200) {
-		// TODO: resultaat parsen: succes of fail_msg?
 		var availability = document.getElementById("AvailabilityInfo");
 		availability.innerHTML = httpObject.responseText;
 	}
@@ -65,7 +64,7 @@ function makeRes(id, again, start_time, cat_to_show, grade_to_show) {
 function delRes(id, start_time, cat_to_show, grade_to_show) {
 	httpObject = getHTTPObjectIns();
 	if (httpObject != null) {
-		var date = document.getElementById("date").value;
+		var date = document.getElementById("resdate").value;
 		httpObject.open("GET", "check_reservation.php?del=1&id=" + id + "&date=" + date + "&start_time=" + start_time +
 			"&cat_to_show=" + cat_to_show + "&grade_to_show=" + grade_to_show, true);
 		httpObject.onreadystatechange = resetReservationPopup;
@@ -75,14 +74,16 @@ function delRes(id, start_time, cat_to_show, grade_to_show) {
 
 function resetReservationPopup(){
 	if (httpObject.readyState == 4 && httpObject.status == 200) {
-		var resPopup = document.getElementById("inschrijving");
-		if (httpObject.responseText.slice(0, 8) == '<p>Beste') {
+		var msgBar = document.getElementById("msgbar");
+		if (httpObject.responseText.slice(0, 8) == '<p>Beste' || 
+			httpObject.responseText.slice(0, 29) == 'De inschrijving is verwijderd') {
 			// Success
-			resPopup.innerHTML = httpObject.responseText;
+			msgBar.setAttribute('class', 'successmsg');
+			var restOfResScreen = document.getElementById("resscreen");
+			restOfResScreen.innerHTML = ''; // empty rest of screen
 		} else {
-			// Fail
-			resPopup.innerHTML = "<div>" + httpObject.responseText + "</div>" + resPopup.innerHTML;
-			// Fix: bovenstaande zorgt er nu voor dat de inhoud van de velden verloren gaat
+			msgBar.setAttribute('class', 'failmsg');
 		}
+		msgBar.innerHTML = httpObject.responseText;
 	}
 }

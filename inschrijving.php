@@ -29,8 +29,7 @@ $grade_to_show = $_GET['grade_to_show'];
 
 $id = $_GET['id']; // 0 indien nieuwe inschrijving
 if ($id < 0 || !is_numeric($id)) { // check op ID
-	echo "<p>Er is iets misgegaan.";
-	echo "<br /><a href=\"./index.php\">Ga terug naar BIS&gt;&gt;</a></p>";
+	echo "<p>Er is iets misgegaan.</p>";
 	exit();
 }
 
@@ -85,13 +84,11 @@ if ($id > 0) { // bestaande/gelijksoortige inschrijving: haal de var'en op t.b.v
 			}
 			$spits = $row['Spits'];
 		} else {
-			echo "<p>Deze inschrijving bestaat niet.";
-			echo "<br /><a href=\"./index.php\">Ga terug naar BIS&gt;&gt;</a></p>";
+			echo "<p>Deze inschrijving bestaat niet.</p>";
 			exit();
 		}
 	} else {
-		echo "<p>De inschrijving kan niet gevonden worden.";
-		echo "<br /><a href=\"./index.php\">Ga terug naar BIS&gt;&gt;</a></p>";
+		echo "<p>De inschrijving kan niet gevonden worden.</p>";
 		exit();
 	}
 }
@@ -118,14 +115,12 @@ if ($id == 0) { // nieuwe inschrijving: haal de var'en op t.b.v. show_availabili
 
 // sanity check op boot
 if (!isset($again) && (!is_numeric($boat_id) || $boat_id < 0)) {
-	echo "<p>Deze boot bestaat niet.";
-	echo "<br /><a href=\"./index.php\">Ga terug naar BIS&gt;&gt;</a></p>";
+	echo "<p>Deze boot bestaat niet.</p>";
 	exit();
 }
 // sanity check op datum
 if (!CheckTheDate($date)) {
-	echo "<p>Datum ($date) klopt niet.";
-	echo "<br /><a href=\"./index.php\">Ga terug naar BIS&gt;&gt;</a></p>";
+	echo "<p>Datum (" . $date . ") klopt niet.</p>";
 	exit();
 } else {
 	$date_db = DateToDBdate($date);
@@ -170,29 +165,9 @@ if (!isset($end_time)) {
 	$end_time_mins = $end_time_fields[1];
 }
 
-// disconnect from DB
-mysql_close($bisdblink);
-
-// Close-button
-echo "<input type=\"button\" value=\"SLUITEN\" onclick=\"window.location.href='index.php?date_to_show=" . $date . 
-	 "&start_time_to_show=" . $start_time . "&cat_to_show=" . $cat_to_show . "&grade_to_show=" . $grade_to_show . "'\" />";
-
-// Blok waarin bestaande inschrijvingen getoond worden (AJAX)
-echo "<div id=\"AvailabilityInfo\">";
-require_once('./show_availability.php');
-echo "</div>";
-//
-
-echo "<div style=\"margin-left:10px; margin-right:10px\">";
-
-// Reconnect to DB
-$bisdblink = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $bisdblink)) {
-	echo "<p>Fout: database niet gevonden.</p>";
-	exit();
-}
-
-// The form (evaluation happens via AJAX)
+// Top bar with header and close button
+echo "<div class='topbar'>";
+echo "<div class='header'>";
 echo "<h1>Inschrijving ";
 if ($id && !$again) {
 	echo "bewerken";
@@ -204,6 +179,33 @@ if ($id && !$again) {
 	}
 }
 echo "</h1>";
+echo "</div>";
+echo "<div class='closediv'>";
+echo "<input type=\"button\" class='bisbtn' value=\"SLUITEN\" onclick=\"window.location.href='index.php?date_to_show=" . $date .
+"&start_time_to_show=" . $start_time . "&cat_to_show=" . $cat_to_show . "&grade_to_show=" . $grade_to_show . "'\" />";
+echo "</div>";
+echo "</div>";
+// Message bar
+echo "<div id='msgbar'></div>"; // To be filled with AJAX after pressing button
+// Rest of screen
+echo "<div id='resscreen'>"; // Enables rest of screen to be removed after pressing button
+
+// Show existing reservations
+// Firstly disconnect from DB
+mysql_close($bisdblink);
+echo "<div id=\"AvailabilityInfo\">";
+require_once('./show_availability.php');
+echo "</div>";
+// Reconnect to DB
+$bisdblink = mysql_connect($database_host, $database_user, $database_pass);
+if (!mysql_select_db($database, $bisdblink)) {
+	echo "<p>Fout: database niet gevonden.</p>";
+	exit();
+}
+
+// Surrounding div
+echo "<div class='leftrightmargins'>";
+// The form (evaluation happens via AJAX)
 echo "<form name='resdetails'>";
 echo "<table><tr>";
 
@@ -242,7 +244,7 @@ if (substr($boat, 0, 7) == "Concept") {
 }
 // Boat
 echo "<td" . (isset($hide) ? $hide : "") . ">Boot/ergometer:</td>";
-echo "<td". (isset($hide) ? $hide : "") . "><select" . (isset($hide) ? $hide : "") . " name=\"boat_id\" onchange='changeInfoIns();' id=\"boat_id\">";
+echo "<td". (isset($hide) ? $hide : "") . "><select" . (isset($hide) ? $hide : "") . " name=\"boat_id\" onchange=\"changeInfo();\" id=\"boat_id\">";
 echo "<option value=0 ";
 if ($boat_id == 0) echo "selected=\"selected\"";
 echo "></option>";
@@ -303,20 +305,20 @@ echo "</tr><tr>";
 
 // datum
 echo "<td>Datum (dd-mm-jjjj):</td>";
-echo "<td><input type='text' onchange='changeInfoIns();' name='resdate' id='resdate' size='8' maxlength='10' value='" . $date . "' />";
+echo "<td><input type='text' onchange=\"changeInfo();\" name='resdate' id='resdate' size='8' maxlength='10' value='" . $date . "' />";
 echo "&nbsp;<a href=\"javascript:show_calendar('resdetails.resdate');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='res/kalender.gif' alt='kalender' width='19' height='17' border='0' /></a></td>";
 echo "</tr><tr>";
 
 // begintijd
 echo "<td>Begintijd</td>";
-echo "<td><select name='start_time_hrs' onchange='changeInfoIns();' id='start_time_hrs'>";
+echo "<td><select name='start_time_hrs' onchange=\"changeInfo();\" id='start_time_hrs'>";
 	for ($t=6; $t<24; $t++) {
 		echo"<option value=\"".$t."\" ";
 		if ($start_time_hrs == $t) echo "selected=\"selected\"";
 		echo ">".$t."</option>";
 	}
 echo "</select>";
-echo "&nbsp;<select name='start_time_mins' onchange='changeInfoIns();' id='start_time_mins'>";
+echo "&nbsp;<select name='start_time_mins' onchange=\"changeInfo();\" id='start_time_mins'>";
 	echo "<option value=\"00\" ";
 	if ($start_time_mins == 0) echo "selected=\"selected\"";
 	echo ">00</option>";
@@ -334,14 +336,14 @@ echo "</tr><tr>";
 
 // eindtijd
 echo "<td>Eindtijd:</td>";
-echo "<td><select name='end_time_hrs' onchange='changeInfoIns();' id='end_time_hrs'>";
+echo "<td><select name='end_time_hrs' onchange=\"changeInfo();\" id='end_time_hrs'>";
 	for ($t=6; $t<24; $t++) {
 		echo"<option value=\"".$t."\" ";
 		if ($end_time_hrs == $t) echo "selected=\"selected\"";
 		echo ">".$t."</option>";
 	}
 echo "</select>";
-echo "&nbsp;<select name='end_time_mins' onchange='changeInfoIns();' id='end_time_mins'>";
+echo "&nbsp;<select name='end_time_mins' onchange=\"changeInfo();\" id='end_time_mins'>";
 	echo "<option value=\"00\" ";
 	if ($end_time_mins == 0) echo "selected=\"selected\"";
 	echo ">00</option>";
@@ -358,7 +360,7 @@ echo "</select></td>";
 echo "</tr>";
 echo "</table>";
 // knoppen
-echo "<div><input type=\"button\" value=\"";
+echo "<div><input type=\"button\" class='bisbtn' value=\"";
 if ($id && !$again) {
 	echo "Opslaan";
 } else {
@@ -369,11 +371,13 @@ if ($id && !$again) {
 	}
 }
 echo "\" onclick=\"makeRes(" . $id . ", ". (isset($again) ? $again : 0) . ", '" .
-	 $start_time . "', '" . $cat_to_show . "', '" . $grade_to_show . "');\" /> ";
+	 $start_time . "', '" . $cat_to_show . "', '" . $grade_to_show . "');\" />";
 if ($id) {
-	echo "<input type=\"button\" value=\"Verwijderen\" onclick=\"delRes(" . $id . ", '" . $start_time . 
-		 "', '" . $cat_to_show . "', '" . $grade_to_show . "');\" /> ";
+	echo "<input type=\"button\" class='bisbtn' value=\"Verwijderen\" onclick=\"delRes(" . $id . ", '" . $start_time . 
+		 "', '" . $cat_to_show . "', '" . $grade_to_show . "');\" />";
 }
 echo "</div></form>";
-echo "</div>";
+echo "</div>"; // surrounding div
+echo "</div>"; // resscreen-div
+
 mysql_close($bisdblink);
