@@ -4,7 +4,7 @@ function getHTTPObjectIns(){
 	else if (window.XMLHttpRequest) 
 		return new XMLHttpRequest();
 	else {
-		alert("Uw browser ondersteunt geen AJAX.");
+		alert("Uw browser ondersteunt geen AJAX, wat voor de werking van BIS vereist is.");
 		return null;
 	}
 }
@@ -13,7 +13,7 @@ function changeInfoIns() {
 	httpObject = getHTTPObjectIns();
 	if (httpObject != null) {
 		httpObject.open("GET", "show_availability.php?change=1&id=" + document.getElementById("id").value + "&date=" + 
-			document.getElementById("date").value + "&start_time_hrs=" + document.getElementById("start_time_hrs").value + 
+			document.getElementById("resdate").value + "&start_time_hrs=" + document.getElementById("start_time_hrs").value + 
 			"&start_time_mins=" + document.getElementById("start_time_mins").value + "&end_time_hrs=" + 
 			document.getElementById("end_time_hrs").value + "&end_time_mins=" + document.getElementById("end_time_mins").value + 
 			"&boat_id=" + document.getElementById("boat_id").value, true);
@@ -24,6 +24,7 @@ function changeInfoIns() {
 
 function setOutputIns() {
 	if (httpObject.readyState == 4 && httpObject.status == 200) {
+		// TODO: resultaat parsen: succes of fail_msg?
 		var availability = document.getElementById("AvailabilityInfo");
 		availability.innerHTML = httpObject.responseText;
 	}
@@ -46,16 +47,11 @@ function makeRes(id, again, start_time, cat_to_show, grade_to_show) {
 		var mpb = '';
 		if (document.getElementById("mpb") != null) mpb = document.getElementById("mpb").value;
 		var date = '';
-		if (document.getElementById("date") != null) date = document.getElementById("date").value;
+		if (document.getElementById("resdate") != null) date = document.getElementById("resdate").value;
 		var start_time_hrs = document.getElementById("start_time_hrs").value;
 		var start_time_mins = document.getElementById("start_time_mins").value;
 		var end_time_hrs = document.getElementById("end_time_hrs").value;
 		var end_time_mins = document.getElementById("end_time_mins").value;
-		alert("aanroep: " + "check_reservation.php?make=1&id=" + id + "&again=" + again + "&boat_id=" + boat_id +
-			"&pname=" + pname + "&name=" + name + "&email=" + email + "&mpb=" + mpb + "&date=" + date + 
-			"&start_time_hrs=" + start_time_hrs + "&start_time_mins=" + start_time_mins +
-			"&end_time_hrs=" + end_time_hrs + "&end_time_mins=" + end_time_mins + "&ergo_lo=" + ergo_lo + "&ergo_hi=" + ergo_hi +
-			"&start_time=" + start_time + "&cat_to_show=" + cat_to_show + "&grade_to_show=" + grade_to_show);
 		httpObject.open("GET", "check_reservation.php?make=1&id=" + id + "&again=" + again + "&boat_id=" + boat_id +
 			"&pname=" + pname + "&name=" + name + "&email=" + email + "&mpb=" + mpb + "&date=" + date + 
 			"&start_time_hrs=" + start_time_hrs + "&start_time_mins=" + start_time_mins +
@@ -80,7 +76,13 @@ function delRes(id, start_time, cat_to_show, grade_to_show) {
 function resetReservationPopup(){
 	if (httpObject.readyState == 4 && httpObject.status == 200) {
 		var resPopup = document.getElementById("inschrijving");
-		// TODO: parse responseText
-		resPopup.innerHTML = httpObject.responseText;
+		if (httpObject.responseText.slice(0, 8) == '<p>Beste') {
+			// Success
+			resPopup.innerHTML = httpObject.responseText;
+		} else {
+			// Fail
+			resPopup.innerHTML = "<div>" + httpObject.responseText + "</div>" + resPopup.innerHTML;
+			// Fix: bovenstaande zorgt er nu voor dat de inhoud van de velden verloren gaat
+		}
 	}
 }
