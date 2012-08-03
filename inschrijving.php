@@ -168,7 +168,7 @@ if (!isset($end_time)) {
 // Top bar with header and close button
 echo "<div class='topbar'>";
 echo "<div class='header'>";
-echo "<h1>Inschrijving ";
+echo "<p class='bisheader'>Inschrijving ";
 if ($id && !$again) {
 	echo "bewerken";
 } else {
@@ -178,7 +178,7 @@ if ($id && !$again) {
 		echo "maken";
 	}
 }
-echo "</h1>";
+echo "</p>";
 echo "</div>";
 echo "<div class='closediv'>";
 echo "<input type=\"button\" class='bisbtn' value=\"SLUITEN\" onclick=\"window.location.href='index.php?date_to_show=" . $date .
@@ -205,6 +205,7 @@ if (!mysql_select_db($database, $bisdblink)) {
 
 // Surrounding div
 echo "<div class='leftrightmargins'>";
+echo "<br />";
 // The form (evaluation happens via AJAX)
 echo "<form name='resdetails'>";
 echo "<table><tr>";
@@ -358,7 +359,7 @@ echo "&nbsp;<select name='end_time_mins' onchange=\"changeInfo();\" id='end_time
 	echo ">45</option>";
 echo "</select></td>";
 echo "</tr>";
-echo "</table>";
+echo "</table><br />";
 // knoppen
 echo "<div><input type=\"button\" class='bisbtn' value=\"";
 if ($id && !$again) {
@@ -373,7 +374,7 @@ if ($id && !$again) {
 echo "\" onclick=\"makeRes(" . $id . ", ". (isset($again) ? $again : 0) . ", '" .
 	 $start_time . "', '" . $cat_to_show . "', '" . $grade_to_show . "');\" />";
 if ($id) {
-	echo "<input type=\"button\" class='bisbtn' value=\"Verwijderen\" onclick=\"delRes(" . $id . ", '" . $start_time . 
+	echo "&nbsp;<input type=\"button\" class='bisbtn' value=\"Verwijderen\" onclick=\"delRes(" . $id . ", '" . $start_time . 
 		 "', '" . $cat_to_show . "', '" . $grade_to_show . "');\" />";
 }
 echo "</div></form>";

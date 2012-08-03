@@ -3,6 +3,8 @@
 include_once("include_globalVars.php");
 include_once("include_helperMethods.php");
 
+setlocale(LC_TIME, 'nl_NL');
+
 $link = mysql_connect($database_host, $database_user, $database_pass);
 if (!mysql_select_db($database, $link)) {
 	echo "Fout: database niet gevonden.<br>";
@@ -28,6 +30,8 @@ if (isset($_GET['change'])) {
 	$id = 0;
 	if (isset($_GET['id'])) $id = $_GET['id'];
 }
+$date_tmp = strtotime($date_db);
+$date_sh = strftime('%A %d-%m-%Y', $date_tmp);
 
 echo "<div class='topbar'>";
 echo "<div class='leftrightmargins'>";
@@ -53,7 +57,7 @@ if ($boat_id > 0) {
 	} else {
 		$rows_aff = mysql_affected_rows($link);
 		if ($rows_aff > 0) {
-			echo "<br /><span class=\"update\">'$boat' is uit de vaart op $date!</span><br />";
+			echo "<br /><span class=\"update\">'" . $boat . "' is uit de vaart op " . $date_sh . "!</span><br />";
 		} else {
 			$query = "SELECT * FROM ".$opzoektabel." WHERE Verwijderd=0 AND Volgnummer<>'$id' AND Datum='$date_db' AND Boot_ID='$boat_id' ORDER BY Begintijd;";
 			$result = mysql_query($query);
@@ -62,7 +66,7 @@ if ($boat_id > 0) {
 			} else {
 				$rows_aff = mysql_affected_rows($link);
 				if ($rows_aff > 0) {
-					echo "<br /><em>Bestaande (andere) inschrijvingen van '$boat' op $date:</em><br /><br />";
+					echo "<br /><em>Bestaande (andere) inschrijvingen van '" . $boat . "' op " . $date_sh . ":</em><br /><br />";
 					while ($row = mysql_fetch_assoc($result)) {
 						$db_start_time = substr($row['Begintijd'],0,5);
 						$db_end_time = substr($row['Eindtijd'],0,5);
@@ -84,7 +88,7 @@ if ($boat_id > 0) {
 						echo "$db_start_time - $db_end_time door $db_pname".$spits_toev.$conflict."<br />";
 					}
 				} else {
-					echo "<br /><em>Er zijn geen (andere) inschrijvingen van '$boat' op $date.</em><br />";
+					echo "<br /><em>Er zijn geen (andere) inschrijvingen van '" . $boat . "' op ". $date_sh . ".</em><br />";
 				}
 			}
 		}

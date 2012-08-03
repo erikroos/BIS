@@ -91,10 +91,11 @@ function showInschrijving(id, boat_id, date, cat_to_show, grade_to_show, time_to
 		// Enable shadow overlay and pop-up:
 		document.getElementById('overlay').style.display = 'block';
 		document.getElementById('inschrijving').style.display = 'block';
-		document.getElementById('inschrijving').style.top = Math.round(window.innerHeight * .1) + 'px';
-		document.getElementById('inschrijving').style.height = Math.round(window.innerHeight * .8) + 'px';
-		document.getElementById('inschrijving').style.left = Math.round(window.innerWidth * .1) + 'px';
-		document.getElementById('inschrijving').style.width = Math.round(window.innerWidth * .8) + 'px';
+		var sizePerc = .6;
+		document.getElementById('inschrijving').style.top = Math.round(window.innerHeight * ((1 - sizePerc) / 2)) + 'px';
+		document.getElementById('inschrijving').style.height = Math.round(window.innerHeight * sizePerc) + 'px';
+		document.getElementById('inschrijving').style.left = Math.round(window.innerWidth * ((1 - sizePerc) / 2)) + 'px';
+		document.getElementById('inschrijving').style.width = Math.round(window.innerWidth * sizePerc) + 'px';
 		// Contents of the pop-up:
 		httpObject = getHTTPObject();
 		if (httpObject != null) {
@@ -164,7 +165,7 @@ function resetReservationPopup(){
 	if (httpObject.readyState == 4 && httpObject.status == 200) {
 		var msgBar = document.getElementById("msgbar");
 		if (httpObject.responseText.slice(0, 8) == '<p>Beste' || 
-			httpObject.responseText.slice(0, 29) == 'De inschrijving is verwijderd') {
+			httpObject.responseText.slice(0, 32) == '<p>De inschrijving is verwijderd') {
 			// Success
 			msgBar.setAttribute('class', 'successmsg');
 			var restOfResScreen = document.getElementById("resscreen");

@@ -112,10 +112,10 @@
 	margin-left:10px;
 	float:left;
 	background-color:#FFFF99;
+	height:35px;
 }
 
 .closediv {
-	margin-right:10px;
 	float:right;
 	background-color:#FFFF99;
 }
@@ -150,10 +150,32 @@
 	background-color:#FFC1C1; /* reddish */
 }
 
+.bisheader {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	line-height:17px;
+	font-weight: bold;
+	color: #CC9900;
+	text-align: left;
+	word-spacing: normal;
+	letter-spacing: 1pt;
+}
+
 /* BUTTONS */
 
-.bisbtn {
-	/* TODO */
+input.bisbtn {
+	padding: 0.5em 1em;
+	border:1px solid #CC9900;
+	background-color:#CC9900;
+	color:white;
+	font-size:1em;
+	font-weight:bold;
+	height:35px;
+}
+
+input.bisbtn:hover {
+	color:#CC9900;
+	background-color:white;
 }
 
 .smalltextbtn {
