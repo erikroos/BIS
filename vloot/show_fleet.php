@@ -1,8 +1,8 @@
 <?php
 
 // NOTE: these links are only suitable for use from within DRUPAL!
-include_once("../bis/include_globalVars.php");
-include_once("../bis/include_helperMethods.php");
+include_once("bis/include_globalVars.php");
+include_once("bis/include_helperMethods.php");
 
 $bisdblink = mysql_connect($database_host, $database_user, $database_pass);
 if (!mysql_select_db($database, $bisdblink)) {
