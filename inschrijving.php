@@ -187,9 +187,8 @@ echo "</div>";
 echo "</div>";
 // Message bar
 echo "<div id='msgbar'></div>"; // To be filled with AJAX after pressing button
+echo "<div id='resscreen'></div>"; // Enables rest of screen to be grayed out after pressing button
 // Rest of screen
-echo "<div id='resscreen'>"; // Enables rest of screen to be grayed out after pressing button
-
 // Show existing reservations
 // Firstly disconnect from DB
 mysql_close($bisdblink);
@@ -379,6 +378,5 @@ if ($id) {
 }
 echo "</div></form>";
 echo "</div>"; // surrounding div
-echo "</div>"; // resscreen-div
 
 mysql_close($bisdblink);
