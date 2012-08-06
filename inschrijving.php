@@ -188,7 +188,7 @@ echo "</div>";
 // Message bar
 echo "<div id='msgbar'></div>"; // To be filled with AJAX after pressing button
 // Rest of screen
-echo "<div id='resscreen'>"; // Enables rest of screen to be removed after pressing button
+echo "<div id='resscreen'>"; // Enables rest of screen to be grayed out after pressing button
 
 // Show existing reservations
 // Firstly disconnect from DB

@@ -89,7 +89,7 @@ function setOutputIns() {
 function showInschrijving(id, boat_id, date, cat_to_show, grade_to_show, time_to_show) {
 	if (document.getElementById('inschrijving').style.display != 'block') {
 		// Enable shadow overlay and pop-up:
-		document.getElementById('overlay').style.display = 'block';
+		document.getElementById('index_overlay').style.display = 'block';
 		document.getElementById('inschrijving').style.display = 'block';
 		var sizePerc = .6;
 		document.getElementById('inschrijving').style.top = Math.round(window.innerHeight * ((1 - sizePerc) / 2)) + 'px';
@@ -106,7 +106,7 @@ function showInschrijving(id, boat_id, date, cat_to_show, grade_to_show, time_to
 			httpObject.send(null);
 		}
 	} else {
-		document.getElementById('overlay').style.display = 'none';
+		document.getElementById('index_overlay').style.display = 'none';
 		document.getElementById('inschrijving').style.display = 'none';
 	}
 }
@@ -169,7 +169,8 @@ function resetReservationPopup(){
 			// Success
 			msgBar.setAttribute('class', 'successmsg');
 			var restOfResScreen = document.getElementById("resscreen");
-			restOfResScreen.innerHTML = ''; // empty rest of screen
+			//restOfResScreen.innerHTML = ''; // empty rest of screen
+			restOfResScreen.setAttribute('class', 'reservation_overlay'); // gray out rest of screen
 		} else {
 			msgBar.setAttribute('class', 'failmsg');
 		}

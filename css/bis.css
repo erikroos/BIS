@@ -71,9 +71,19 @@
 	background-color:white;
 }
 
-#overlay {
-	z-index:1;
+.reservation_overlay {
+	z-index:3;
+	width: 100%;
+	height: 100%;
+	background-color:#000000;
+	-moz-opacity: 0.6;
+	opacity:.60;
+	filter: alpha(opacity=60);
+}
+
+#index_overlay {
 	display:none;
+	z-index:1;
 	position:absolute;
 	top:0;
 	left:0;

@@ -215,7 +215,7 @@ if (!$result) {
 	<?php require_once("./show_schedule.php"); ?>
 </div>
 
-<div id='overlay'></div>
+<div id='index_overlay'></div>
 <div id='inschrijving'></div>
 
 <script type="text/javascript" src="scripts/dates_and_ajax.js"></script>
