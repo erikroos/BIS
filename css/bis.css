@@ -69,6 +69,8 @@
 	display:none;
 	position:absolute;
 	background-color:white;
+	/*overflow:scroll;*/
+	margin-right:-1px;
 }
 
 #index_overlay {
@@ -83,6 +85,20 @@
 	-moz-opacity: 0.6;
 	opacity:.60;
 	filter: alpha(opacity=60);
+}
+
+#res_overlay {
+	clear:both;
+	display:none;
+	z-index:3;
+	position:absolute;
+	top:35;
+	left:0;
+	width: 100%;
+	background-color:#000000;
+	-moz-opacity:0.5;
+	opacity:.50;
+	filter:alpha(opacity=50);
 }
 
 .italic {
@@ -123,18 +139,10 @@
 	background-color:#FFFF99;
 }
 
-#resscreen {
-	clear:both;
+#msgbar {
 	display:none;
-	z-index:3;
-	position:absolute;
-	top:35;
-	left:0;
-	width: 100%;
-	background-color:#000000;
-	-moz-opacity:0.5;
-	opacity:.50;
-	filter:alpha(opacity=50);
+	height:50px;
+	overflow:hidden;
 }
 
 .successmsg {

@@ -187,7 +187,7 @@ echo "</div>";
 echo "</div>";
 // Message bar
 echo "<div id='msgbar'></div>"; // To be filled with AJAX after pressing button
-echo "<div id='resscreen'></div>"; // Enables rest of screen to be grayed out after pressing button
+echo "<div id='res_overlay'></div>"; // Enables rest of screen to be grayed out after pressing button
 // Rest of screen
 // Show existing reservations
 // Firstly disconnect from DB

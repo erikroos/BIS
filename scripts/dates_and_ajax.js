@@ -94,8 +94,13 @@ function showInschrijving(id, boat_id, date, cat_to_show, grade_to_show, time_to
 		var sizePerc = .65;
 		document.getElementById('inschrijving').style.top = Math.round(window.innerHeight * ((1 - sizePerc) / 2)) + 'px';
 		document.getElementById('inschrijving').style.height = Math.round(window.innerHeight * sizePerc) + 'px';
+		// width must always be even number because of bug in Chrome
+		var resWidth = Math.round(window.innerWidth * sizePerc);
+		if (resWidth % 2) {
+			resWidth -= 1;
+		}
 		document.getElementById('inschrijving').style.left = Math.round(window.innerWidth * ((1 - sizePerc) / 2)) + 'px';
-		document.getElementById('inschrijving').style.width = Math.round(window.innerWidth * sizePerc) + 'px';
+		document.getElementById('inschrijving').style.width = resWidth + 'px';
 		// Contents of the pop-up:
 		httpObject = getHTTPObject();
 		if (httpObject != null) {
@@ -168,18 +173,16 @@ function resetReservationPopup(){
 			httpObject.responseText.slice(0, 32) == '<p>De inschrijving is verwijderd') {
 			// Success
 			msgBar.setAttribute('class', 'successmsg');
-			msgBar.innerHTML = httpObject.responseText;
 			// gray out rest of screen
 			var hgt = document.getElementById('inschrijving').style.height;
-			var msgHgt = document.getElementById("msgbar").style.height;
 			hgt = hgt.slice(0, -2);
-			msgHgt = msgHgt.slice(0, -2);
-			hgt = hgt - msgHgt - 35;
-			document.getElementById("resscreen").style.height = hgt + 'px';
-			document.getElementById("resscreen").style.display = 'block';
+			hgt = hgt - 70 - 35; // height of 'inschrijving' div minus heights of top (50 + 2 * 10 padding) and message bars
+			document.getElementById("res_overlay").style.height = hgt + 'px';
+			document.getElementById("res_overlay").style.display = 'block';
 		} else {
 			msgBar.setAttribute('class', 'failmsg');
-			msgBar.innerHTML = httpObject.responseText;
 		}
+		msgBar.innerHTML = httpObject.responseText;
+		msgBar.style.display = 'block';
 	}
 }
