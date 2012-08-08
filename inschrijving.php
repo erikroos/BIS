@@ -181,13 +181,13 @@ if ($id && !$again) {
 echo "</p>";
 echo "</div>";
 echo "<div class='closediv'>";
-echo "<input type=\"button\" class='bisbtn' value=\"SLUITEN\" onclick=\"window.location.href='index.php?date_to_show=" . $date .
+echo "<input type=\"button\" class='bisbtn_borderless' value=\"SLUITEN\" onclick=\"window.location.href='index.php?date_to_show=" . $date .
 "&start_time_to_show=" . $start_time . "&cat_to_show=" . $cat_to_show . "&grade_to_show=" . $grade_to_show . "'\" />";
 echo "</div>";
 echo "</div>";
 // Message bar
 echo "<div id='msgbar'></div>"; // To be filled with AJAX after pressing button
-echo "<div id='res_overlay'></div>"; // Enables rest of screen to be grayed out after pressing button
+echo "<div id='resscreen'>"; // Enables rest of screen to be removed upon success
 // Rest of screen
 // Show existing reservations
 // Firstly disconnect from DB
@@ -377,6 +377,8 @@ if ($id) {
 		 "', '" . $cat_to_show . "', '" . $grade_to_show . "');\" />";
 }
 echo "</div></form>";
+echo "<br />";
+echo "</div>"; // resscreen
 echo "</div>"; // surrounding div
 
 mysql_close($bisdblink);

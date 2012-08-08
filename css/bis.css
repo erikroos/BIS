@@ -2,6 +2,16 @@
  * BIS specific style sheet
  */
  
+ .middle_box {
+	position:absolute;
+	top:25%;
+    right:25%;
+    bottom:25%;
+    left:25%;
+    padding:25px;
+    margin:25px;
+}
+ 
 .mainscreen {
 	padding-left:15px;
 	padding-right:15px;
@@ -69,8 +79,10 @@
 	display:none;
 	position:absolute;
 	background-color:white;
-	/*overflow:scroll;*/
-	margin-right:-1px;
+	top:20%;
+    right:25%;
+    left:25%;
+    margin:25px;
 }
 
 #index_overlay {
@@ -87,20 +99,6 @@
 	filter: alpha(opacity=60);
 }
 
-#res_overlay {
-	clear:both;
-	display:none;
-	z-index:3;
-	position:absolute;
-	top:35;
-	left:0;
-	width: 100%;
-	background-color:#000000;
-	-moz-opacity:0.5;
-	opacity:.50;
-	filter:alpha(opacity=50);
-}
-
 .italic {
 	font-style:italic;
 }
@@ -113,6 +111,7 @@
 .topbar {
 	margin-left:0px;
 	margin-right:0px;
+	padding-right:0px;
 	overflow:hidden; /* So it will contain the header and closediv */
 	background-color:#FFFF99;
 }
@@ -132,8 +131,7 @@
 }
 
 .closediv {
-	margin-right:0px;
-	padding-right:0px;
+	margin-right:-2px; /* To fix Chrome and possibly IE problem with positioning of close button*/
 	border:0px;
 	float:right;
 	background-color:#FFFF99;
@@ -141,8 +139,6 @@
 
 #msgbar {
 	display:none;
-	height:50px;
-	overflow:hidden;
 }
 
 .successmsg {
@@ -198,9 +194,28 @@ input.bisbtn {
 	height:35px;
 }
 
+input.bisbtn_borderless {
+	padding: 0.5em 1em;
+	border:0px;
+	background-color:#CC9900;
+	color:white;
+	font-size:1em;
+	font-weight:bold;
+	height:35px;
+}
+
 input.bisbtn:hover {
 	color:#CC9900;
 	background-color:white;
+}
+
+input.bisbtn_borderless:hover {
+	color:#CC9900;
+	background-color:white;
+}
+
+.textbtn {
+	/**/
 }
 
 .smalltextbtn {
