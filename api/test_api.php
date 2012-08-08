@@ -94,7 +94,30 @@ if (substr($res, 0, 8) == "<p>Beste") {
 	die;
 }
 
-// 6. delete reservation
+// 4. retrieve altered reservation
+$url = "http://www.hunze.nl/test_bis/api/index.php?token=" . $token . "&entity=test_inschrijvingen&date=" . $tomorrow_db;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_HEADER, 0);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+$boats = curl_exec($ch);
+curl_close($ch);
+$resArray = json_decode($boats);
+$resId = -1;
+foreach ($resArray as $res) {
+	if ($res->Verwijderd == 0 && $res->Boot_ID == 2 && $res->Begintijd == '10:00:00') {
+		$resId = $res->Volgnummer;
+		echo "Found back altered reservation, ID = " . $resId . "<br /><br />";
+		break;
+	}
+}
+if ($resId == -1) {
+	echo "Altered reservation not found, something went wrong!<br /><br />";
+	die;
+}
+
+// 7. delete reservation
 $url = "http://www.hunze.nl/test_bis/api/index.php";
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
@@ -113,7 +136,7 @@ if (substr($del, 0, 33) == "<p>De inschrijving is verwijderd.") {
 	die;
 }
 
-// 7. make a deliberately wrong reservation
+// 8. make a deliberately wrong reservation
 $url = "http://www.hunze.nl/test_bis/api/index.php";
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
