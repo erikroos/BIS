@@ -23,7 +23,8 @@ if (isset($_GET['del'])){
 	$start_time = $_GET['start_time'];
 	$cat_to_show = $_GET['cat_to_show'];
 	$grade_to_show = $_GET['grade_to_show'];
-	echo deleteReservation($database_host, $database_user, $database_pass, $database, $opzoektabel, $id);
+	$result = deleteReservation($id);
+	echo json_encode($result);
 }
 	
 if (isset($_GET['make'])){
@@ -43,9 +44,10 @@ if (isset($_GET['make'])){
 	if ($ergo_lo == "") $ergo_lo = 0;
 	$ergo_hi = $_GET['ergo_hi'];
 	if ($ergo_hi == "") $ergo_hi = 0;
-	echo makeReservation($database_host, $database_user, $database_pass, $database, $opzoektabel, $fail_msg, 
-						 false, $id, $again, $boat_id, $pname, $name, $email, $mpb, $date, $start_time_hrs, 
-						 $start_time_mins, $end_time_hrs, $end_time_mins, $ergo_lo, $ergo_hi);
+	// make/alter reservation and spit out resulting JSON as-is
+	$result = makeReservation(false, $id, $again, $boat_id, $pname, $name, $email, $mpb, $date, $start_time_hrs, 
+							  $start_time_mins, $end_time_hrs, $end_time_mins, $ergo_lo, $ergo_hi);
+	echo json_encode($result);
 }
 
 ?>

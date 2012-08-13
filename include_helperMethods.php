@@ -89,15 +89,15 @@ function InRange($ddmmyyyy, $nr_of_days) {
 	return false;
 }
 
-function ValidateLogin($user_, $pass_, $database_host_, $login_database_user_, $login_database_pass_, $login_database_) {
+function ValidateLogin($user, $pass, $database_host, $login_database_user, $login_database_pass, $login_database) {
 
 	// Drupal-DB selecteren
-	$link_drupal = mysql_connect($database_host_, $login_database_user_, $login_database_pass_);
-	if (!mysql_select_db($login_database_, $link_drupal)) {
+	$link_drupal = mysql_connect($database_host, $login_database_user, $login_database_pass);
+	if (!mysql_select_db($login_database, $link_drupal)) {
 		echo mysql_error()."<br />";
 	}
 	
-	$query = "SELECT pass FROM users WHERE name='$user_';";
+	$query = "SELECT pass FROM users WHERE name='" . $user . "';";
 	$result = mysql_query($query);
 	if (!$result) {
 		echo mysql_error()."<br />";
@@ -105,11 +105,9 @@ function ValidateLogin($user_, $pass_, $database_host_, $login_database_user_, $
 	$row = mysql_fetch_assoc($result);
 	$pass_db = $row['pass'];
 	mysql_close($link_drupal);
-	$pass_given = md5($pass_);
+	$pass_given = md5($pass);
 	if ($pass_db == $pass_given) {
 		return true;
 	}
 	return false;
 }
-
-?>

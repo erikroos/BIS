@@ -9,9 +9,9 @@ $request_method = strtolower($_SERVER['REQUEST_METHOD']);
 if ($request_method == 'post') {
 	if (validateToken($_POST)) {
 		if ($_POST['delete'] == 1) {
-			handleDeleteRequest($_POST, $database_host, $database_user, $database_pass, $database, $opzoektabel);
+			handleDeleteRequest($_POST);
 		} else {
-			handlePostRequest($_POST, $database_host, $database_user, $database_pass, $database, $opzoektabel);
+			handlePostRequest($_POST);
 		}
 	} else {
 		die(sendResponse(401));
@@ -19,14 +19,14 @@ if ($request_method == 'post') {
 } else {
 	if ($request_method == 'get') {
 		if ($_GET['getToken'] == 1) {
-			if (validateApiLogin($_GET, $database_host, $login_database_user, $login_database_pass, $login_database, $database)) {
+			if (validateApiLogin($_GET)) {
 				sendResponse(200, makeToken());
 			} else {
 				die(sendResponse(401));
 			}
 		} else {
 			if (validateToken($_GET)) {
-				handleGetRequest($_GET, $database_host, $database_user, $database_pass, $database);
+				handleGetRequest($_GET);
 			} else {
 				die(sendResponse(401));
 			}
@@ -41,9 +41,9 @@ function makeToken() {
 	return md5($ip.$salt.$timestamp);
 }
 
-function validateApiLogin($data, $database_host_, $login_database_user_, $login_database_pass_, $login_database_, $database_) {
+function validateApiLogin($data) {
 	// Get username -> password from DB (md5)
-	$password = getPass($data['username'], $database_host_, $login_database_user_, $login_database_pass_, $login_database_, $database_);
+	$password = getPass($data['username']);
 	// Compare password from DB to password from request
 	// Note: getPass() returns empty string if username unknown in DB, so check for that!!
 	if ($password != "" && $password == $data['password']) {
@@ -61,15 +61,21 @@ function validateToken($data) {
 	}
 }
 
-function getPass($user_, $database_host_, $login_database_user_, $login_database_pass_, $login_database_, $database_) {
+function getPass($user) {
+	
+	global $database_host;
+	global $login_database_user;
+	global $login_database_pass;
+	global $login_database;
+	global $database;
 	
 	// Drupal-DB selecteren
-	$link_drupal = mysql_connect($database_host_, $login_database_user_, $login_database_pass_);
-	if (!mysql_select_db($login_database_, $link_drupal)) {
+	$link_drupal = mysql_connect($database_host, $login_database_user, $login_database_pass);
+	if (!mysql_select_db($login_database, $link_drupal)) {
 		echo mysql_error()."<br />";
 	}
 	
-	$query = "SELECT pass FROM users WHERE name='$user_';";
+	$query = "SELECT pass FROM users WHERE name='" . $user . "';";
 	$result = mysql_query($query);
 	if ($result) {
 		$row = mysql_fetch_assoc($result);
@@ -80,7 +86,7 @@ function getPass($user_, $database_host_, $login_database_user_, $login_database
 	return $pass_db;
 }
 
-function handleGetRequest($data, $database_host_, $database_user_, $database_pass_, $database_) {
+function handleGetRequest($data) {
 	if ($data['entity'] == "bestuursleden" ||
 		$data['entity'] == "boten" ||
 		$data['entity'] == "inschrijvingen" ||
@@ -92,14 +98,14 @@ function handleGetRequest($data, $database_host_, $database_user_, $database_pas
 		$data['entity'] == "types" ||
 		$data['entity'] == "uitdevaart")
 	{
-		$record_list = getEntityRecords($data['entity'], $data['date'], $database_host_, $database_user_, $database_pass_, $database_);
+		$record_list = getEntityRecords($data['entity'], $data['date']);
 		sendResponse(200, json_encode($record_list), 'application/json');
 	} else {
 		die(sendResponse(403));
 	}
 }
 
-function handlePostRequest($data, $database_host_, $database_user_, $database_pass_, $database_, $opzoektabel_) {
+function handlePostRequest($data) {
 	$fail_msg = "";
 	$res_id = $data['res_id'];
 	$boat_id = $data['boat_id'];
@@ -116,24 +122,27 @@ function handlePostRequest($data, $database_host_, $database_user_, $database_pa
 	if ($ergo_lo == "") $ergo_lo = 0;
 	$ergo_hi = $data['ergo_hi'];
 	if ($ergo_hi == "") $ergo_hi = 0;
-	$response = makeReservation($database_host_, $database_user_, $database_pass_, $database_, $opzoektabel_, $fail_msg, true, $res_id, 0, $boat_id, $name, $team_name, $email, $mpb, $date, $start_time_hrs, $start_time_mins, $end_time_hrs, $end_time_mins, $ergo_lo, $ergo_hi);
-	if ($fail_msg != "") {
-		sendResponse(200, "<p>".$fail_msg."</p>");
-	} else {
-		sendResponse(200, $response);
-	}
+	$response = makeReservation(true, $res_id, 0, $boat_id, $name, $team_name, $email, $mpb, $date, $start_time_hrs, $start_time_mins, $end_time_hrs, $end_time_mins, $ergo_lo, $ergo_hi);
+	sendResponse(200, json_encode($response), 'application/json');
 }
 
-function handleDeleteRequest($data, $database_host_, $database_user_, $database_pass_, $database_, $opzoektabel_) {
+function handleDeleteRequest($data) {
 	$res_id = $data['res_id'];
-	sendResponse(200, deleteReservation($database_host_, $database_user_, $database_pass_, $database_, $opzoektabel_, $res_id));
+	$response = deleteReservation($res_id);
+	sendResponse(200, json_encode($response), 'application/json');
 }
 
-function getEntityRecords($entity, $date, $database_host_, $database_user_, $database_pass_, $database_) {
+function getEntityRecords($entity, $date) {
+
+	global $database_host;
+	global $database_user;
+	global $database_pass;
+	global $database;
+
 	$records = array();
 	// BIS-DB selecteren
-	$link = mysql_connect($database_host_, $database_user_, $database_pass_);
-	if (!mysql_select_db($database_, $link)) {
+	$link = mysql_connect($database_host, $database_user, $database_pass);
+	if (!mysql_select_db($database, $link)) {
 		echo "Fout: database niet gevonden.<br>";
 		exit();
 	}
@@ -148,7 +157,7 @@ function getEntityRecords($entity, $date, $database_host_, $database_user_, $dat
 			$where = " WHERE Datum='$date'";
 		}
 	}
-	$query = "SELECT * FROM ".$entity.$where.";";
+	$query = "SELECT * FROM " . $entity . $where . ";";
 	$result = mysql_query($query);
 	if ($result) {
 		while ($row = mysql_fetch_assoc($result)) {
@@ -269,5 +278,3 @@ function sendResponse($status = 200, $body = '', $content_type = 'text/html')
 		exit;
 	}
 }
-
-?>

@@ -159,8 +159,8 @@ function delRes(id, start_time, cat_to_show, grade_to_show) {
 function resetReservationPopup(){
 	if (httpObject.readyState == 4 && httpObject.status == 200) {
 		var msgBar = document.getElementById("msgbar");
-		if (httpObject.responseText.slice(0, 8) == '<p>Beste' || 
-			httpObject.responseText.slice(0, 32) == '<p>De inschrijving is verwijderd') {
+		var resultArray = JSON.parse(httpObject.responseText);
+		if (resultArray.success == 1) {
 			// Success
 			msgBar.setAttribute('class', 'successmsg');
 			// Remove rest of screen
@@ -169,7 +169,12 @@ function resetReservationPopup(){
 			msgBar.setAttribute('class', 'failmsg');
 			// Leave form standing so user can try again
 		}
-		msgBar.innerHTML = httpObject.responseText;
+		var msg = "<p>";
+		for (i in resultArray.messages) {
+			msg += resultArray.messages[i] + "<br />";
+		}
+		msg += "</p>";
+		msgBar.innerHTML = msg;
 		msgBar.style.display = 'block';
 	}
 }
