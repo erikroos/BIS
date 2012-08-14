@@ -315,7 +315,7 @@ Calendar.prototype.cal_data = function() {
 				"<A HREF='#' " + 
 					"onClick=\"self.opener.document." + this.gReturnItem + ".value='" + 
 					this.format_data(vDay) + 
-					"';self.opener.ChangeInfo();window.close();\">" + 
+					"';self.opener.changeInfo();window.close();\">" + // hardcoded name of function to call after changing value of date box (AJAX)
 				this.format_day(vDay) + 
 				"</A>" + 
 				"</FONT></TD>";

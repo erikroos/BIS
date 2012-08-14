@@ -36,7 +36,6 @@ function resetDate(factor) {
 	document.getElementById("date_to_show").value = nDatum;
 }
 
-// Get the HTTP Object
 function getHTTPObject(){
 	if (window.ActiveXObject) 
 		return new ActiveXObject("Microsoft.XMLHTTP");
