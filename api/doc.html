@@ -27,11 +27,13 @@
  	<li>mededelingen</li>
 	<li>roeigraden</li>
 	<li>types</li>
- 	<li>uitdevaart</li>
+ 	<li>uitdevaart (u moet een extra parameter meegeven, date = &lt;de datum waarop de uit-de-vaart-meldingen geldig moeten zijn (yyyy-mm-dd)&gt;)</li>
 </ul>
 <p>De gegevens worden in JSON-formaat als een lijst van tuples van key-value-paren teruggegeven. Voorbeeld van zo'n tuple:<br />{"ID":"1","Type":"1x","Categorie":"Skiffs en C1en","Roeisoort":"scull"}</p>
 
-<p>Met een <strong>POST</strong>-request kunt u een inschrijving aan de database toevoegen, een bestaande inschrijving wijzigen of een bestaande inschrijving verwijderen. <em>NB: alle normale Hunze-regels betreffende inschrijvingen en MPB's gelden ook als u via de API inschrijft! Eventuele foutmeldingen krijgt u via de response terug.</em></p>
+<p>Met een <strong>POST</strong>-request kunt u een inschrijving aan de database toevoegen, een bestaande inschrijving wijzigen of een bestaande inschrijving verwijderen.
+<em>NB: alle normale regels betreffende inschrijvingen en MPB's gelden ook als u via de API inschrijft! Eventuele foutmeldingen krijgt u via de response terug.</em>
+De response bestaat uit een JSON-array met een veld "success" (true/false) en een veld "messages", een array van &eacute;&eacute;n of meer toelichtingen bij het resultaat van de gevraagde actie.</p>
 <ul>
 	<li>Toevoegen: geef in de request-body (content-type: application/x-www-form-urlencoded en charset: UTF-8) de volgende parameters mee:
 		<ul>

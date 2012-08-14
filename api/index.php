@@ -18,7 +18,7 @@ if ($request_method == 'post') {
 	}
 } else {
 	if ($request_method == 'get') {
-		if ($_GET['getToken'] == 1) {
+		if (isset($_GET['getToken']) && $_GET['getToken'] == 1) {
 			if (validateApiLogin($_GET)) {
 				sendResponse(200, makeToken());
 			} else {
@@ -36,9 +36,10 @@ if ($request_method == 'post') {
 exit;
 
 function makeToken() {
+	global $salt;
 	$ip = $_SERVER['REMOTE_ADDR'];
 	$timestamp = floor(time() / 3600);
-	return md5($ip.$salt.$timestamp);
+	return md5($ip . $salt . $timestamp);
 }
 
 function validateApiLogin($data) {
@@ -98,7 +99,7 @@ function handleGetRequest($data) {
 		$data['entity'] == "types" ||
 		$data['entity'] == "uitdevaart")
 	{
-		$record_list = getEntityRecords($data['entity'], $data['date']);
+		$record_list = getEntityRecords($data['entity'], isset($data['date']) ? $data['date'] : null);
 		sendResponse(200, json_encode($record_list), 'application/json');
 	} else {
 		die(sendResponse(403));
@@ -150,11 +151,18 @@ function getEntityRecords($entity, $date) {
 	if ($entity == "inschrijvingen" ||
 		$entity == "inschrijvingen_oud" ||
 		$entity == "test_inschrijvingen" ||
-		$entity == "test_inschrijvingen_oud") {
+		$entity == "test_inschrijvingen_oud" ||
+		$entity == "uitdevaart") {
 		if (!$date) {
 			die(sendResponse(400, "<p>Fout: geen datum opgegeven</p>"));
 		} else {
-			$where = " WHERE Datum='$date'";
+			if ($entity == "uitdevaart") {
+				$where = " WHERE Verwijderd = 0 AND 
+						  Startdatum <= '" . $date . "' AND 
+						  (Einddatum = '0000-00-00' OR Einddatum >= '" . $date . "')";
+			} else {
+				$where = " WHERE Datum = '" . $date . "'";
+			}
 		}
 	}
 	$query = "SELECT * FROM " . $entity . $where . ";";
