@@ -181,7 +181,7 @@ if ($id && !$again) {
 echo "</p>";
 echo "</div>";
 echo "<div class='closediv'>";
-echo "<input type=\"button\" class='bisbtn_borderless' value=\"SLUITEN\" onclick=\"window.location.href='index.php?date_to_show=" . $date .
+echo "<input id='closebtn' type=\"button\" class='bisbtn_borderless' value=\"SLUITEN\" onclick=\"window.location.href='index.php?date_to_show=" . $date .
 "&start_time_to_show=" . $start_time . "&cat_to_show=" . $cat_to_show . "&grade_to_show=" . $grade_to_show . "'\" />";
 echo "</div>";
 echo "</div>";
@@ -226,7 +226,7 @@ if (($id == 0 || $again) && substr($boat, 0, 7) == "Concept") {
 		echo ">".$t."</option>";
 	}
 	echo "</select> t/m ";
-	if (!$ergo_hi) $ergo_hi = $ergo_lo;
+	if (!isset($ergo_hi) || $ergo_hi == 0) $ergo_hi = $ergo_lo;
 	echo "<select name=\"ergo_hi\" id='ergo_hi'>";
 	for ($t = $ergo_lo; $t <= $NR_OF_CONCEPTS; $t++) {
 		echo"<option value=\"".$t."\" ";

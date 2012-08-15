@@ -157,20 +157,25 @@ function delRes(id, start_time, cat_to_show, grade_to_show) {
 
 function resetReservationPopup(){
 	if (httpObject.readyState == 4 && httpObject.status == 200) {
-		var msgBar = document.getElementById("msgbar");
 		var resultArray = JSON.parse(httpObject.responseText);
-		if (resultArray.success == 1) {
-			// Success
-			msgBar.setAttribute('class', 'successmsg');
-			// Remove rest of screen
-			document.getElementById("resscreen").style.display = 'none';
-		} else {
-			msgBar.setAttribute('class', 'failmsg');
-			// Leave form standing so user can try again
-		}
+		// Fill and show message bar
+		var msgBar = document.getElementById("msgbar");
 		var msg = "<p>";
 		for (i in resultArray.messages) {
 			msg += resultArray.messages[i] + "<br />";
+		}
+		if (resultArray.success == 1) {
+			msgBar.setAttribute('class', 'successmsg');
+			msg += "U kunt hieronder eventueel nog eenzelfde inschrijving maken van een andere boot/ergometer.";
+			// Re-render close button to reflect chosen date, grade etc.
+			var date = document.getElementById("resdate").value;
+			var start_time_hrs = document.getElementById("start_time_hrs").value;
+			var start_time_mins = document.getElementById("start_time_mins").value;
+			document.getElementById("closebtn").setAttribute('onclick', "window.location.href='index.php?date_to_show=" + date + 
+				"&start_time_to_show=" + start_time_hrs + ":" + start_time_mins +  "&cat_to_show=Dubbelvieren&grade_to_show=alle'");	
+		} else {
+			msgBar.setAttribute('class', 'failmsg');
+			msg += "U kunt hieronder de inschrijving corrigeren en nogmaals proberen op te slaan.";
 		}
 		msg += "</p>";
 		msgBar.innerHTML = msg;

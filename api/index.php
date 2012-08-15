@@ -139,6 +139,7 @@ function getEntityRecords($entity, $date) {
 	global $database_user;
 	global $database_pass;
 	global $database;
+	global $opzoektabel;
 
 	$records = array();
 	// BIS-DB selecteren
@@ -147,12 +148,16 @@ function getEntityRecords($entity, $date) {
 		echo "Fout: database niet gevonden.<br>";
 		exit();
 	}
+	// Make sure right reservations table is selected
+	if ($entity == "inschrijvingen" || $entity == "test_inschrijvingen") {
+		$entity = $opzoektabel;
+	}
+	if ($entity == "inschrijvingen_oud" || $entity == "test_inschrijvingen_oud") {
+		$entity = $opzoektabel . "_oud";
+	}
+	// Build where clause
 	$where = "";
-	if ($entity == "inschrijvingen" ||
-		$entity == "inschrijvingen_oud" ||
-		$entity == "test_inschrijvingen" ||
-		$entity == "test_inschrijvingen_oud" ||
-		$entity == "uitdevaart") {
+	if ($entity == $opzoektabel || $entity == $opzoektabel . "_oud" || $entity == "uitdevaart") {
 		if (!$date) {
 			die(sendResponse(400, "<p>Fout: geen datum opgegeven</p>"));
 		} else {
@@ -165,6 +170,7 @@ function getEntityRecords($entity, $date) {
 			}
 		}
 	}
+	// Perform the actual query
 	$query = "SELECT * FROM " . $entity . $where . ";";
 	$result = mysql_query($query);
 	if ($result) {
