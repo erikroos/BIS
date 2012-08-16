@@ -29,7 +29,6 @@ if (isset($_GET['del'])){
 	
 if (isset($_GET['make'])){
 	$id = $_GET['id'];
-	$again = $_GET['again'];
 	$boat_id = $_GET['boat_id'];
 	$pname = $_GET['pname'];
 	$name = $_GET['name'];
@@ -44,10 +43,7 @@ if (isset($_GET['make'])){
 	if ($ergo_lo == "") $ergo_lo = 0;
 	$ergo_hi = $_GET['ergo_hi'];
 	if ($ergo_hi == "") $ergo_hi = 0;
-	// make/alter reservation and spit out resulting JSON as-is
-	$result = makeReservation(false, $id, $again, $boat_id, $pname, $name, $email, $mpb, $date, $start_time_hrs, 
+	$result = makeReservation($id, $boat_id, $pname, $name, $email, $mpb, $date, $start_time_hrs, 
 							  $start_time_mins, $end_time_hrs, $end_time_mins, $ergo_lo, $ergo_hi);
 	echo json_encode($result);
 }
-
-?>

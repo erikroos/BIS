@@ -123,7 +123,7 @@ function handlePostRequest($data) {
 	if ($ergo_lo == "") $ergo_lo = 0;
 	$ergo_hi = $data['ergo_hi'];
 	if ($ergo_hi == "") $ergo_hi = 0;
-	$response = makeReservation(true, $res_id, 0, $boat_id, $name, $team_name, $email, $mpb, $date, $start_time_hrs, $start_time_mins, $end_time_hrs, $end_time_mins, $ergo_lo, $ergo_hi);
+	$response = makeReservation($res_id, $boat_id, $name, $team_name, $email, $mpb, $date, $start_time_hrs, $start_time_mins, $end_time_hrs, $end_time_mins, $ergo_lo, $ergo_hi);
 	sendResponse(200, json_encode($response), 'application/json');
 }
 

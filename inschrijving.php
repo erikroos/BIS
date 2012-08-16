@@ -33,8 +33,7 @@ if ($id < 0 || !is_numeric($id)) { // check op ID
 	exit();
 }
 
-if ($id > 0) { // bestaande/gelijksoortige inschrijving: haal de var'en op t.b.v. show_availability
-	$again = (isset($_GET['again']) ? $_GET['again'] : 0);
+if ($id > 0) { // bestaande inschrijving: haal de var'en op t.b.v. show_availability
 	$query = "SELECT * FROM ".$opzoektabel." WHERE Volgnummer='$id';";
 	$result = mysql_query($query);
 	if ($result) {
@@ -60,7 +59,7 @@ if ($id > 0) { // bestaande/gelijksoortige inschrijving: haal de var'en op t.b.v
 			if (isset($_POST['boat_id'])) {
 				$boat_id = $_POST['boat_id'];
 			} else {
-				if (!$again) $boat_id = $row['Boot_ID'];
+				$boat_id = $row['Boot_ID'];
 			}
 			if (isset($_POST['pname'])) {
 				$pname = $_POST['pname'];
@@ -114,7 +113,7 @@ if ($id == 0) { // nieuwe inschrijving: haal de var'en op t.b.v. show_availabili
 }
 
 // sanity check op boot
-if (!isset($again) && (!is_numeric($boat_id) || $boat_id < 0)) {
+if (!is_numeric($boat_id) || $boat_id < 0) {
 	echo "<p>Deze boot bestaat niet.</p>";
 	exit();
 }
@@ -169,7 +168,7 @@ if (!isset($end_time)) {
 echo "<div class='topbar'>";
 echo "<div class='header'>";
 echo "<p class='bisheader'>Inschrijving ";
-if ($id && !$again) {
+if ($id) {
 	echo "bewerken";
 } else {
 	if ($spits) {
@@ -211,9 +210,11 @@ echo "<table><tr>";
 
 // ID, tbv AJAX
 echo "<td style=\"display:none\"><input type=\"hidden\" name=\"id\" id=\"id\" value=\"" . $id . "\" /></td></tr><tr>";
+// Grade to show in index.php, so we can compare it to the grade of the reserved boat after success
+echo "<td style=\"display:none\"><input type=\"hidden\" name=\"grade\" id=\"grade\" value=\"" . $grade_to_show . "\" /></td></tr><tr>";
 
 // Ergo-blokinschrijving, alleen bij een nieuwe inschrijving van Concepts
-if (($id == 0 || $again) && substr($boat, 0, 7) == "Concept") {
+if ($id == 0 && substr($boat, 0, 7) == "Concept") {
 	echo "<td colspan=\"2\">";
 	echo "Schrijf in &eacute;&eacute;n keer meerdere Concept-ergometers in:<br />bijv. '3 t/m 5' voor Concepts 3, 4 en 5, of gewoon eentje, bijv. '2 t/m 2' voor alleen Concept 2.";
 	echo "</td></tr><tr>";
@@ -361,7 +362,7 @@ echo "</tr>";
 echo "</table><br />";
 // knoppen
 echo "<div><input type=\"button\" class='bisbtn' value=\"";
-if ($id && !$again) {
+if ($id) {
 	echo "Opslaan";
 } else {
 	if ($spits) {
@@ -370,8 +371,7 @@ if ($id && !$again) {
 		echo "Inschrijven";
 	}
 }
-echo "\" onclick=\"makeRes(" . $id . ", ". (isset($again) ? $again : 0) . ", '" .
-	 $start_time . "', '" . $cat_to_show . "', '" . $grade_to_show . "');\" />";
+echo "\" onclick=\"makeRes(" . $id .  ", '" . $start_time . "', '" . $cat_to_show . "', '" . $grade_to_show . "');\" />";
 if ($id) {
 	echo "&nbsp;<input type=\"button\" class='bisbtn' value=\"Verwijderen\" onclick=\"delRes(" . $id . ", '" . $start_time . 
 		 "', '" . $cat_to_show . "', '" . $grade_to_show . "');\" />";

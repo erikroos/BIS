@@ -112,7 +112,7 @@ function fillPopup(){
 	}
 }
 
-function makeRes(id, again, start_time, cat_to_show, grade_to_show) {
+function makeRes(id, start_time, cat_to_show, grade_to_show) {
 	httpObject = getHTTPObject();
 	if (httpObject != null) {
 		var boat_id = document.getElementById("boat_id").value;
@@ -134,7 +134,7 @@ function makeRes(id, again, start_time, cat_to_show, grade_to_show) {
 		var start_time_mins = document.getElementById("start_time_mins").value;
 		var end_time_hrs = document.getElementById("end_time_hrs").value;
 		var end_time_mins = document.getElementById("end_time_mins").value;
-		httpObject.open("GET", "check_reservation.php?make=1&id=" + id + "&again=" + again + "&boat_id=" + boat_id +
+		httpObject.open("GET", "check_reservation.php?make=1&id=" + id + "&boat_id=" + boat_id +
 			"&pname=" + pname + "&name=" + name + "&email=" + email + "&mpb=" + mpb + "&date=" + date + 
 			"&start_time_hrs=" + start_time_hrs + "&start_time_mins=" + start_time_mins +
 			"&end_time_hrs=" + end_time_hrs + "&end_time_mins=" + end_time_mins + "&ergo_lo=" + ergo_lo + "&ergo_hi=" + ergo_hi +
@@ -171,8 +171,13 @@ function resetReservationPopup(){
 			var date = document.getElementById("resdate").value;
 			var start_time_hrs = document.getElementById("start_time_hrs").value;
 			var start_time_mins = document.getElementById("start_time_mins").value;
+			var cat = resultArray.category;
+			var grade = resultArray.grade;
+			if (grade != document.getElementById("grade").value) {
+				grade = "alle"; // If grade of reserved boat differs from grade of boat originally selected, change to 'all'
+			}
 			document.getElementById("closebtn").setAttribute('onclick', "window.location.href='index.php?date_to_show=" + date + 
-				"&start_time_to_show=" + start_time_hrs + ":" + start_time_mins +  "&cat_to_show=Dubbelvieren&grade_to_show=alle'");	
+				"&start_time_to_show=" + start_time_hrs + ":" + start_time_mins + "&cat_to_show=" + cat + "&grade_to_show=" + grade + "'");	
 		} else {
 			msgBar.setAttribute('class', 'failmsg');
 			msg += "U kunt hieronder de inschrijving corrigeren en nogmaals proberen op te slaan.";
