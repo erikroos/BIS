@@ -18,6 +18,7 @@
 	padding-top: 5px;
 	padding-bottom: 5px;
 	background-color:#FFFF99;
+	float:left;
 }
 
 .scrollTable table
@@ -79,7 +80,7 @@
 	display:none;
 	position:absolute;
 	background-color:white;
-	top:20%;
+	top:15%;
     right:25%;
     left:25%;
     margin:25px;
@@ -117,10 +118,19 @@
 }
 
 #topbar_mainscreen {
+	clear:both;
 	padding-left:10px;
 	padding-right:10px; 
 	background-color:#FFFF99;
 	height:190px;
+}
+
+#ScheduleInfo  {
+	clear:left;
+}
+
+#mainscreen_footer {
+	margin-left:10px;
 }
 
 .header {
@@ -184,44 +194,39 @@
 
 /* BUTTONS */
 
-input.bisbtn {
+.bisbtn, .bisbtn_borderless {
 	padding: 0.5em 1em;
+	background-color:#CC9900;
+	color:white;
+	font-size:1em;
+	font-weight:bold;
+	height:35px;
+}
+
+.bisbtn {
+	border:1px solid #CC9900;
+}
+
+.bisbtn_borderless {
+	border:0px;
+}
+
+.smalltextbtn, .smallertextbtn {
 	border:1px solid #CC9900;
 	background-color:#CC9900;
 	color:white;
-	font-size:1em;
-	font-weight:bold;
-	height:35px;
-}
-
-input.bisbtn_borderless {
-	padding: 0.5em 1em;
-	border:0px;
-	background-color:#CC9900;
-	color:white;
-	font-size:1em;
-	font-weight:bold;
-	height:35px;
-}
-
-input.bisbtn:hover {
-	color:#CC9900;
-	background-color:white;
-}
-
-input.bisbtn_borderless:hover {
-	color:#CC9900;
-	background-color:white;
-}
-
-.textbtn {
-	/**/
+	font-weight:normal;
 }
 
 .smalltextbtn {
-	font-size:10px;
+	font-size:11px;
 }
 
 .smallertextbtn {
 	font-size:9px;
+}
+
+.bisbtn:hover, .bisbtn_borderless:hover , .smalltextbtn:hover, .smallertextbtn:hover {
+	color:#CC9900;
+	background-color:white;
 }
