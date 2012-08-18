@@ -166,10 +166,10 @@ function resetReservationPopup(){
 		}
 		if (resultArray.success == 1) {
 			msgBar.setAttribute('class', 'successmsg');
-			if (resultArray.action == "del") {
-				document.getElementById("resscreen").style.display = 'none';
-			} else {
+			if (resultArray.action == "make") {
 				msg += "U kunt hieronder eventueel nog eenzelfde inschrijving maken van een andere boot/ergometer.";
+			} else { // alter or delete: hide rest of reservation pop-up
+				document.getElementById("resscreen").style.display = 'none';
 			}
 			// Re-render close button to reflect chosen date, grade etc.
 			var date = document.getElementById("resdate").value;
@@ -184,10 +184,10 @@ function resetReservationPopup(){
 				"&start_time_to_show=" + start_time_hrs + ":" + start_time_mins + "&cat_to_show=" + cat + "&grade_to_show=" + grade + "'");	
 		} else {
 			msgBar.setAttribute('class', 'failmsg');
-			if (resultArray.action == "del") {
-				document.getElementById("resscreen").style.display = "none";
-			} else {
+			if (resultArray.action == "make" || resultArray.action == "alter") {
 				msg += "U kunt hieronder de inschrijving corrigeren en nogmaals proberen op te slaan.";
+			} else {  // unsuccessful delete: hide rest of reservation pop-up
+				document.getElementById("resscreen").style.display = "none";
 			}
 		}
 		msg += "</p>";

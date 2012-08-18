@@ -211,7 +211,7 @@ $date_sh = strftime('%A %d-%m-%Y', $date_tmp);
 <?php if ($toonweer): ?>
 	<div id='infobalkRechts'>
 		<strong>Weer</strong><br />
-		<?php //echo xmlnews('http://www.gyas.nl/media/output/weer.rss',3,'_blank','br', 0); ?>
+		<?php echo xmlnews('http://www.gyas.nl/media/output/weer.rss',3,'_blank','br', 0); ?>
 	</div>
 <?php endif; ?>
 
@@ -223,7 +223,7 @@ $date_sh = strftime('%A %d-%m-%Y', $date_tmp);
 </div>
 
 <div id="mainscreen_footer">
-	<p>BIS&nbsp;&copy;2008-<?php echo $theyear; ?>&nbsp;Erik Roos, Contact: <a href='mailto:<?php echo $mailadres; ?>'><?php echo $mailadres; ?></a>, Open source: <a href="https://github.com/erikroos/BIS" target="_blank">GitHub</a></p>
+	<p>BIS&nbsp;&copy;2008-<?php echo $theyear; ?>&nbsp;Erik Roos, contact: <a href='mailto:<?php echo $mailadres; ?>'><?php echo $mailadres; ?></a>, open source: <a href="https://github.com/erikroos/BIS" target="_blank">GitHub</a></p>
 </div>
 
 <div id='index_overlay'></div>
