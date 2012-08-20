@@ -15,19 +15,17 @@ include_once("../include_globalVars.php");
 <head>
     <title><? echo $systeemnaam; ?> - Uitloggen</title>
     <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
+    <link type="text/css" href="../css/bis.css" rel="stylesheet" />
 </head>
 <body>
-<?php
 
-unset($_SESSION['authorized_bis']);
+<?php unset($_SESSION['authorized_bis']); ?>
 
-echo "<div style=\"position:absolute; top:30%; left:30%\">";
-echo "<p><strong>U bent uitgelogd - tot ziens!</strong></p>";
-echo "<p><a href='bis_login.php'>Klik hier om opnieuw in te loggen&gt;&gt;</a><br>";
-echo "<a href='".$homepage."'>Klik hier om naar ".$homepagenaam." te gaan&gt;&gt;</a></p>";
-echo "</div>";
-
-?>
+<div class="middle_box">
+<p><strong>U bent uitgelogd - tot ziens!</strong></p>
+<p><a href='index.php'>Klik hier om opnieuw in te loggen&gt;&gt;</a><br>
+<a href='<?php echo $homepage; ?>'>Klik hier om naar <?php echo $homepagenaam; ?> te gaan&gt;&gt;</a></p>
+</div>
 
 </body>
 </html>
