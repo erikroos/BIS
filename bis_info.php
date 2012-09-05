@@ -29,12 +29,13 @@ include_once("include_globalVars.php");
 <? echo "<a href='mailto:".$mailadres."'>".$mailadres."</a>"; ?>
 </p>
 
-<strong>API</strong>
-<p>Voor meer informatie over de BIS-API, zie <a href="api/doc.html">de documentatie</a>.</p>
+<strong>API en app</strong>
+<p>Voor meer informatie over de BIS-API, zie <a href="api/doc.html">de documentatie</a>.<br />
+Download <a href="http://hunze.nl/sites/default/files/Hunze%20BIS%20v120820.apk" target="_blank">hier</a> de Android-app van BIS.</p>
 
 <strong>Algemeen - hoofdscherm</strong>
 <ul>
-  <li>Klik op een boot-/ergometernaam om een inschrijving te maken. NB: grijsgekleurde boten zijn uit de vaart.</li>
+  <li>Klik in het schema ter hoogte van de gewenste boot en tijd om een inschrijving te maken. NB: grijsgekleurde boten zijn uit de vaart.</li>
   <li>Klik op een ingeschreven blok om dit te bevestigen, te bekijken of te wijzigen. NB: grijze blokken kunnen niet (meer) gewijzigd worden.</li>
   <li>Oranje blokken zijn vooraf door het bestuur ingevoerde spitsblokken. Deze dienen uiterlijk een dag vantevoren bevestigd te worden.</li>
 </ul>
@@ -43,7 +44,7 @@ include_once("include_globalVars.php");
 <ul>
   <li>Voer de juiste gegevens in en druk tot slot op 'inschrijven' of 'opslaan'.</li>
   <li>Bij een spitsblok de gegevens controleren en op 'bevestigen' drukken.</li>
-  <li>Met een druk op 'annuleren' gaat u terug naar het inschrijfblad zonder de inschrijving te hebben gemaakt of gewijzigd.</li>
+  <li>Met een druk op 'sluiten' rechtsbovenin gaat u terug naar het inschrijfblad zonder de inschrijving te hebben gemaakt of gewijzigd.</li>
   <li>Kies, in het geval van een bestaande inschrijving, eventueel 'verwijderen' om deze te wissen.</li>
 </ul>
 
