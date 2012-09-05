@@ -37,7 +37,7 @@ if (isset($login) && isset($password)) {
 		</tr>
 		<tr>
 		  <td>&nbsp;</td>
-		  <td><input type="submit" value="Inloggen" class="textbtn" /></td>
+		  <td><input type="submit" value="Inloggen" class="bisbtn" /></td>
 		  <td>&nbsp;</td>
 		</tr>
 	</table>

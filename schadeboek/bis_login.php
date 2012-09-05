@@ -19,11 +19,12 @@ if (isset($login) && isset($password)) {
 <head>
     <title><? echo $systeemnaam; ?> - Login</title>
     <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
+    <link type="text/css" href="../css/bis.css" rel="stylesheet" />
 </head>
 <body>
-	<div style="position:absolute; top:30%; left:30%">
+	<div class="middle_box">
 	<h1>Inloggen op het <? echo $systeemnaam; ?></h1>
-	<form method="post" action="./bis_login.php">
+	<form method="post" action="bis_login.php">
 		<table>
 		<tr>
 		  <td>Login-naam:</td>
@@ -36,7 +37,7 @@ if (isset($login) && isset($password)) {
 		</tr>
 		<tr>
 		  <td>&nbsp;</td>
-		  <td><input type="submit" value="Inloggen" /></td>
+		  <td><input type="submit" value="Inloggen" class="bisbtn" /></td>
 		  <td>&nbsp;</td>
 		</tr>
 	</table>
