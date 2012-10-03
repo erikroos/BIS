@@ -22,7 +22,7 @@ function xmlnews($url, $timeout = 0, $target = "_top", $makelist = "br", $links)
 {
   if ( $timeout > 0 || ini_get( "allow_url_fopen" ) == "0" )
   { // als $timeout gezet is, of fopen wrappers niet geactiveerd zijn
-
+/*
     // breek de url op in delen
     $pu = parse_url( $url );
     if ( isset( $pu['port'] ) )
@@ -56,7 +56,8 @@ function xmlnews($url, $timeout = 0, $target = "_top", $makelist = "br", $links)
       $data .= fgets( $fp, 4096 );
     fclose( $fp );
     $data = substr( $data, strpos( $data, "\r\n\r\n" ) + 4 );
-
+*/
+    $data = file_get_contents($url);
   }
   elseif ( function_exists( "file_get_contents" ) )
 
@@ -137,5 +138,3 @@ function xmlnews($url, $timeout = 0, $target = "_top", $makelist = "br", $links)
   
   return $html;
 }
-
-?>
