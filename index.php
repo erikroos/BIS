@@ -211,7 +211,7 @@ $date_sh = strftime('%A %d-%m-%Y', $date_tmp);
 <?php if ($toonweer): ?>
 	<div id='infobalkRechts'>
 		<strong>Weer</strong><br />
-		<?php echo xmlnews('http://www.gyas.nl/media/output/weer.rss',3,'_blank','br', 0); ?>
+		<?php echo xmlnews('https://www.gyas.nl/media/output/weer.rss',3,'_blank','br', 0); ?>
 	</div>
 <?php endif; ?>
 
