@@ -31,8 +31,8 @@ if (!mysql_select_db($database, $link)) {
 
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_examens.php'>Terug naar examen-menu</a>] [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
-$id = $_GET['id']; // wijzigen bestaand examen
-if ($id && ($id < 0 || !is_numeric($id))) { // check op ID
+if (isset($_GET['id'])) $id = $_GET['id']; // wijzigen bestaand examen
+if (isset($id) && ($id < 0 || !is_numeric($id))) { // check op ID
 	echo "Er is iets misgegaan.";
 	exit();
 }

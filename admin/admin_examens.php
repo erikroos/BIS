@@ -30,12 +30,12 @@ if (!mysql_select_db($database, $link)) {
 
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
-$mode = $_GET['mode'];
-$curval = $_GET['curval'];
-$id = $_GET['id'];
+$mode = isset($_GET['mode']) ? $_GET['mode'] : '';
+if (isset($_GET['curval'])) $curval = $_GET['curval'];
+if (isset($_GET['id'])) $id = $_GET['id'];
 
-if ($mode == "c" && $id) {
-	if ($curval) {
+if ($mode == "c" && isset($id)) {
+	if (isset($curval)) {
 		$query = "UPDATE examens SET ToonOpSite=0 WHERE ID='$id';";
 	} else {
 		$query = "UPDATE examens SET ToonOpSite=1 WHERE ID='$id';";
@@ -48,7 +48,7 @@ if ($mode == "c" && $id) {
 	echo "<a href='admin_examens.php'>Terug naar de examenpagina&gt;&gt;</a>";
 	exit;
 }
-if ($mode == "d" && $id) {
+if ($mode == "d" && isset($id)) {
 	$query = "DELETE FROM examens WHERE ID='$id';";
 	$result = mysql_query($query);
 	if (!$result) {
