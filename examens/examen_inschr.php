@@ -111,7 +111,7 @@ if (isset($_POST['insert'])) {
 			// Mail kandidaat, met uitschrijflink
 			if ($email) {
 				$message = 'U bent aangemeld voor het examen op ' . $date_db . '<br />' .
-					'Mocht u zich willen uitschrijven, klik dan <a href="' . $homepage . '/examens/examen_inschr.php?delId=' . $hash . '">hier</a>';
+					'Mocht u zich willen uitschrijven, klik dan <a href="' . $homepage . '/bis/examens/examen_inschr.php?delId=' . $hash . '">hier</a>';
 				SendEmail($email, "Bevestiging examenaanmelding", $message);
 			}
 			
