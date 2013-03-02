@@ -47,7 +47,7 @@ $restrict_query_grade = "";
 if ($grade_to_show != 'alle') {
 	$restrict_query_grade = " AND boten.Roeigraad='$grade_to_show'";
 }
-$query = "SELECT boten.ID AS ID, Naam, Gewicht, Type, boten.Roeigraad FROM boten JOIN roeigraden ON boten.Roeigraad=roeigraden.Roeigraad WHERE Datum_eind IS NULL AND (".$restrict_query_type.") ".$restrict_query_grade." ORDER BY roeigraden.ID;";
+$query = "SELECT boten.ID AS ID, Naam, Gewicht, Type, boten.Roeigraad FROM boten JOIN roeigraden ON boten.Roeigraad=roeigraden.Roeigraad WHERE Datum_eind IS NULL AND (".$restrict_query_type.") ".$restrict_query_grade." ORDER BY roeigraden.ID, Naam;";
 
 $boats_result = mysql_query($query);
 if (!$boats_result) {
