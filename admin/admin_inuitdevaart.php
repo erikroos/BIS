@@ -54,7 +54,11 @@ while ($row = mysql_fetch_assoc($result)) {
 	$startdate = $row['Startdatum'];
 	$startdate_sh = DBdateToDate($startdate);
 	$enddate = $row['Einddatum'];
-	$enddate_sh = DBdateToDate($enddate);
+	if ($enddate == '' || $enddate == null) {
+		$enddate_sh = '';
+	} else {
+		$enddate_sh = DBdateToDate($enddate);
+	}
 	$reason = $row['Reden'];
 	echo "<tr>";
 	echo "<td><div style=\"text-align:left\">$startdate_sh</div></td>";	

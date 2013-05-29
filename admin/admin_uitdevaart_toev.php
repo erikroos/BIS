@@ -42,7 +42,7 @@ echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href=\"./admin_i
 
 $reason = "Uit de vaart";
 
-if ($_POST['cancel']) {
+if (isset($_POST['cancel'])) {
 	echo "<p>Er zal niets worden aangemaakt.</p>";
 	exit();
 }
@@ -59,7 +59,7 @@ if ($_POST['submit']) {
 	// einddatum
 	$enddate = $_POST['enddate'];
 	if (!$enddate) {
-		$enddate_db = 0;
+		$enddate_db = '';
 	} else {
 		if (CheckTheDate($enddate)) {
 			$enddate_db = DateToDBdate($enddate);
@@ -69,7 +69,7 @@ if ($_POST['submit']) {
 	}
 	
 	// datumvolgorde
-	if ($enddate_db) {
+	if ($enddate_db != '') {
 		if (strtotime($enddate_db) < strtotime($startdate_db)) {
 			$fail_msg_date = "De einddatum dient na de begindatum te liggen.";
 		}
@@ -79,10 +79,14 @@ if ($_POST['submit']) {
 	$reason = $_POST['reason'];
 	
 	// als niet gefaald, Uit de Vaart invoeren
-	if ($fail_msg_startdate || $fail_msg_enddate || $fail_msg_date) {
-		$fail = TRUE;
+	if (isset($fail_msg_startdate) || isset($fail_msg_enddate) || isset($fail_msg_date)) {
+		$fail = true;
 	} else {
-		$query = "INSERT INTO uitdevaart (Boot_ID, Startdatum, Einddatum, Reden, Verwijderd) VALUES ('$boot_id', '$startdate_db', '$enddate_db', '$reason', 0);"; 
+		if ($enddate_db != '') {
+			$query = "INSERT INTO uitdevaart (Boot_ID, Startdatum, Einddatum, Reden, Verwijderd) VALUES ('" . $boot_id . "', '" . $startdate_db . "', '" . $enddate_db . "', '" . $reason . "', 0);"; 
+		} else {
+			$query = "INSERT INTO uitdevaart (Boot_ID, Startdatum, Reden, Verwijderd) VALUES ('" . $boot_id . "', '" . $startdate_db . "', '" . $reason . "', 0);"; 
+		}
 		$result = mysql_query($query);
 		if (!$result) {
 			die("Invoeren mislukt.". mysql_error());
@@ -90,7 +94,9 @@ if ($_POST['submit']) {
 			echo "Uit de Vaart succesvol ingevoerd.";
 			// mensen mailen die deze boot hadden ingeschreven
 			$datepart_query = "";
-			if ($enddate_db) $datepart_query = "AND Datum <= '$enddate_db' ";
+			if ($enddate_db != '') {
+				$datepart_query = "AND Datum <= '$enddate_db' ";
+			}
 			$query2 = "SELECT Email, Datum, Begintijd FROM ".$opzoektabel." WHERE Boot_ID = '$boot_id' AND Datum >= '$startdate_db' ".$datepart_query." AND Spits=0 AND Verwijderd=0;";
 			$result2 = mysql_query($query2);
 			if ($result2) {
