@@ -33,10 +33,10 @@ $boot_id = $_GET['boot_id'];
 
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href=\"./admin_inuitdevaart.php?id=$boot_id\">Terug naar in/uit de vaart van deze boot</a>] [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
-$query = "UPDATE uitdevaart SET Verwijderd=1, Einddatum='$today_db' WHERE ID=$udv_id;"; 
-mysql_query($query);
+$query = 'UPDATE uitdevaart SET Verwijderd=1, Einddatum="' . $today_db . '" WHERE ID=' . $udv_id; 
+$result = mysql_query($query);
 if (!$result) {
-	die("Be&euml;indigen mislukt.". mysql_error());
+	die("Be&euml;indigen mislukt. " . mysql_error());
 } else {
 	echo "Uit de Vaart succesvol be&euml;indigd.";
 }

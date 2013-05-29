@@ -30,7 +30,7 @@ setlocale(LC_TIME, 'nl_NL');
 
 <?php
 
-$fail = FALSE;
+$fail = false;
 
 $boot_id = $_GET['id'];
 $query = "SELECT Naam FROM boten WHERE ID=$boot_id;";
@@ -47,7 +47,7 @@ if (isset($_POST['cancel'])) {
 	exit();
 }
 
-if ($_POST['submit']) {
+if (isset($_POST['submit'])) {
 	// startdatum
 	$startdate = $_POST['startdate'];
 	if (CheckTheDate($startdate)) {
@@ -116,24 +116,24 @@ if ($_POST['submit']) {
 }
 
 // HET FORMULIER
-if ((!$_POST['submit'] && !$_POST['cancel']) || $fail) {
+if ((!isset($_POST['submit']) && !isset($_POST['cancel'])) || $fail) {
 	
-	echo "<form name='form' action=\"$REQUEST_URI\" method=\"post\">";
+	echo '<form name="form" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
 	echo "<table><tr>";
 	
 	// startdatum
-	if ($fail_msg_date) echo "<td colspan=2><em>$fail_msg_date</em></td></tr><tr>";
+	if (isset($fail_msg_date)) echo "<td colspan=2><em>$fail_msg_date</em></td></tr><tr>";
 	echo "<td>Startdatum (dd-mm-jjjj):</td>";
-	echo "<td><input type='text' name='startdate' id='startdate' size='8' maxlength='10' value='$startdate'>";
+	echo "<td><input type='text' name='startdate' id='startdate' size='8' maxlength='10' value='" . (isset($startdate) ? $startdate : '') . "'>";
 	echo "&nbsp;<a href=\"javascript:show_calendar('form.startdate');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='../res/kalender.gif' alt='kalender' width='19' height='17' border='0'></a></td>";
-	if ($fail_msg_startdate) echo "<td><em>$fail_msg_startdate</em></td>";
+	if (isset($fail_msg_startdate)) echo "<td><em>$fail_msg_startdate</em></td>";
 	echo "</tr><tr>";
 	
 	// evt. einddatum
 	echo "<td>Einddatum (dd-mm-jjjj), of leeg:</td>";
-	echo "<td><input type='text' name='enddate' id='enddate' size='8' maxlength='10' value='$enddate'>";
+	echo "<td><input type='text' name='enddate' id='enddate' size='8' maxlength='10' value='" . (isset($enddate) ? $enddate : '') . "'>";
 	echo "&nbsp;<a href=\"javascript:show_calendar('form.enddate');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='../res/kalender.gif' alt='kalender' width='19' height='17' border='0'></a></td>";
-	if ($fail_msg_enddate) echo "<td><em>$fail_msg_enddate</em></td>";
+	if (isset($fail_msg_enddate)) echo "<td><em>$fail_msg_enddate</em></td>";
 	echo "</tr><tr>";
 	
 	// reden
@@ -158,7 +158,7 @@ mysql_close($link);
 
 <script language="javascript">
 
-function ChangeInfo(){
+function changeInfo(){
 	return true;
 }
 
