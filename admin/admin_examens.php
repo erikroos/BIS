@@ -31,21 +31,18 @@ if (!mysql_select_db($database, $link)) {
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
 $mode = isset($_GET['mode']) ? $_GET['mode'] : '';
-if (isset($_GET['curval'])) $curval = $_GET['curval'];
-if (isset($_GET['id'])) $id = $_GET['id'];
+if (isset($_GET['id'])) {
+	$id = $_GET['id'];
+}
 
 if ($mode == "c" && isset($id)) {
-	if (isset($curval)) {
-		$query = "UPDATE examens SET ToonOpSite=0 WHERE ID='$id';";
+	if ($_GET['curval'] == 1) {
+		$query = "UPDATE examens SET ToonOpSite=0 WHERE ID=" . $id;
 	} else {
-		$query = "UPDATE examens SET ToonOpSite=1 WHERE ID='$id';";
+		$query = "UPDATE examens SET ToonOpSite=1 WHERE ID=" . $id;
 	}
-	$result = mysql_query($query);
-	if (!$result) {
-		die("Tonen/verbergen van examen mislukt.". mysql_error());
-	}
-	echo "Tonen/verbergen van examen gelukt.<br>";
-	echo "<a href='admin_examens.php'>Terug naar de examenpagina&gt;&gt;</a>";
+	mysql_query($query);
+	header('Location: admin_examens.php');
 	exit;
 }
 if ($mode == "d" && isset($id)) {
