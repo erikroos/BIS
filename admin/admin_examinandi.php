@@ -15,6 +15,15 @@ if (!mysql_select_db($database, $link)) {
 	exit();
 }
 
+$mode = isset($_GET['mode']) ? $_GET['mode'] : '';
+$id = $_GET['id'];
+
+if ($mode == "d") {
+	$query = "DELETE FROM examen_inschrijvingen WHERE ID=" . $_GET['part_id'];
+	$result = mysql_query($query);
+	header('Location: admin_examinandi.php?id=' . $id);
+	exit;
+}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -25,23 +34,10 @@ if (!mysql_select_db($database, $link)) {
 </head>
 <body>
 <div style="margin-left:10px; margin-top:10px">
+<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_examens.php'>Terug naar examen-menu</a>] [<a href='./admin_logout.php'>Uitloggen</a>]</p>
+<p>Deelnemers</p>
 
 <?php
-
-echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_examens.php'>Terug naar examen-menu</a>] [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
-
-$mode = isset($_GET['mode']) ? $_GET['mode'] : '';
-$id = $_GET['id'];
-
-if ($mode == "d") {
-	$query = "DELETE FROM examen_inschrijvingen WHERE ID=" . $_GET['part_id'];
-	$result = mysql_query($query);
-	header('Location: admin_examinandi.php?id=' . $id);
-	exit;
-}
-
-echo "<p>Deelnemers</p>";
-
 $query = "SELECT * FROM examen_inschrijvingen WHERE Ex_ID=" . $id;
 $result = mysql_query($query);
 if (!$result) {

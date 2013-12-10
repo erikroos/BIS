@@ -15,21 +15,6 @@ if (!mysql_select_db($database, $link)) {
 	exit();
 }
 
-?>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" >
-<head>
-    <title><? echo $systeemnaam; ?> - Examencommissie</title>
-    <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
-</head>
-<body>
-<div style="margin-left:10px; margin-top:10px">
-
-<?php
-
-echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
-
 $mode = isset($_GET['mode']) ? $_GET['mode'] : '';
 if (isset($_GET['id'])) {
 	$id = $_GET['id'];
@@ -47,18 +32,25 @@ if ($mode == "c" && isset($id)) {
 }
 if ($mode == "d" && isset($id)) {
 	$query = "DELETE FROM examens WHERE ID=" . $id;
-	$result = mysql_query($query);
-	if (!$result) {
-		die("Verwijderen van examen mislukt: " . mysql_error());
-	}
-	echo "Verwijderen van examen gelukt.<br>";
-	echo "<a href='admin_examens.php'>Terug naar de examenpagina&gt;&gt;</a>";
+	mysql_query($query);
+	header('Location: admin_examens.php');
 	exit;
 }
+?>
 
-echo "<p>Examencommissie</p>";
-echo "<p><a href='admin_examen_toev.php'>Maak een nieuw examen aan&gt;&gt;</a></p>";
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title><? echo $systeemnaam; ?> - Examencommissie</title>
+    <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
+</head>
+<body>
+<div style="margin-left:10px; margin-top:10px">
+<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_logout.php'>Uitloggen</a>]</p>
+<p>Examencommissie</p>
+<p><a href='admin_examen_toev.php'>Maak een nieuw examen aan&gt;&gt;</a></p>
 
+<?php
 $query = "SELECT * FROM examens ORDER BY Datum DESC";
 $result = mysql_query($query);
 if (!$result) {
