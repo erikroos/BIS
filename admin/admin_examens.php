@@ -46,10 +46,10 @@ if ($mode == "c" && isset($id)) {
 	exit;
 }
 if ($mode == "d" && isset($id)) {
-	$query = "DELETE FROM examens WHERE ID='$id';";
+	$query = "DELETE FROM examens WHERE ID=" . $id;
 	$result = mysql_query($query);
 	if (!$result) {
-		die("Verwijderen van examen mislukt.". mysql_error());
+		die("Verwijderen van examen mislukt: " . mysql_error());
 	}
 	echo "Verwijderen van examen gelukt.<br>";
 	echo "<a href='admin_examens.php'>Terug naar de examenpagina&gt;&gt;</a>";
@@ -59,10 +59,10 @@ if ($mode == "d" && isset($id)) {
 echo "<p>Examencommissie</p>";
 echo "<p><a href='admin_examen_toev.php'>Maak een nieuw examen aan&gt;&gt;</a></p>";
 
-$query = "SELECT * FROM examens ORDER BY Datum;";
+$query = "SELECT * FROM examens ORDER BY Datum DESC";
 $result = mysql_query($query);
 if (!$result) {
-	die("Ophalen van examens mislukt.". mysql_error());
+	die("Ophalen van examens mislukt: " . mysql_error());
 }
 echo "<br><table class=\"basis\" border=\"1\" cellpadding=\"6\" cellspacing=\"0\" bordercolor=\"#AAB8D5\">";
 echo "<tr><th><div style=\"text-align:left\">Datum</div></th><th><div style=\"text-align:left\">Omschrijving</div></th><th><div style=\"text-align:left\">Graden</div></th><th><div style=\"text-align:left\">Quotum</div></th><th><div style=\"text-align:left\">Open voor inschrijving</div></th><th colspan=4></th></tr>";
@@ -92,9 +92,6 @@ while ($row = mysql_fetch_assoc($result)) {
 	echo "</tr>";
 }
 echo "</table>";
-
-mysql_close($link);
-
 ?>
 
 </div>
