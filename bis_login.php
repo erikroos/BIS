@@ -17,23 +17,23 @@ if (isset($login) && isset($password)) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title><? echo $systeemnaam; ?> - Login</title>
-    <link type="text/css" href="<? echo $csslink; ?>" rel="stylesheet" />
+    <title><?php echo $systeemnaam; ?> - Login</title>
+    <link type="text/css" href="<?php echo $csslink; ?>" rel="stylesheet" />
 	<link type="text/css" href="css/bis.css" rel="stylesheet" />
 </head>
 <body>
 	<div class="middle_box">
-	<h1>Inloggen op het <? echo $systeemnaam; ?></h1>
+	<h1>Inloggen op het <?php echo $systeemnaam; ?></h1>
 	<form method="post" action="./bis_login.php">
 		<table>
 		<tr>
 		  <td>Login-naam:</td>
 		  <td><input type="text" name="login" /></td>
-		  <td><em><? echo $loginnaam_hulp; ?></em></td>
+		  <td><em><?php echo $loginnaam_hulp; ?></em></td>
 		</tr>
 		<tr>
 		  <td>Wachtwoord:</td><td><input type="password" name="password" /></td>
-		  <td><em><? echo $loginwachtwoord_hulp; ?></em></td>
+		  <td><em><?php echo $loginwachtwoord_hulp; ?></em></td>
 		</tr>
 		<tr>
 		  <td>&nbsp;</td>
