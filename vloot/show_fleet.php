@@ -57,7 +57,7 @@ while ($row = mysql_fetch_assoc($result)) {
 $query = "SELECT Naam, Gewicht, Type, boten.Roeigraad FROM boten JOIN roeigraden ON boten.Roeigraad=roeigraden.Roeigraad WHERE Datum_eind IS NULL AND (".$restrict_query_type.") ORDER BY roeigraden.ID;";
 
 // Mochten we ooit uit-de-vaart nog willen markeren:
-//$query2 = "SELECT Reden FROM uitdevaart WHERE Verwijderd=0 AND Boot_ID='$boat_ids_array[$c]' AND Startdatum<='$date_to_show_db' AND (Einddatum='0' OR Einddatum='0000-00-00' OR Einddatum>='$date_to_show_db');";
+//$query2 = "SELECT Reden FROM uitdevaart WHERE Verwijderd=0 AND Boot_ID='$boat_ids_array[$c]' AND Startdatum<='$date_to_show_db' AND (Einddatum='0' OR Einddatum='0000-00-00' OR Einddatum IS NULL OR Einddatum>='$date_to_show_db');";
 
 $boats_result = mysql_query($query);
 if (!$boats_result) {

@@ -20,8 +20,8 @@ if (!mysql_select_db($database, $link)) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title><? echo $systeemnaam; ?> - Admin - Vlootbeheer</title>
-    <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
+    <title><?php echo $systeemnaam; ?> - Admin - Vlootbeheer</title>
+    <link type="text/css" href="../<?php echo $csslink; ?>" rel="stylesheet" />
 </head>
 <body>
 <div style="margin-left:10px; margin-top:10px">
@@ -55,7 +55,13 @@ while ($row = mysql_fetch_assoc($boats_result)) {
 	
 	// in/uit de vaart
 	echo "<td><div style=\"text-align:left\">";
-	$query2 = "SELECT * FROM uitdevaart WHERE Verwijderd=0 AND Boot_ID='$id' AND Startdatum<='$today_db' AND (Einddatum='0' OR Einddatum='0000-00-00' OR Einddatum>='$today_db');";
+	$query2 = sprintf('SELECT * 
+			FROM uitdevaart 
+			WHERE Verwijderd=0 
+			AND Boot_ID=%d 
+			AND Startdatum<="%s" 
+			AND (Einddatum="0" OR Einddatum="0000-00-00" OR Einddatum IS NULL OR Einddatum>="%s")', 
+				$id, $today_db, $today_db);
 	$result2 = mysql_query($query2);
 	if (!$result2) {
 		die("Ophalen van Uit de Vaart-informatie mislukt.". mysql_error());
@@ -79,7 +85,6 @@ while ($row = mysql_fetch_assoc($boats_result)) {
 echo "</table>";
 
 mysql_close($link);
-
 ?>
 
 </div>

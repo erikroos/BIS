@@ -50,7 +50,12 @@ if ($boat_id == 0) {
 // Toon bestaande inschrijvingen voor deze boot & dag
 if ($boat_id > 0) {
 	// stap 1: check op Uit de Vaart
-	$query = "SELECT * FROM uitdevaart WHERE Verwijderd=0 AND Boot_ID='$boat_id' AND Startdatum<='$date_db' AND (Einddatum='0000-00-00' OR Einddatum>='$date_db');";
+	$query = "SELECT * 
+		FROM uitdevaart 
+		WHERE Verwijderd=0 
+		AND Boot_ID='$boat_id' 
+		AND Startdatum<='$date_db' 
+		AND (Einddatum='0000-00-00' OR Einddatum IS NULL OR Einddatum>='$date_db');";
 	$result = mysql_query($query);
 	if (!$result) {
 		die("Ophalen van Uit de Vaart-informatie mislukt.". mysql_error());

@@ -21,8 +21,8 @@ setlocale(LC_TIME, 'nl_NL');
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title><? echo $systeemnaam; ?> - Admin - Vlootbeheer - In/uit de vaart</title>
-    <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
+    <title><?php echo $systeemnaam; ?> - Admin - Vlootbeheer - In/uit de vaart</title>
+    <link type="text/css" href="../<?php echo $csslink; ?>" rel="stylesheet" />
 </head>
 <body>
 <div style="margin-left:10px; margin-top:10px">
@@ -32,12 +32,12 @@ setlocale(LC_TIME, 'nl_NL');
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_vloot.php'>Terug naar vlootbeheer</a>] [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
 $boot_id = $_GET['id'];
-$query = "SELECT Naam from boten WHERE ID=$boot_id;";
+$query = "SELECT Naam, Type from boten WHERE ID=$boot_id;";
 $result = mysql_query($query);
 $row = mysql_fetch_assoc($result);
 $name = $row['Naam'];
 
-echo "<p>Uit de Vaart-info voor: $name</p>";
+echo '<p>Uit de Vaart-info voor: ' . $name . ' (' . $row['Type'] . ')</p>';
 echo "<p><a href=\"./admin_uitdevaart_toev.php?id=$boot_id\">Toevoegen</a></p>";
 
 // tabel
@@ -72,7 +72,6 @@ echo "</table>";
 echo "<p><em>NB: Meldingen die over datum zijn, worden automatisch be&euml;indigd.</em></p>";
 
 mysql_close($link);
-
 ?>
 
 </div>

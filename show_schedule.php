@@ -104,7 +104,12 @@ while ($row = mysql_fetch_assoc($boats_result)) {
 	// check Uit de Vaart
 	$available[$c] = 1;
 	$reason[$c] = "";
-	$query2 = "SELECT Reden FROM uitdevaart WHERE Verwijderd=0 AND Boot_ID='$boat_ids_array[$c]' AND Startdatum<='$date_to_show_db' AND (Einddatum='0' OR Einddatum='0000-00-00' OR Einddatum>='$date_to_show_db');";
+	$query2 = "SELECT Reden 
+		FROM uitdevaart 
+		WHERE Verwijderd=0 
+		AND Boot_ID='$boat_ids_array[$c]' 
+		AND Startdatum<='$date_to_show_db' 
+		AND (Einddatum='0' OR Einddatum='0000-00-00' OR Einddatum IS NULL OR Einddatum>='$date_to_show_db');";
 	$result2 = mysql_query($query2);
 	if (!$result2) {
 		die("Ophalen van Uit de Vaart-informatie mislukt.". mysql_error());

@@ -84,7 +84,10 @@ if ($_POST['submit']) {
 		echo "<td><strong>$tot</strong></td>";
 		
 		//Uit de vaart
-		$query3 = "SELECT * FROM uitdevaart WHERE Boot_ID='$boot_id' AND ((Startdatum >= '$start_year' AND Startdatum <= '$end_year') OR (Einddatum <= '$end_year' AND Einddatum > $start_year) OR (Startdatum <= '$start_year' AND Einddatum = '0000-00-00'));";
+		$query3 = "SELECT * 
+			FROM uitdevaart 
+			WHERE Boot_ID='$boot_id' 
+			AND ((Startdatum >= '$start_year' AND Startdatum <= '$end_year') OR (Einddatum <= '$end_year' AND Einddatum > '$start_year') OR (Startdatum <= '$start_year' AND (Einddatum = '0000-00-00' OR Einddatum IS NULL)))";
 		$result3 = mysql_query($query3);
 		if (!$result3) {
 			die("Ophalen van uit de vaart-meldingen mislukt.". mysql_error());
@@ -94,7 +97,9 @@ if ($_POST['submit']) {
 			while ($row = mysql_fetch_assoc($result3)) {
 				$nr_of_udvs++;
 				$end_date = $row['Einddatum'];
-				if ($end_date == '0000-00-00') $end_date = $today_db;
+				if ($end_date == '0000-00-00' || $end_date == null) {
+					$end_date = $today_db;
+				}
 				$end_date_parts = explode("-", $end_date);
 				$start_date_parts = explode("-", $row['Startdatum']);
 				// Bij meerjarige udv's, alleen gedeelte in gewenste jaar meetellen:

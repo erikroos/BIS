@@ -47,7 +47,12 @@ if (!$result) {
 		while ($row = mysql_fetch_assoc($result)) {
 			$boat_id = $row['ID'];
 			$db_boat = $row['Boot'];
-			$query2 = "SELECT * from uitdevaart WHERE Verwijderd=0 AND Boot_ID='$boat_id' AND Startdatum<='$today_db' AND (Einddatum='0' OR Einddatum='0000-00-00' OR Einddatum>='$today_db');";
+			$query2 = "SELECT * 
+				FROM uitdevaart 
+				WHERE Verwijderd=0 
+				AND Boot_ID='$boat_id' 
+				AND Startdatum<='$today_db' 
+				AND (Einddatum='0' OR Einddatum='0000-00-00' OR Einddatum IS NULL OR Einddatum>='$today_db');";
 			$result2 = mysql_query($query2);
 			if (!$result2) {
 				die("Ophalen van Uit de Vaart-informatie mislukt.". mysql_error());
