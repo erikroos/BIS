@@ -162,7 +162,7 @@ mysql_close($link);
 
 <script language="javascript">
 
-function ChangeInfo(){
+function changeInfo(){
 	return true;
 }
 

@@ -1,11 +1,10 @@
 <?php
-
 include_once("include_globalVars.php");
 
 // connect to DB for following query
 $link = mysql_connect($database_host, $database_user, $database_pass);
 if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
+	echo 'Fout: database niet gevonden.';
 	exit();
 }
 // stop alle MPB-gevende bestuursleden in een array
@@ -16,10 +15,10 @@ $mpb_array_mail = array();
 array_push($mpb_array, "");
 array_push($mpb_array_sh, "");
 array_push($mpb_array_mail, "");
-$query = "SELECT Functie, Naam, Email FROM bestuursleden WHERE MPB=1;";
+$query = 'SELECT Functie, Naam, Email FROM bestuursleden WHERE MPB=1';
 $result = mysql_query($query);
 if (!$result) {
-	die("Ophalen van bestuursleden mislukt.". mysql_error());
+	die('Ophalen van bestuursleden mislukt: ' . mysql_error());
 }
 while ($row = mysql_fetch_assoc($result)) {
 	array_push($mpb_array, $row['Functie']);
@@ -28,4 +27,3 @@ while ($row = mysql_fetch_assoc($result)) {
 }
 
 mysql_close($link);
-?>

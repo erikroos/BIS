@@ -14,14 +14,13 @@ if (!mysql_select_db($database, $link)) {
 	echo "Fout: database niet gevonden.<br>";
 	exit();
 }
-
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title><? echo $systeemnaam; ?> - Admin - Rapportages</title>
-    <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
+    <title><?php echo $systeemnaam; ?> - Admin - Rapportages</title>
+    <link type="text/css" href="../<?php echo $csslink; ?>" rel="stylesheet" />
 	<script type="text/javascript" src="../scripts/sortable.js"></script>
 </head>
 <body>
@@ -29,11 +28,10 @@ if (!mysql_select_db($database, $link)) {
 <div style="margin-left:10px; margin-top:10px">
 
 <?php
-
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./index.php'>Terug naar admin-menu</a>] [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
 if (!$_POST['submit']) {
-	echo "<form name='form' action=\"$REQUEST_URI\" method=\"post\">";
+	echo '<form name="form" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
 	// jaar
 	echo "<p>Jaar (jjjj): ";
 	echo "<input type=\"text\" name=\"jaar\" value=\"$jaar\" size=\"4\" /></p>";
@@ -116,7 +114,6 @@ if ($_POST['submit']) {
 }
 
 mysql_close($link);
-
 ?>
 
 </div>
