@@ -328,8 +328,8 @@ if ((!isset($_POST['submit']) && !isset($_POST['cancel'])) || $fail) {
 		die("Ophalen van vlootinformatie mislukt.". mysql_error());
 	} else {
 		while ($row = mysql_fetch_assoc($boats_result)) {
-			$curr_boat_id = $row[ID];
-			$curr_boat = $row[Naam];
+			$curr_boat_id = $row['ID'];
+			$curr_boat = $row['Naam'];
 			echo"<option value=\"".$curr_boat_id."\" ";
 			if (isset($boat_id) && $boat_id == $curr_boat_id) {
 				echo "selected=\"selected\"";

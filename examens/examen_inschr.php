@@ -25,7 +25,7 @@ setlocale(LC_TIME, 'nl_NL');
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
     <title>BotenInschrijfSysteem - Examens - Inschrijven voor een examen</title>
-    <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
+    <link type="text/css" href="../<?php echo $csslink; ?>" rel="stylesheet" />
 </head>
 <body>
 <div style="margin-left:10px; margin-top:10px">

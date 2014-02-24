@@ -109,7 +109,7 @@ if (isset($_POST['submit'])) {
 					$message = "Uw inschrijving van $date_sh vanaf ".substr($starttijd, 0, 5)." komt te vervallen omdat '$name' zojuist uit de vaart gemeld is.";
 					SendEmail($email_to, "Wijziging inschrijving", $message);
 				}
-				echo "<br>Degenen die hadden ingeschreven, zijn via e-mail op de hoogte gesteld.";	
+				echo "<br>Degenen die hadden ingeschreven, zijn via e-mail op de hoogte gesteld.";
 			}
 		}
 	}

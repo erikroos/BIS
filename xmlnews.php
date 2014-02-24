@@ -97,12 +97,12 @@ function xmlnews($url, $timeout = 0, $target = "_top", $makelist = "br", $links)
 				// $titel = "Gyas-vaarverbod [<a href='http://www.hunze.nl/oud/index.php?subnav=subnav_04&amp;location=folder_04&amp;page=page_05&amp;leftnav=leftnav_04' target='_blank'>uitleg</a>]";
 				// $inhoud_opg = "<strong><font color=\"#FF0000\">".$inhoud."</font></strong>";
 			} else {
-				$inhoud_opg = '<em>' . $inhoud . '</em>';
+				$inhoud = '<em>' . $inhoud . '</em>';
 			}
-			$lnk = $titel . ':<br />' . $inhoud_opg;
+			$lnk = $titel . ':<br />' . $inhoud;
 		}
 		// zet passende html tags voor en achter de link
-		if (! $skip) {
+		if (!$skip) {
 			$html .= $pre . $lnk . $post;
 		}
 	} // end FOR

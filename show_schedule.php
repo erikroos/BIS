@@ -196,6 +196,7 @@ while (isset($boats_array[$boatnr])) {
 					$db_email = $row['Email'];
 					$db_mpb = $row['MPB'];
 					$db_spits = $row['Spits'];
+					$db_blok = $row['Wedstrijdblok'];
 					$db_start_time_blocks = TimeToBlocks($db_start_time);
 					if ($db_start_time_blocks < $start_block) $db_start_time_blocks = $start_block;
 					$db_end_time_blocks = TimeToBlocks($db_end_time);
@@ -232,7 +233,7 @@ while (isset($boats_array[$boatnr])) {
 					$info_to_show_sh = substr($info_to_show, 0, (2 * $span_size) - 1); // max 2 chars per kwartierblokje!
 					$info_to_show = addslashes($info_to_show);
 					// Geef blok weer in geel/oranje en klikbaar (beschikbaar) of grijs (niet meer editbaar)
-					if ($available_ins && (($db_spits == 0 && InRange($date_to_show, 10)) || ($db_spits > 0 && InRange($date_to_show, 3)))) {
+					if ($available_ins && $db_blok == 0 && (($db_spits == 0 && InRange($date_to_show, 10)) || ($db_spits > 0 && InRange($date_to_show, 3)))) {
 						echo " onclick=\"showInschrijving(" . $db_id . ", 0, '', '" . $cat_to_show . "', '" . $grade_to_show . "', '');\"";
 						if ($db_spits > 0) {
 							echo " bgcolor=\"#FF6600\"";

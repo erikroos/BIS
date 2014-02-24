@@ -11,8 +11,7 @@ include_once("../mail.php");
 
 $link = mysql_connect($database_host, $database_user, $database_pass);
 if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
+	die('Fout: database niet gevonden.');
 }
 
 setlocale(LC_TIME, 'nl_NL');
@@ -22,7 +21,7 @@ setlocale(LC_TIME, 'nl_NL');
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
     <title>BotenInschrijfSysteem - Examens</title>
-    <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
+    <link type="text/css" href="../<?php echo $csslink; ?>" rel="stylesheet" />
 </head>
 <body>
 <div style="margin-left:10px; margin-top:10px">
@@ -30,6 +29,32 @@ setlocale(LC_TIME, 'nl_NL');
 <p><h1>Examens</h1></p>
 <p><a href='../index.php'>Naar BIS&gt;&gt;</a><br />
 <a href='./bis_logout.php'>Uitloggen&gt;&gt;</a></p>
+
+<p><strong>Komende examens</strong><br />
+<?php
+$openExamens = false;
+$query = "SELECT ID, Datum, ToonOpSite FROM examens WHERE Datum > '" . $today_db . "' ORDER BY Datum";
+$result = mysql_query($query);
+if (!$result) {
+	echo("Ophalen van examendata mislukt: " . mysql_error());
+} else {
+	if (mysql_affected_rows($link) > 0) {
+		echo "De komende examendata zijn:</p><ul>";
+		while ($row = mysql_fetch_assoc($result)) {
+			echo '<li>' . strftime('%A %d-%m-%Y', strtotime($row['Datum']));
+			if ($row['ToonOpSite']) {
+				echo ': open voor <a href="examen.php?id=' . $row['ID'] . '">inschrijving</a>';
+			} else {
+				echo ': nog niet of niet meer open voor inschrijving';
+			}
+			echo '</li>';
+		}
+		echo "</ul>";
+	} else {
+		echo 'Er zijn de komende tijd geen examens ingepland.</p>';
+	}
+}
+?>
 
 <p><strong>Mededelingen</strong><br />
 Er zijn met ingang van maart 2011 twee theorie-examens: T1 en T2<br />
@@ -53,78 +78,6 @@ Voor T2 hoofdstuk 1 en 2 en alle bijlagen behalve H).</p>
   <li>De duur van het theorie-examen is gemiddeld &#233;&#233;n uur.</li>
   <li>De duur van het praktijkexamen is gemiddeld ook &#233;&#233;n uur. </li>
 </ul>"; ?>
-
-<p><strong>Examendata</strong><br />
-<?php
-$openExamens = false;
-$query = "SELECT Datum, ToonOpSite FROM examens WHERE Datum > '" . $today_db . "' ORDER BY Datum";
-$result = mysql_query($query);
-if (!$result) {
-	echo("Ophalen van examendata mislukt: " . mysql_error());
-} else {
-	if (mysql_affected_rows($link) > 0) {
-		echo "De komende examendata zijn:</p><ul>";
-		while ($row = mysql_fetch_assoc($result)) {
-			$exdate = $row['Datum'];
-			$exdate_sh = strtotime($exdate);
-			$show = $row['ToonOpSite'];
-			echo "<li>".strftime('%A %d-%m-%Y', $exdate_sh);
-			if ($show) {
-				$openExamens = true;
-				echo " (open voor inschrijving)";
-			} else {
-				echo " (nog niet of niet meer open voor inschrijving)";
-			}
-			echo "</li>";
-		}
-		echo "</ul>";
-	} else {
-		echo 'Er zijn de komende tijd geen examens ingepland.</p>';
-	}
-}
-?>
-
-<?php if ($openExamens): ?>
-	<p><strong>Inschrijven</strong></p>
-	
-	<?php
-	$query = "SELECT ID, Datum, Quotum, Omschrijving FROM examens WHERE Datum > '" . $today_db . "' AND ToonOpSite=1 ORDER BY Datum";
-	$result = mysql_query($query);
-	if (!$result) {
-		echo "Ophalen van examendata mislukt: " . mysql_error();
-	} else {
-		$rows_aff = mysql_affected_rows($link);
-		if ($rows_aff > 0) {
-			while ($row = mysql_fetch_assoc($result)) {
-				$id = $row['ID'];
-				$exdate = $row['Datum'];
-				$exdate_sh = strtotime($exdate);
-				$quotum = $row['Quotum'];
-				$description = $row['Omschrijving'];
-				echo "<p><em>".strftime('%A %d-%m-%Y', $exdate_sh)."&nbsp;".$description."</em>";
-				echo "<table class=\"basis\" border=\"1\" cellpadding=\"6\" cellspacing=\"0\" bordercolor=\"#AAB8D5\"><tr><th>&nbsp;</th><th>Naam</th><th>Examen</th></tr>";
-				$query2 = "SELECT Naam, Graad FROM examen_inschrijvingen WHERE Ex_ID='$id';";
-				$result2 = mysql_query($query2);
-				if (!$result2) {
-					echo("Ophalen van exameninschrijvingen mislukt.".mysql_error());
-				} else {
-					$rows_aff2 = mysql_affected_rows($link);
-					$c2 = 0;
-					while ($row2 = mysql_fetch_assoc($result2)) {
-						echo "<tr><td>".($c2+1)."</td><td>".$row2['Naam']."</td><td>".$row2['Graad']."</td></tr>";
-						$c2++;
-					}
-					while ($c2 < $quotum) {
-						echo "<tr><td>".($c2+1)."</td><td><a href='examen_inschr.php?id=$id'>Aanmelden&gt;&gt;</a></td><td>&nbsp;</td></tr>";
-						$c2++;
-					}
-				}
-				echo "</table></p>";
-			}
-		}
-	}
-	?>
-<?php endif; ?>
 
 </div>
 </body>
