@@ -32,6 +32,8 @@ setlocale(LC_TIME, 'nl_NL');
 
 <p>
 	<strong>Welkom in de Admin-sectie van BIS</strong>
-	[<?php echo $backLink; ?>]
+	<?php if (isset($backLink)): ?>
+		[<?php echo $backLink; ?>]
+	<?php endif; ?>
 	[<a href='./admin_logout.php'>Uitloggen</a>]
 </p>

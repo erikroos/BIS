@@ -1,71 +1,70 @@
 <?php
 // check login
 session_start();
-if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes' || $_SESSION['restrict'] != 'instrcie') {
+if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes') {
 	header("Location: admin_login.php");
 	exit();
 }
 
-include_once("../include_globalVars.php");
-include_once("../include_helperMethods.php");
+include_once('../include_globalVars.php');
+include_once('../include_helperMethods.php');
 
 $link = mysql_connect($database_host, $database_user, $database_pass);
 if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
+	die('Fout: database niet gevonden.');
 }
 
-?>
+$mode = isset($_GET['mode']) ? $_GET['mode'] : '';
+$id = isset($_GET['id']) ? $_GET['id'] : 0;
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" >
-<head>
-    <title><? echo $systeemnaam; ?> - Instructiecommissie</title>
-    <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
-</head>
-<body>
-<div style="margin-left:10px; margin-top:10px">
-
-<?php
-
-echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
-
-$mode = $_GET['mode'];
-$curval = $_GET['curval'];
-$id = $_GET['id'];
-
-if ($mode == "c" && $id) {
-	if ($curval) {
-		$query = "UPDATE cursussen SET ToonOpSite=0 WHERE ID='$id';";
+if ($mode == "c") {
+	if ($_GET['curval'] == 1) {
+		$query = 'UPDATE cursussen SET ToonOpSite=0 WHERE ID=' . $id;
 	} else {
-		$query = "UPDATE cursussen SET ToonOpSite=1 WHERE ID='$id';";
+		$query = 'UPDATE cursussen SET ToonOpSite=1 WHERE ID=' . $id;
 	}
-	$result = mysql_query($query);
-	if (!$result) {
-		die("Tonen/verbergen van cursus mislukt.". mysql_error());
-	}
-	echo "Tonen/verbergen van cursus gelukt.<br>";
-	echo "<a href='admin_cursussen.php'>Terug naar de cursuspagina&gt;&gt;</a>";
+	mysql_query($query);
+	header('Location: admin_cursussen.php');
 	exit;
 }
-if ($mode == "d" && $id) {
-	$query = "DELETE FROM cursussen WHERE ID='$id';";
+if ($mode == "d") {
+	$query = 'DELETE FROM cursussen WHERE ID=' . $id;
 	$result = mysql_query($query);
 	if (!$result) {
-		die("Verwijderen van cursus mislukt.". mysql_error());
+		die('Verwijderen van cursus mislukt: ' . mysql_error());
 	}
 	echo "Verwijderen van cursus gelukt.<br>";
 	echo "<a href='admin_cursussen.php'>Terug naar de cursuspagina&gt;&gt;</a>";
 	exit;
 }
+?>
 
-echo "<p>Instructiecommissie</p>";
-echo "<p><a href='admin_cursus_toev.php'>Maak een nieuwe cursus aan&gt;&gt;</a></p>";
+<!DOCTYPE html>
+<html>
+<head>
+    <title><?php echo $systeemnaam; ?> - Instructiecommissie</title>
+    <link type="text/css" href="../<?php echo $csslink; ?>" rel="stylesheet" />
+    <link type="text/css" href="../css/bis.css" rel="stylesheet" />
+    <script type="text/javascript" src="../scripts/kalender.js"></script>
+    <script type="text/javascript" src="../scripts/sortable.js"></script>
+</head>
+<body>
+<div class="maindiv">
 
-$query = "SELECT * FROM cursussen ORDER BY Startdatum;";
+<p>
+	<strong>Welkom in de Admin-sectie van BIS</strong>
+	[<a href='./admin_logout.php'>Uitloggen</a>]
+</p>
+<p>Instructiecommissie</p>
+<p><a href='admin_cursus_toev.php'>Maak een nieuwe cursus aan&gt;&gt;</a></p>
+
+<?php
+setlocale(LC_TIME, 'nl_NL');
+
+$query = "SELECT * FROM cursussen ORDER BY Startdatum DESC";
 $result = mysql_query($query);
 if (!$result) {
-	die("Ophalen van cursussen mislukt.". mysql_error());
+	die('Ophalen van cursussen mislukt: ' . mysql_error());
 }
 echo "<br><table class=\"basis\" border=\"1\" cellpadding=\"6\" cellspacing=\"0\" bordercolor=\"#AAB8D5\">";
 echo "<tr><th><div style=\"text-align:left\">Startdatum</div></th><th><div style=\"text-align:left\">Einddatum</div></th><th><div style=\"text-align:left\">Type</div></th><th><div style=\"text-align:left\">Omschrijving</div></th><th><div style=\"text-align:left\">Mailadres</div></th><th><div style=\"text-align:left\">Quotum</div></th><th><div style=\"text-align:left\">Toon op site?</div></th><th colspan=4></th></tr>";
@@ -100,11 +99,6 @@ while ($row = mysql_fetch_assoc($result)) {
 	echo "</tr>";
 }
 echo "</table>";
-
-mysql_close($link);
-
 ?>
 
-</div>
-</body>
-</html>
+<?php include 'admin_footer.php'; ?>
