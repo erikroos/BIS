@@ -123,7 +123,7 @@ if (isset($_POST['insert'])) {
 			$message .= "Telefoonnummer: ".$telph."<br>";
 			$message .= "E-mailadres: ".$email."<br>";
 			SendEmail("examens@hunze.nl", "Nieuwe examenaanmelding", $message);
-			SendEmail("instructie@hunze.nl", "Nieuwe examenaanmelding", $message);
+			//SendEmail("instructie@hunze.nl", "Nieuwe examenaanmelding", $message); //21-4-2014 uitgezet op verzoek van Dagmar
 			
 			echo "<p>Hartelijk dank voor uw aanmelding! Deze is doorgegeven aan de Examencommissie.<br>";
 			echo "<a href='index.php'>Terug naar het examenscherm&gt;&gt;</a></p>";
