@@ -33,7 +33,7 @@ setlocale(LC_TIME, 'nl_NL');
 <p><strong>Komende examens</strong><br />
 <?php
 $openExamens = false;
-$query = "SELECT ID, Datum, ToonOpSite FROM examens WHERE Datum > '" . $today_db . "' ORDER BY Datum";
+$query = "SELECT ID, Datum, Omschrijving, ToonOpSite FROM examens WHERE Datum > '" . $today_db . "' ORDER BY Datum";
 $result = mysql_query($query);
 if (!$result) {
 	echo("Ophalen van examendata mislukt: " . mysql_error());
@@ -41,7 +41,7 @@ if (!$result) {
 	if (mysql_affected_rows($link) > 0) {
 		echo "De komende examendata zijn:</p><ul>";
 		while ($row = mysql_fetch_assoc($result)) {
-			echo '<li>' . strftime('%A %d-%m-%Y', strtotime($row['Datum']));
+			echo '<li>' . $row['Omschrijving'] . ' op ' . strftime('%A %d-%m-%Y', strtotime($row['Datum']));
 			if ($row['ToonOpSite']) {
 				echo ': open voor <a href="examen.php?id=' . $row['ID'] . '">inschrijving</a>';
 			} else {
