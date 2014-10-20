@@ -19,7 +19,7 @@ if (!mysql_select_db($database, $bisdblink)) {
 	exit();
 }
 
-$NR_OF_CONCEPTS = 8; // LET OP: aanpassen als het aantal Concept-ergo's verandert! (ivm blokinschrijving)
+$NR_OF_CONCEPTS = 7; // LET OP: aanpassen als het aantal Concept-ergo's verandert! (ivm blokinschrijving)
 $fail_msg = "";
 $spits = 0;
 
