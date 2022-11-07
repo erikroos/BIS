@@ -191,7 +191,7 @@ while (isset($boats_array[$boatnr])) {
 					$db_email = $row['Email'];
 					$db_mpb = $row['MPB'];
 					$db_spits = $row['Spits'];
-					$db_blok = $row['Wedstrijdblok'];
+					$db_blok = isset($row['Wedstrijdblok']) ? $row['Wedstrijdblok'] : 0;
 					$db_start_time_blocks = TimeToBlocks($db_start_time);
 					if ($db_start_time_blocks < $start_block) $db_start_time_blocks = $start_block;
 					$db_end_time_blocks = TimeToBlocks($db_end_time);

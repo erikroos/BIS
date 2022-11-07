@@ -5,11 +5,7 @@ include_once("include_helperMethods.php");
 
 setlocale(LC_TIME, 'nl_NL');
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 
 if (isset($_GET['change'])) {
 	if (isset($_GET['date'])) {
@@ -41,8 +37,8 @@ if ($boat_id == 0) {
 	$boat = "";
 } else {
 	$query2 = "SELECT Naam from boten WHERE ID=$boat_id;";
-	$result2 = mysql_query($query2);
-	$row2 = mysql_fetch_assoc($result2);
+	$result2 = mysqli_query($link, $query2);
+	$row2 = mysqli_fetch_assoc($result2);
 	$boat = $row2['Naam'];
 }
 //
@@ -56,23 +52,23 @@ if ($boat_id > 0) {
 		AND Boot_ID='$boat_id' 
 		AND Startdatum<='$date_db' 
 		AND (Einddatum='0000-00-00' OR Einddatum IS NULL OR Einddatum>='$date_db');";
-	$result = mysql_query($query);
+	$result = mysqli_query($link, $query);
 	if (!$result) {
-		die("Ophalen van Uit de Vaart-informatie mislukt.". mysql_error());
+		die("Ophalen van Uit de Vaart-informatie mislukt.". mysqli_error());
 	} else {
-		$rows_aff = mysql_affected_rows($link);
+		$rows_aff = mysqli_affected_rows($link);
 		if ($rows_aff > 0) {
 			echo "<br /><span class=\"update\">'" . $boat . "' is uit de vaart op " . $date_sh . "!</span><br />";
 		} else {
 			$query = "SELECT * FROM ".$opzoektabel." WHERE Verwijderd=0 AND Volgnummer<>'$id' AND Datum='$date_db' AND Boot_ID='$boat_id' ORDER BY Begintijd;";
-			$result = mysql_query($query);
+			$result = mysqli_query($link, $query);
 			if (!$result) {
-				die("Het ophalen van bestaande inschrijvingen is mislukt.". mysql_error());
+				die("Het ophalen van bestaande inschrijvingen is mislukt.". mysqli_error());
 			} else {
-				$rows_aff = mysql_affected_rows($link);
+				$rows_aff = mysqli_affected_rows($link);
 				if ($rows_aff > 0) {
 					echo "<br /><em>Bestaande (andere) inschrijvingen van '" . $boat . "' op " . $date_sh . ":</em><br /><br />";
-					while ($row = mysql_fetch_assoc($result)) {
+					while ($row = mysqli_fetch_assoc($result)) {
 						$db_start_time = substr($row['Begintijd'],0,5);
 						$db_end_time = substr($row['Eindtijd'],0,5);
 						$db_pname = $row["Pnaam"];
@@ -103,14 +99,14 @@ echo "<br />";
 
 // Toon aantallen inschrijvingen voor begintijd
 $query = "SELECT COUNT(*) AS AantalBijStart FROM ".$opzoektabel." JOIN boten ON ".$opzoektabel.".Boot_ID=boten.ID WHERE Verwijderd=0 AND Datum='$date_db' AND ((Begintijd='$start_time' AND Boot_ID<>'$boat_id') OR Eindtijd='$start_time') AND boten.Type<>\"ergo\" AND boten.Type<>\"soc\";";
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if (!$result) {
-	die("Het tellen van de inschrijvingen is mislukt.". mysql_error());
+	die("Het tellen van de inschrijvingen is mislukt.". mysqli_error());
 } else {
 	echo "<em>Aantal andere ploegen en/of skiffeurs op het vlot bij vertrek om $start_time: </em>";
-	$rows_aff = mysql_affected_rows($link);
+	$rows_aff = mysqli_affected_rows($link);
 	if ($rows_aff > 0) {
-		$row = mysql_fetch_assoc($result);
+		$row = mysqli_fetch_assoc($result);
 		echo $row["AantalBijStart"];
 	} else {
 		echo "geen";
@@ -120,14 +116,14 @@ echo "<br />";
 
 // Toon aantallen inschrijvingen voor eindtijd
 $query = "SELECT COUNT(*) AS AantalBijEind FROM ".$opzoektabel." JOIN boten ON ".$opzoektabel.".Boot_ID=boten.ID WHERE Verwijderd=0 AND Datum='$date_db' AND (Begintijd='$end_time' OR (Eindtijd='$end_time' AND Boot_ID<>'$boat_id')) AND boten.Type<>\"ergo\" AND boten.Type<>\"soc\";";
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if (!$result) {
-	die("Het tellen van de inschrijvingen is mislukt.". mysql_error());
+	die("Het tellen van de inschrijvingen is mislukt.". mysqli_error());
 } else {
 	echo "<em>Aantal andere ploegen en/of skiffeurs op het vlot bij terugkomst om $end_time: </em>";
-	$rows_aff = mysql_affected_rows($link);
+	$rows_aff = mysqli_affected_rows($link);
 	if ($rows_aff > 0) {
-		$row = mysql_fetch_assoc($result);
+		$row = mysqli_fetch_assoc($result);
 		echo $row["AantalBijEind"];
 	} else {
 		echo "geen";
@@ -137,6 +133,4 @@ echo "<br /><br />";
 
 echo "</div></div>";
 
-mysql_close($link);
-
-?>
+mysqli_close($link);

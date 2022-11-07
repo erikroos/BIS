@@ -11,11 +11,7 @@ include_once("inschrijving_methods.php");
 
 setlocale(LC_TIME, 'nl_NL');
 
-$bisdblink = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $bisdblink)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
+$bisdblink = getDbLink($database_host, $database_user, $database_pass, $database);
 	
 if (isset($_GET['del'])){
 	$id = $_GET['id'];

@@ -13,11 +13,7 @@ include_once("inschrijving_methods.php");
 
 setlocale(LC_TIME, 'nl_NL');
 
-$bisdblink = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $bisdblink)) {
-	echo "<p>Fout: database niet gevonden.</p>";
-	exit();
-}
+$bisdblink = getDbLink($database_host, $database_user, $database_pass, $database);
 
 $NR_OF_CONCEPTS = 7; // LET OP: aanpassen als het aantal Concept-ergo's verandert! (ivm blokinschrijving)
 $fail_msg = "";
@@ -35,11 +31,11 @@ if ($id < 0 || !is_numeric($id)) { // check op ID
 
 if ($id > 0) { // bestaande inschrijving: haal de var'en op t.b.v. show_availability
 	$query = "SELECT * FROM ".$opzoektabel." WHERE Volgnummer='$id';";
-	$result = mysql_query($query);
+	$result = mysqli_query($bisdblink, $query);
 	if ($result) {
-		$rows_aff = mysql_affected_rows($bisdblink);
+		$rows_aff = mysqli_affected_rows($bisdblink);
 		if ($rows_aff > 0) {
-			$row = mysql_fetch_assoc($result);
+			$row = mysqli_fetch_assoc($result);
 			if (isset($_POST['date'])) { 
 				$date = $_POST['date'];
 			} else {
@@ -190,16 +186,12 @@ echo "<div id='resscreen'>"; // Enables rest of screen to be removed upon succes
 // Rest of screen
 // Show existing reservations
 // Firstly disconnect from DB
-mysql_close($bisdblink);
+mysqli_close($bisdblink);
 echo "<div id=\"AvailabilityInfo\">";
 require_once('./show_availability.php');
 echo "</div>";
 // Reconnect to DB
-$bisdblink = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $bisdblink)) {
-	echo "<p>Fout: database niet gevonden.</p>";
-	exit();
-}
+$bisdblink = getDbLink($database_host, $database_user, $database_pass, $database);
 
 // Surrounding div
 echo "<div class='leftrightmargins'>";
@@ -250,12 +242,12 @@ echo "<option value=0 ";
 if ($boat_id == 0) echo "selected=\"selected\"";
 echo "></option>";
 $query = "SELECT boten.ID AS ID, Naam, Gewicht, `Type`, boten.Roeigraad FROM boten JOIN roeigraden ON boten.Roeigraad=roeigraden.Roeigraad WHERE Datum_eind IS NULL ORDER BY `Type`, roeigraden.ID, Naam;";
-$boats_result = mysql_query($query);
+$boats_result = mysqli_query($bisdblink, $query);
 if (!$boats_result) {
-	die("Ophalen van vlootinformatie mislukt.". mysql_error());
+	die("Ophalen van vlootinformatie mislukt.". mysqli_error());
 } else {
 	$t = 0;
-	while ($row = mysql_fetch_assoc($boats_result)) {
+	while ($row = mysqli_fetch_assoc($boats_result)) {
 		$curr_boat_id = $row['ID'];
 		$curr_boat = $row['Naam'];
 		$curr_weight = $row['Gewicht'];
@@ -381,4 +373,4 @@ echo "<br />";
 echo "</div>"; // resscreen
 echo "</div>"; // surrounding div
 
-mysql_close($bisdblink);
+mysqli_close($bisdblink);
