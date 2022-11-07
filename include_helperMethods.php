@@ -73,7 +73,7 @@ function CheckName($name_to_check) {
 	// aardigheidje voor der Feico
 	if ($name_to_check == "F.P.J. Camphuis" || $name_to_check == "F.P.J.Camphuis" || $name_to_check == "F.P.J.C." || $name_to_check == "FPJC" || $name_to_check == "fpjc") return true;
 	
-	return preg_match("/^[a-zA-Z][a-záàâäçéèêëóòôöíìîïúùûü]+([ -][a-zA-Z][a-záàâäçéèêëóòôöíìîïúùûü]+)*[ ][a-zA-Záàâäçéèêëóòôöíìîïúùûü][a-záàâäçéèêëóòôöíìîïúùûü]+([ -][a-zA-Záàâäçéèêëóòôöíìîïúùûü][a-záàâäçéèêëóòôöíìîïúùûü]+)*$/", $name_to_check);
+	return preg_match("/^[a-zA-Z][a-zÃ¡Ã Ã¢Ã¤Ã§Ã©Ã¨ÃªÃ«Ã³Ã²Ã´Ã¶Ã­Ã¬Ã®Ã¯ÃºÃ¹Ã»Ã¼]+([ -][a-zA-Z][a-zÃ¡Ã Ã¢Ã¤Ã§Ã©Ã¨ÃªÃ«Ã³Ã²Ã´Ã¶Ã­Ã¬Ã®Ã¯ÃºÃ¹Ã»Ã¼]+)*[ ][a-zA-ZÃ¡Ã Ã¢Ã¤Ã§Ã©Ã¨ÃªÃ«Ã³Ã²Ã´Ã¶Ã­Ã¬Ã®Ã¯ÃºÃ¹Ã»Ã¼][a-zÃ¡Ã Ã¢Ã¤Ã§Ã©Ã¨ÃªÃ«Ã³Ã²Ã´Ã¶Ã­Ã¬Ã®Ã¯ÃºÃ¹Ã»Ã¼]+([ -][a-zA-ZÃ¡Ã Ã¢Ã¤Ã§Ã©Ã¨ÃªÃ«Ã³Ã²Ã´Ã¶Ã­Ã¬Ã®Ã¯ÃºÃ¹Ã»Ã¼][a-zÃ¡Ã Ã¢Ã¤Ã§Ã©Ã¨ÃªÃ«Ã³Ã²Ã´Ã¶Ã­Ã¬Ã®Ã¯ÃºÃ¹Ã»Ã¼]+)*$/", $name_to_check);
 }
 
 function InRange($ddmmyyyy, $nr_of_days) {
@@ -89,23 +89,26 @@ function InRange($ddmmyyyy, $nr_of_days) {
 	return false;
 }
 
-function ValidateLogin($user, $pass, $database_host, $login_database_user, $login_database_pass, $login_database) {
+function getDbLink($database_host, $database_user, $database_pass, $database) {
+    $link = mysqli_connect($database_host, $database_user, $database_pass, $database);
+    if (mysqli_connect_errno()) {
+        echo "Failed to connect to MySQL: " . mysqli_connect_error();
+        exit();
+    }
+    return $link;
+}
 
-	// Drupal-DB selecteren
-	$link_drupal = mysql_connect($database_host, $login_database_user, $login_database_pass);
-	if (!mysql_select_db($login_database, $link_drupal)) {
-		echo mysql_error()."<br />";
-	}
-	
+function ValidateLogin($user, $pass, $database_host, $login_database_user, $login_database_pass, $login_database) {
+	$link_login = getDbLink($database_host, $login_database_user, $login_database_pass, $login_database);
 	$query = "SELECT pass FROM users WHERE name='" . $user . "';";
-	$result = mysql_query($query);
+	$result = mysqli_query($link_login, $query);
 	if (!$result) {
-		echo mysql_error()."<br />";
+		echo mysqli_error()."<br />";
 	}
-	$row = mysql_fetch_assoc($result);
+	$row = mysqli_fetch_assoc($result);
 	$pass_db = $row['pass'];
-	mysql_close($link_drupal);
-	$pass_given = md5($pass);
+	mysqli_close($link_login);
+	$pass_given = md5($pass); // TODO use more modern hash function
 	if ($pass_db == $pass_given) {
 		return true;
 	}

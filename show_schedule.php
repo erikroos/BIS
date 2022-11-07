@@ -4,11 +4,7 @@ include_once("include_helperMethods.php");
 
 setlocale(LC_TIME, 'nl_NL');
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 
 if (isset($_GET['date_to_show'])) {
 	$date_to_show = $_GET['date_to_show'];
@@ -33,12 +29,12 @@ echo "<h1>".strtoupper($date_sh)." vanaf $start_time_to_show: $cat_to_show ($gra
 // tabel-weergave (boten x tijdstippen) van inschrijvingen op gekozen dag
 $restrict_query_type = "";
 $query = "SELECT Type from types WHERE Categorie='$cat_to_show';";
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if (!$result) {
-	die("Ophalen van types mislukt.". mysql_error());
+	die("Ophalen van types mislukt." . mysqli_error());
 }
 $c = 0;
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
 	if ($c > 0) $restrict_query_type .= " OR ";
 	$restrict_query_type .= "Type='".$row['Type']."'";
 	$c++;
@@ -49,12 +45,11 @@ if ($grade_to_show != 'alle') {
 }
 $query = "SELECT boten.ID AS ID, Naam, Gewicht, Type, boten.Roeigraad FROM boten JOIN roeigraden ON boten.Roeigraad=roeigraden.Roeigraad WHERE Datum_eind IS NULL AND (".$restrict_query_type.") ".$restrict_query_grade." ORDER BY roeigraden.ID, Naam;";
 
-$boats_result = mysql_query($query);
+$boats_result = mysqli_query($link, $query);
 if (!$boats_result) {
-	die("Ophalen van boten-informatie mislukt.". mysql_error());
+	die("Ophalen van boten-informatie mislukt.". mysqli_error());
 }
-if (mysql_affected_rows() == 0)
-{
+if (mysqli_affected_rows($link) == 0) {
 	echo "<p>Niets gevonden.</p>";
 } else {
 
@@ -94,7 +89,7 @@ echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">";
 echo "<tr><th><div>Naam (gewicht, type, graad)</div></th></tr>";
 echo "<tr><th><div>&nbsp;</div></th></tr>";
 $c = 0;
-while ($row = mysql_fetch_assoc($boats_result)) {
+while ($row = mysqli_fetch_assoc($boats_result)) {
 	$boat_ids_array[$c] = $row['ID'];
 	$boats_array[$c] = $row['Naam'];
 	$boat_tmp = addslashes($boats_array[$c]);
@@ -110,11 +105,11 @@ while ($row = mysql_fetch_assoc($boats_result)) {
 		AND Boot_ID='$boat_ids_array[$c]' 
 		AND Startdatum<='$date_to_show_db' 
 		AND (Einddatum='0' OR Einddatum='0000-00-00' OR Einddatum IS NULL OR Einddatum>='$date_to_show_db');";
-	$result2 = mysql_query($query2);
+	$result2 = mysqli_query($link, $query2);
 	if (!$result2) {
 		die("Ophalen van Uit de Vaart-informatie mislukt.". mysql_error());
 	} else {
-		$rows_aff = mysql_affected_rows($link);
+		$rows_aff = mysqli_affected_rows($link);
 		if ($rows_aff > 0) {
 			$available[$c] = 0;
 			$row = mysql_fetch_assoc($result2);
@@ -122,11 +117,11 @@ while ($row = mysql_fetch_assoc($boats_result)) {
 		}
 	}
 	$query3 = "SELECT KleurInBIS FROM roeigraden WHERE Roeigraad='$grade';";
-	$result3 = mysql_query($query3);
+	$result3 = mysqli_query($link, $query3);
 	if (!$result3) {
-		die("Ophalen van kleuren mislukt.". mysql_error());
+		die("Ophalen van kleuren mislukt.". mysqli_error());
 	} else {
-		$row3 = mysql_fetch_assoc($result3);
+		$row3 = mysqli_fetch_assoc($result3);
 		$bgcolor = $row3['KleurInBIS'];
 	}
 	echo "<tr><th ";
@@ -179,13 +174,13 @@ while (isset($boats_array[$boatnr])) {
 		$opzoektabel_tmp = $opzoektabel;
 		if (strtotime($date_to_show_db) - strtotime($today_db) < 0) $opzoektabel_tmp .= "_oud";
 		$query = "SELECT * FROM ".$opzoektabel_tmp." WHERE Verwijderd=0 AND Datum='$date_to_show_db' AND Eindtijd>'$start_time_to_show' AND Boot_ID='$boat_ids_array[$boatnr]' ORDER BY Begintijd;";
-		$result = mysql_query($query);
+		$result = mysqli_query($link, $query);
 		if (!$result) {
 			die("Ophalen van inschrijvingen mislukt.". mysql_error());
 		} else {
-			$rows_aff = mysql_affected_rows($link);
+			$rows_aff = mysqli_affected_rows($link);
 			if ($rows_aff > 0) {
-				while ($row = mysql_fetch_assoc($result)) {
+				while ($row = mysqli_fetch_assoc($result)) {
 					$db_id = $row['Volgnummer'];
 					$db_date = $row['Datum'];
 					$date = DBdateToDate($db_date);
@@ -283,6 +278,4 @@ echo "</table>"; // einde omhullende tabel
 echo "</div>";
 } // behoort bij IF aantal boten in selectie > 0
 
-mysql_close($link);
-
-?>
+mysqli_close($link);

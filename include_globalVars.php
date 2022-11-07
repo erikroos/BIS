@@ -7,7 +7,7 @@ if (file_exists($filename_basis)) {
 } else {
 	$filename = "../".$filename_basis; // probeer een dir lager
 	if (!file_exists($filename)) {
-		$filename = "../../".$filename_basis; // probeer nóg een dir lager
+		$filename = "../../".$filename_basis; // probeer nï¿½g een dir lager
 		if (!file_exists($filename)) {
 			$filename = "bis/".$filename_basis; // probeer in BIS-dir (tbv page 15 en 22)
 			if (!file_exists($filename)) {
@@ -23,7 +23,7 @@ if (file_exists($filename_basis)) {
 $fh = fopen($filename, "r");
 while (!feof($fh)) {
 	$line = fgets($fh);
-	if ($line[0] != "#") { // commentaar niet parsen
+	if ($line == false || $line[0] != "#") { // laatste regel en commentaar niet parsen
 		$line = trim($line);
 		$fields = explode("=", $line, 2);
 		if ($fields[0] == "database_host") $database_host = $fields[1];

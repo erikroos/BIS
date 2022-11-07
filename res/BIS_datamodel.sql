@@ -1,16 +1,12 @@
--- phpMyAdmin SQL Dump
--- version 2.6.4-pl3
--- http://www.phpmyadmin.net
--- 
--- Host: rdbms.strato.de
--- Generatie Tijd: 12 Mei 2012 om 21:28
--- Server versie: 5.0.91
--- PHP Versie: 5.2.9
--- 
+--
 -- Database: `bis`
 -- 
 CREATE DATABASE `bis` DEFAULT CHARACTER SET latin1 COLLATE latin1_german1_ci;
+
 USE bis;
+
+-- If you get error messages about the default dates, use this:
+-- SET sql_mode=ALLOW_INVALID_DATES,NO_ENGINE_SUBSTITUTION
 
 -- --------------------------------------------------------
 

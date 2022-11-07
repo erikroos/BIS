@@ -12,15 +12,11 @@ if ($toonweer) include_once("xmlnews.php");
 
 setlocale(LC_TIME, 'nl_NL');
 
-$bisdblink = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $bisdblink)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
+$bisdblink = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" >
+<!DOCTYPE html>
+<html>
 <head>
     <title><?php echo $systeemnaam; ?></title>
     <link type="text/css" href="<?php echo $csslink; ?>" rel="stylesheet" />
@@ -32,25 +28,25 @@ if (!mysql_select_db($database, $bisdblink)) {
 <script type="text/javascript" src="scripts/wz_tooltip.js"></script>
 
 <?php
-// stop alle bootcategorieën in een array
+// stop alle bootcategorieÃ«n in een array
 $query = "SELECT DISTINCT Categorie FROM types ORDER BY Categorie;";
-$result = mysql_query($query);
+$result = mysqli_query($bisdblink, $query);
 if (!$result) {
-	die("Ophalen van categorieën mislukt.". mysql_error());
+	die("Ophalen van categorieÃ«n mislukt.". mysql_error());
 }
 $cat_array = array();
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
 	array_push($cat_array, $row['Categorie']);
 }
 
 // stop alle roeigraden in een array
 $query = "SELECT Roeigraad FROM roeigraden WHERE ToonInBIS=1 ORDER BY ID;";
-$result = mysql_query($query);
+$result = mysqli_query($bisdblink, $query);
 if (!$result) {
 	die("Ophalen van roeigraden mislukt.". mysql_error());
 }
 $grade_array = array();
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
 	array_push($grade_array, $row['Roeigraad']);
 }
 
@@ -183,21 +179,21 @@ $date_sh = strftime('%A %d-%m-%Y', $date_tmp);
 	<strong>Bestuursmededelingen</strong><br />
 	<?php
 	$query = "SELECT * FROM mededelingen ORDER BY Datum DESC LIMIT 1;"; // alleen recentste
-	$result = mysql_query($query);
+	$result = mysqli_query($bisdblink, $query);
 	if (!$result) {
-		echo "Ophalen van bestuursmededelingen mislukt.".mysql_error();
+		echo "Ophalen van bestuursmededelingen mislukt." . mysqli_error();
 	} else {
-		$rows_aff = mysql_affected_rows($bisdblink);
+		$rows_aff = mysqli_affected_rows($bisdblink);
 		if ($rows_aff > 0) {
-			$row = mysql_fetch_assoc($result);
+			$row = mysqli_fetch_assoc($result);
 			$note_datum = DBdateToDate($row['Datum']);
 			$bestuurslid = $row['Bestuurslid'];
 			$summary = $row['Betreft'];
 			$note = $row['Mededeling'];
 			echo "Datum: $note_datum<br />Van: $bestuurslid<br />Betreft: $summary<br /><br />$note<br /><br /><a href=\"$mededelingenpagina\" target='_blank'>Alle mededelingen";
 			$query2 = "SELECT COUNT(*) AS NrOfNotes FROM mededelingen;"; // alleen recentste
-			$result2 = mysql_query($query2);
-			$row2 = mysql_fetch_assoc($result2);
+			$result2 = mysqli_query($bisdblink, $query2);
+			$row2 = mysqli_fetch_assoc($result2);
 			$nr_notes = $row2['NrOfNotes'];
 			if ($nr_notes) echo " (".$nr_notes.") ";
 			echo "&gt;&gt;</a>";
@@ -217,7 +213,7 @@ $date_sh = strftime('%A %d-%m-%Y', $date_tmp);
 
 </div>
 
-<?php mysql_close($bisdblink); ?>
+<?php mysqli_close($bisdblink); ?>
 <div id='ScheduleInfo'>
 	<?php require_once("./show_schedule.php"); ?>
 </div>
