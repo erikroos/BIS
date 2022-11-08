@@ -107,12 +107,12 @@ while ($row = mysqli_fetch_assoc($boats_result)) {
 		AND (Einddatum='0' OR Einddatum='0000-00-00' OR Einddatum IS NULL OR Einddatum>='$date_to_show_db');";
 	$result2 = mysqli_query($link, $query2);
 	if (!$result2) {
-		die("Ophalen van Uit de Vaart-informatie mislukt.". mysql_error());
+		die("Ophalen van Uit de Vaart-informatie mislukt.". mysqli_error());
 	} else {
 		$rows_aff = mysqli_affected_rows($link);
 		if ($rows_aff > 0) {
 			$available[$c] = 0;
-			$row = mysql_fetch_assoc($result2);
+			$row = mysqli_fetch_assoc($result2);
 			$reason[$c] = $row['Reden'];
 		}
 	}
@@ -176,7 +176,7 @@ while (isset($boats_array[$boatnr])) {
 		$query = "SELECT * FROM ".$opzoektabel_tmp." WHERE Verwijderd=0 AND Datum='$date_to_show_db' AND Eindtijd>'$start_time_to_show' AND Boot_ID='$boat_ids_array[$boatnr]' ORDER BY Begintijd;";
 		$result = mysqli_query($link, $query);
 		if (!$result) {
-			die("Ophalen van inschrijvingen mislukt.". mysql_error());
+			die("Ophalen van inschrijvingen mislukt.". mysqli_error());
 		} else {
 			$rows_aff = mysqli_affected_rows($link);
 			if ($rows_aff > 0) {
