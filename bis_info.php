@@ -13,8 +13,8 @@ include_once("include_globalVars.php");
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title><? echo $systeemnaam; ?> - Hulp</title>
-    <link type="text/css" href="<? echo $csslink; ?>" rel="stylesheet" />
+    <title><?php echo $systeemnaam; ?> - Hulp</title>
+    <link type="text/css" href="<?php echo $csslink; ?>" rel="stylesheet" />
 </head>
 <body>
 
@@ -26,7 +26,7 @@ include_once("include_globalVars.php");
 <p><a href="./index.php">Terug naar BIS&gt;&gt;</a></p>
 
 <p>Voor meer informatie, opmerkingen, vragen en/of suggesties kunt u ook contact opnemen met Erik Roos door te mailen naar het volgende adres:
-<? echo "<a href='mailto:".$mailadres."'>".$mailadres."</a>"; ?>
+<?php echo "<a href='mailto:".$mailadres."'>".$mailadres."</a>"; ?>
 </p>
 
 <strong>API en app</strong>

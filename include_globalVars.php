@@ -7,7 +7,7 @@ if (file_exists($filename_basis)) {
 } else {
 	$filename = "../".$filename_basis; // probeer een dir lager
 	if (!file_exists($filename)) {
-		$filename = "../../".$filename_basis; // probeer n�g een dir lager
+		$filename = "../../".$filename_basis; // probeer nog een dir lager
 		if (!file_exists($filename)) {
 			$filename = "bis/".$filename_basis; // probeer in BIS-dir (tbv page 15 en 22)
 			if (!file_exists($filename)) {
@@ -76,5 +76,3 @@ if ($theminute_quarts == 60) {
 		$theminute_quarts = 45;
 	}
 }
-
-?>

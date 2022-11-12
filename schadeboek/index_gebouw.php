@@ -9,19 +9,15 @@ if (!isset($_SESSION['authorized_bis']) || $_SESSION['authorized_bis'] != 'yes')
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
-
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
     <title>BotenInschrijfSysteem - Klachten Gebouw/Algemeen</title>
-    <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
+    <link type="text/css" href="../<?php echo $csslink; ?>" rel="stylesheet" />
+    <link type="text/css" href="../css/bis.css" rel="stylesheet" />
 	<!-- Datatables -->
 	<style type="text/css" title="currentStyle"> 
 		@import "../scripts/datatables/demo_page.css";
@@ -42,14 +38,14 @@ echo "<a href='./bis_logout.php'>Uitloggen&gt;&gt;</a></p>";
 echo "<p>Lijst van klachten die in behandeling zijn:</p>";
 
 $query = "SELECT Datum, Naam, Oms_lang, Feedback from schades_gebouw;";
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if (!$result) {
-	die("Ophalen van klachten mislukt.". mysql_error());
+	die("Ophalen van klachten mislukt.". mysqli_error());
 }
-echo "<div style='width:700px'><table id='schades'>";
+echo "<div style='width:700px'><table id='klachten'>";
 echo "<thead><tr><th>Melddatum (jjjj-mm-dd)</th><th>Naam melder</th><th>Omschrijving</th><th>Terugkoppeling GebouwCie</th></tr></thead><tbody>";
 $c = 0;
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
 	$date = $row['Datum'];
 	$name = $row['Naam'];
 	$note = $row['Oms_lang'];
@@ -66,44 +62,43 @@ while ($row = mysql_fetch_assoc($result)) {
 }
 echo "</tbody></table></div>";
 
-mysql_close($link);
-
+mysqli_close($link);
 ?>
 </div>
 </body>
 
 <script type="text/javascript" charset="utf-8"> 
 	$(document).ready(function() {
-		$('#schades').dataTable( {
+		$('#klachten').dataTable( {
 			"bPaginate": true,
-		"sPaginationType": "full_numbers",
-		"bLengthChange": true,
-		"bAutoWidth": false,
-		"bFilter": true,
-		"bSort": true,
-		"aaSorting": [[ 0, "desc" ]],
-		"oLanguage": {
-			"sLengthMenu": "Toon _MENU_ meldingen per pagina",
-			"sZeroRecords": "Niets gevonden",
-			"sInfo": "_START_ tot _END_ van _TOTAL_ meldingen",
-			"sInfoEmpty": "Er zijn geen meldingen om te tonen",
-			"sInfoFiltered": "(gefilterd uit _MAX_ meldingen)",
-			"sSearch": "Zoek:",
-			"oPaginate": {
-				"sFirst":    "Eerste",
-				"sPrevious": "Vorige",
-				"sNext":     "Volgende",
-				"sLast":     "Laatste"
-			}
-		},
-		"aoColumns" : [
-			{"sWidth": '100px'},
-			{"sWidth": '100px'},
-			{"sWidth": '300px'},
-			{"sWidth": '200px'}
-		]
-	} );
-} );
+            "sPaginationType": "full_numbers",
+            "bLengthChange": true,
+            "bAutoWidth": false,
+            "bFilter": true,
+            "bSort": true,
+            "aaSorting": [[ 0, "desc" ]],
+            "oLanguage": {
+                "sLengthMenu": "Toon _MENU_ meldingen per pagina",
+                "sZeroRecords": "Niets gevonden",
+                "sInfo": "_START_ tot _END_ van _TOTAL_ meldingen",
+                "sInfoEmpty": "Er zijn geen meldingen om te tonen",
+                "sInfoFiltered": "(gefilterd uit _MAX_ meldingen)",
+                "sSearch": "Zoek:",
+                "oPaginate": {
+                    "sFirst":    "Eerste",
+                    "sPrevious": "Vorige",
+                    "sNext":     "Volgende",
+                    "sLast":     "Laatste"
+                }
+            },
+            "aoColumns" : [
+                {"sWidth": '100px'},
+                {"sWidth": '100px'},
+                {"sWidth": '300px'},
+                {"sWidth": '200px'}
+            ]
+	    } );
+    } );
 </script> 
 
 </html>

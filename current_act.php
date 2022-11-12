@@ -17,7 +17,7 @@ $link = getDbLink($database_host, $database_user, $database_pass, $database);
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title><? echo $systeemnaam; ?> - Wie zijn er nu op het water?</title>
+    <title><?php echo $systeemnaam; ?> - Wie zijn er nu op het water?</title>
     <link type="text/css" href="<?php echo $csslink; ?>" rel="stylesheet" />
     <link type="text/css" href="css/bis.css" rel="stylesheet" />
 </head>

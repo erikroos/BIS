@@ -106,6 +106,9 @@ function ValidateLogin($user, $pass, $database_host, $login_database_user, $logi
 		echo mysqli_error()."<br />";
 	}
 	$row = mysqli_fetch_assoc($result);
+    if ($row == null) {
+        return false;
+    }
 	$pass_db = $row['pass'];
 	mysqli_close($link_login);
 	$pass_given = md5($pass); // TODO use more modern hash function

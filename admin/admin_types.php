@@ -15,7 +15,7 @@ $link = getDbLink($database_host, $database_user, $database_pass, $database);
 <!DOCTYPE html>
 <html>
 <head>
-    <title><? echo $systeemnaam; ?> - Admin - Boottypes</title>
+    <title><?php echo $systeemnaam; ?> - Admin - Boottypes</title>
     <link type="text/css" href="../<?php echo $csslink; ?>" rel="stylesheet" />
 </head>
 <body>

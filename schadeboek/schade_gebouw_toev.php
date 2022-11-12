@@ -9,19 +9,14 @@ if (!isset($_SESSION['authorized_bis']) || $_SESSION['authorized_bis'] != 'yes')
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
-
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
     <title>BotenInschrijfSysteem - Klachtenboek Gebouw/Algemeen - Nieuwe klacht/schademelding</title>
-    <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
+    <link type="text/css" href="../<?php echo $csslink; ?>" rel="stylesheet" />
 </head>
 <body>
 <div style="margin-left:10px; margin-top:10px">
@@ -52,7 +47,7 @@ if (isset($_POST['insert'])){
 	
 	if (!isset($fail)) {
 		$query = "INSERT INTO `schades_gebouw` (Datum, Naam, Oms_lang) VALUES ('$today_db', '$name', '$note');";
-		$result = mysql_query($query);
+		$result = mysqli_query($link, $query);
 		if (!$result) {
 			die("Invoeren klacht mislukt.". mysql_error());
 		} else {
@@ -91,8 +86,7 @@ if ((!isset($_POST['insert']) && !isset($_POST['delete']) && !isset($_POST['canc
 	echo "</form>";
 }
 
-mysql_close($link);
-
+mysqli_close($link);
 ?>
 </div>
 </body>

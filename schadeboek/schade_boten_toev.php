@@ -9,19 +9,14 @@ if (!isset($_SESSION['authorized_bis']) || $_SESSION['authorized_bis'] != 'yes')
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
-
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
     <title>BotenInschrijfSysteem - Schadeboek Boten - Nieuwe schademelding</title>
-    <link type="text/css" href="../<? echo $csslink; ?>" rel="stylesheet" />
+    <link type="text/css" href="../<?php echo $csslink; ?>" rel="stylesheet" />
 </head>
 <body>
 <div style="margin-left:10px; margin-top:10px">
@@ -48,8 +43,8 @@ if (isset($_POST['insert'])){
 		$boat = "algemeen";
 	} else {
 		$query2 = "SELECT Naam from boten WHERE ID=$boat_id;";
-		$result2 = mysql_query($query2);
-		$row2 = mysql_fetch_assoc($result2);
+		$result2 = mysqli_query($link, $query2);
+		$row2 = mysqli_fetch_assoc($result2);
 		$boat = $row2['Naam'];
 	}
 	//
@@ -63,9 +58,9 @@ if (isset($_POST['insert'])){
 	
 	if (!isset($fail)) {
 		$query = "INSERT INTO `schades` (Datum, Naam, Boot_ID, Oms_lang) VALUES ('$today_db', '$name', '$boat_id', '$note');";
-		$result = mysql_query($query);
+		$result = mysqli_query($link, $query);
 		if (!$result) {
-			die("Invoeren klacht mislukt.". mysql_error());
+			die("Invoeren klacht mislukt.". mysqli_error());
 		} else {
 		    // mail aan matcom
 			$message = $name." heeft zojuist een schade gemeld betreffende '".$boat."'.<br>";
@@ -98,11 +93,11 @@ if ((!isset($_POST['insert']) && !isset($_POST['delete']) && !isset($_POST['canc
 	//if ($boat_id == 0) echo "selected=\"selected\"";
 	//echo ">algemeen</option>";
 	$query = "SELECT ID, Naam, Type FROM boten WHERE Datum_eind IS NULL AND Type<>\"soc\" ORDER BY Naam;";
-	$boats_result = mysql_query($query);
+	$boats_result = mysqli_query($link, $query);
 	if (!$boats_result) {
-		die("Ophalen van vlootinformatie mislukt.". mysql_error());
+		die("Ophalen van vlootinformatie mislukt.". mysqli_error());
 	} else {
-		while ($row = mysql_fetch_assoc($boats_result)) {
+		while ($row = mysqli_fetch_assoc($boats_result)) {
 			$curr_boat_id = $row['ID'];
 			$curr_boat = $row['Naam'];
 			$type = $row['Type'];
@@ -126,8 +121,7 @@ if ((!isset($_POST['insert']) && !isset($_POST['delete']) && !isset($_POST['canc
 	echo "</form>";
 }
 
-mysql_close($link);
-
+mysqli_close($link);
 ?>
 </div>
 </body>
