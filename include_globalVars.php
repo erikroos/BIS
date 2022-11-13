@@ -76,3 +76,7 @@ if ($theminute_quarts == 60) {
 		$theminute_quarts = 45;
 	}
 }
+
+// Set locale correctly, once
+setlocale(LC_TIME, 'NL_nl');
+setlocale(LC_ALL, 'nl_NL');

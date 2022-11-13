@@ -10,8 +10,6 @@ include_once("include_globalVars.php");
 include_once("include_helperMethods.php");
 if ($toonweer) include_once("xmlnews.php");
 
-setlocale(LC_TIME, 'nl_NL');
-
 $bisdblink = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
@@ -110,7 +108,7 @@ $date_sh = strftime('%A %d-%m-%Y', $date_tmp);
 
 <div class="topbar">
 	<div class='mainscreen'>
-		<strong>Welkom,</strong>&nbsp;<?php echo $_SESSION['login']; ?><br /><strong>Het is vandaag:&nbsp;</strong><?php echo $date_sh?>
+		<strong>Welkom,</strong>&nbsp;<?php echo $_SESSION['login']; ?><br /><strong>Het is vandaag:&nbsp;</strong><?php echo $date_sh; ?>
 		&nbsp;<input class='smalltextbtn' type="button" name="CurrAct" value="Nu op water" onclick="window.location.href='current_act.php';" />
 		&nbsp;<input class='smalltextbtn' type="button" name="Schadeboek" value="Schadeboek boten" onclick="window.location.href='schadeboek/index_boten.php';" />
 		&nbsp;<input class='smalltextbtn' type="button" name="Schadeboek" value="Klachtenboek gebouw" onclick="window.location.href='schadeboek/index_gebouw.php';" />

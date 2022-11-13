@@ -279,6 +279,7 @@ CREATE TABLE `inschrijvingen` (
   `Email` text collate latin1_german1_ci NOT NULL,
   `MPB` text collate latin1_german1_ci NOT NULL,
   `Spits` int(11) NOT NULL default '0',
+  `Wedstrijdblok` int(11) NOT NULL default '0',
   `Controle` tinyint(2) NOT NULL default '0',
   `Verwijderd` tinyint(2) NOT NULL default '0',
   PRIMARY KEY  (`Volgnummer`),

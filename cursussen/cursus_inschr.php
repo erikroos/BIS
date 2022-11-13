@@ -9,11 +9,7 @@ if (!isset($_SESSION['authorized_bis']) || $_SESSION['authorized_bis'] != 'yes')
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 
 setlocale(LC_TIME, 'nl_NL');
 ?>
@@ -21,7 +17,7 @@ setlocale(LC_TIME, 'nl_NL');
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title>BotenInschrijfSysteem - Cursussen - Inschrijven voor een cursus</title>
+    <title><?php echo $systeemnaam; ?> - Cursussen - Inschrijven voor een cursus</title>
     <link type="text/css" href="../<?php echo $csslink; ?>" rel="stylesheet" />
 </head>
 <body>
@@ -30,13 +26,13 @@ setlocale(LC_TIME, 'nl_NL');
 
 $id = $_GET['id'];
 $query = "SELECT * FROM cursussen WHERE ID='$id';";
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if (!$result) {
-	die("Ophalen van cursusgegevens mislukt.".mysql_error());
+	die("Ophalen van cursusgegevens mislukt." . mysqli_error());
 } else {
-	$rows_aff = mysql_affected_rows($link);
+	$rows_aff = mysqli_affected_rows($link);
 	if ($rows_aff > 0) {
-		$row = mysql_fetch_assoc($result);
+		$row = mysqli_fetch_assoc($result);
 		$startdate = $row['Startdatum'];
 		$startdate_sh = strtotime($exstartdate);
 		$type = $row['Type'];
@@ -75,7 +71,7 @@ if ($_POST['insert']){
 		$fail_msg_demand = "U dient op te geven hoe u aan de instructie-eis voldaan heeft.";
 	}
 	if (!$telph || !$email) {
-		$fail_msg_contact = "U dient zowel een telefoonnnummer als een e-mailadres op te geven.";
+		$fail_msg_contact = "U dient zowel een telefoonnummer als een e-mailadres op te geven.";
 	} else {
 		if (!check_phone_dutch($telph)) {
 			$fail_msg_telph = "U dient een geldig 10-cijferig telefoonnummer, met streepje, in te voeren.";
@@ -89,19 +85,19 @@ if ($_POST['insert']){
 	
 	if (!$fail) {
 		$query = "INSERT INTO `cursus_inschrijvingen` (Naam, Demand, Ex_ID, Email, TelNr) VALUES ('$name', '$demand', '$id', '$email', '$telph');";
-		$result = mysql_query($query);
+		$result = mysqli_query($link, $query);
 		if (!$result) {
-			die("Inschrijven voor cursus mislukt.".mysql_error());
+			die("Inschrijven voor cursus mislukt." . mysqli_error());
 		} else {
 			$intro = "Beste cursist,<br /><br />Bedankt voor uw aanmelding. Wij hebben onderstaande gegevens ontvangen en nemen z.s.m. per email contact met u op. U ontvangt dan nadere informatie omtrent de cursus.<br /><br />Met vriendelijke groet,<br />De Instructiecommissie<br /><br />KGR De Hunze<br />Praediniussingel 32<br />9711 AG Groningen<br /><br />www.hunze.nl<br /><br />";
 			$message = "Naam: ".$name."<br>";
 			$query2 = "SELECT Startdatum, Type FROM `cursussen` WHERE ID='$id';";
-			$result2 = mysql_query($query2);
-			$row2 = mysql_fetch_assoc($result2);
+			$result2 = mysqli_query($link, $query2);
+			$row2 = mysqli_fetch_assoc($result2);
 			$startdate_db = $row2['Startdatum'];
 			$type = $row2['Type'];
 			$message .= "Cursus: ".$type."<br />";
-			$message .= "Beginnend op: ".DBdateToDate($startdate_db)."<br />";
+			$message .= "Beginnend op: " . DBdateToDate($startdate_db)."<br />";
 			if ($demand) $message .= "Tegenprestatie: ".$demand."<br />";
 			if ($telph) $message .= "Telefoonnummer: ".$telph."<br />";
 			if ($email) $message .= "E-mailadres: ".$email."<br />";
@@ -162,8 +158,7 @@ if ((!$_POST['insert'] && !$_POST['cancel']) || $fail) {
 	echo "</form>";
 }
 
-mysql_close($link);
-
+mysqli_close($link);
 ?>
 </div>
 </body>
