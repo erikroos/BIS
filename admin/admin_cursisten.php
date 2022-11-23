@@ -9,12 +9,7 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes' || $_SES
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
-
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -36,9 +31,9 @@ $part_id = $_GET['part_id'];
 
 if ($mode == "d" && $part_id) {
 	$query = "DELETE FROM cursus_inschrijvingen WHERE ID='$part_id';";
-	$result = mysql_query($query);
+	$result = mysqli_query($link, $query);
 	if (!$result) {
-		die("Verwijderen van deelnemer mislukt.". mysql_error());
+		die("Verwijderen van deelnemer mislukt.". mysqli_error());
 	}
 	echo "Verwijderen van deelnemer gelukt.<br />";
 	echo "<a href='admin_cursisten.php?id=$id'>Terug naar de deelnemerspagina&gt;&gt;</a>";
@@ -48,14 +43,14 @@ if ($mode == "d" && $part_id) {
 echo "<p>Deelnemers</p>";
 
 $query = "SELECT * FROM cursus_inschrijvingen WHERE Ex_ID='$id';";
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if (!$result) {
-	die("Ophalen van kandidaten mislukt.". mysql_error());
+	die("Ophalen van kandidaten mislukt.". mysqli_error());
 }
 echo "<br><table class=\"basis\" border=\"1\" cellpadding=\"6\" cellspacing=\"0\" bordercolor=\"#AAB8D5\">";
 echo "<tr><th><div style=\"text-align:left\">Naam</div></th><th><div style=\"text-align:left\">Tegenprestatie</div></th><th><div style=\"text-align:left\">Telefoon</div></th><th><div style=\"text-align:left\">E-mail</div></th><th></th></tr>";
 $c = 0;
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
 	$part_id = $row['ID'];
 	$name = $row['Naam'];
 	$demand = $row['Demand'];
@@ -71,8 +66,7 @@ while ($row = mysql_fetch_assoc($result)) {
 }
 echo "</table>";
 
-mysql_close($link);
-
+mysqli_close($link);
 ?>
 
 </div>

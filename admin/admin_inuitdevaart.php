@@ -7,8 +7,8 @@ include 'admin_header.php';
 <?php
 $arch = isset($_GET['arch']);
 $boot_id = $_GET['id'];
-$result = mysql_query('SELECT Naam, Type from boten WHERE ID = ' . $boot_id);
-$row = mysql_fetch_assoc($result);
+$result = mysqli_query($link, 'SELECT Naam, Type from boten WHERE ID = ' . $boot_id);
+$row = mysqli_fetch_assoc($result);
 $name = $row['Naam'];
 
 echo '<p>' . ($arch ? 'Gearchiveerde u' : 'U') . 'it de Vaart-info voor: ' . $name . ' (' . $row['Type'] . ').';
@@ -17,16 +17,16 @@ echo '<p><a href="admin_uitdevaart_toev.php?id=' . $boot_id . '">Toevoegen</a></
 
 // tabel
 $query = 'SELECT * from uitdevaart WHERE Verwijderd=' . ($arch ? '1' : '0') . ' AND Boot_ID=' . $boot_id . ' ORDER BY Startdatum DESC';
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if (!$result) {
-	die("Ophalen van informatie mislukt.". mysql_error());
+	die("Ophalen van informatie mislukt.". mysqli_error());
 }
 echo "<table class=\"basis\" border=\"1\" cellpadding=\"6\" cellspacing=\"0\" bordercolor=\"#AAB8D5\">";
 echo '<tr><th>Startdatum</th><th>Einddatum</th><th>Reden</th>';
 if (!$arch) echo '<th><div style=\"text-align:left\">Aanpassen</div></th>';
 echo '</tr>';
 $c = 0;
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
 	$udv_id = $row['ID'];
 	$startdate = $row['Startdatum'];
 	$startdate_sh = DBdateToDate($startdate);
@@ -49,4 +49,4 @@ echo "</table>";
 echo "<p><em>NB: Meldingen met een verlopen einddatum worden automatisch gearchiveerd.</em></p>";
 ?>
 
-<?php include 'admin_footer.php'; ?>
+<?php include 'admin_footer.php';

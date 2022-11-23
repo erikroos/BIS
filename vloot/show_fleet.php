@@ -4,12 +4,7 @@
 include_once("bis/include_globalVars.php");
 include_once("bis/include_helperMethods.php");
 
-$bisdblink = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $bisdblink)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
-
+$bisdblink = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!--link type="text/css" href="../<? //echo $csslink; ?>" rel="stylesheet" /-->
@@ -26,12 +21,12 @@ echo "<form name='form' action=\"$REQUEST_URI\" method=\"post\">";
 echo "Categorie:&nbsp;";
 echo "<select name=\"cat_to_show\" />";
 	$query = "SELECT DISTINCT Categorie FROM types ORDER BY Categorie;";
-	$result = mysql_query($query);
+	$result = mysqli_query($bisdblink, $query);
 	if (!$result) {
-		die("Ophalen van categorie&euml;n mislukt.". mysql_error());
+		die("Ophalen van categorie&euml;n mislukt.". mysqli_error());
 	}
 	$c = 0;
-	while ($row = mysql_fetch_assoc($result)) {
+	while ($row = mysqli_fetch_assoc($result)) {
 		$cat_db = $row['Categorie'];
 		echo "<option value=\"$cat_db\" ";
 		if ($cat_to_show == $cat_db) echo "selected";
@@ -44,12 +39,12 @@ echo "</form>";
 
 $restrict_query_type = "";
 $query = "SELECT Type FROM types WHERE Categorie='$cat_to_show';";
-$result = mysql_query($query);
+$result = mysqli_query($bisdblink, $query);
 if (!$result) {
-	die("Ophalen van types mislukt.". mysql_error());
+	die("Ophalen van types mislukt.". mysqli_error());
 }
 $c = 0;
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
 	if ($c > 0) $restrict_query_type .= " OR ";
 	$restrict_query_type .= "Type='".$row['Type']."'";
 	$c++;
@@ -59,11 +54,11 @@ $query = "SELECT Naam, Gewicht, Type, boten.Roeigraad FROM boten JOIN roeigraden
 // Mochten we ooit uit-de-vaart nog willen markeren:
 //$query2 = "SELECT Reden FROM uitdevaart WHERE Verwijderd=0 AND Boot_ID='$boat_ids_array[$c]' AND Startdatum<='$date_to_show_db' AND (Einddatum='0' OR Einddatum='0000-00-00' OR Einddatum IS NULL OR Einddatum>='$date_to_show_db');";
 
-$boats_result = mysql_query($query);
+$boats_result = mysqli_query($bisdblink, $query);
 if (!$boats_result) {
-	die("Ophalen van boten-informatie mislukt.". mysql_error());
+	die("Ophalen van boten-informatie mislukt.". mysqli_error());
 } else {
-	if (mysql_affected_rows() > 0) {
+	if (mysqli_affected_rows() > 0) {
 		echo "<table class=\"basis\" border=\"1\" cellpadding=\"6\" cellspacing=\"0\" bordercolor=\"#AAB8D5\">";
 		echo "<tr>";
 		echo "<th><div align=\"left\">Naam</div></th>";
@@ -74,7 +69,7 @@ if (!$boats_result) {
 		$c = 0;
 		$grade = "";
 		$bgcolor = "";
-		while ($row = mysql_fetch_assoc($boats_result)) {
+		while ($row = mysqli_fetch_assoc($boats_result)) {
 			$boats_array[$c] = $row['Naam'];
 			$boat_tmp = addslashes($boats_array[$c]);
 			$weight = $row['Gewicht'];
@@ -82,11 +77,11 @@ if (!$boats_result) {
 			if ($grade != $row['Roeigraad']) {
 				$grade = $row['Roeigraad'];
 				$query_color = "SELECT KleurInBIS FROM roeigraden WHERE Roeigraad='$grade';";
-				$result_color = mysql_query($query_color);
+				$result_color = mysqli_query($bisdblink, $query_color);
 				if (!$result_color) {
-					die("Ophalen van kleuren mislukt: ".mysql_error());
+					die("Ophalen van kleuren mislukt: ".mysqli_error());
 				} else {
-					$row_color = mysql_fetch_assoc($result_color);
+					$row_color = mysqli_fetch_assoc($result_color);
 					$bgcolor = $row_color['KleurInBIS'];
 				}
 			}
@@ -102,6 +97,4 @@ if (!$boats_result) {
 	}
 }
 
-mysql_close($bisdblink);
-
-?>
+mysqli_close($bisdblink);

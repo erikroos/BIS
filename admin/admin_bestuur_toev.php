@@ -8,11 +8,11 @@ include 'admin_header.php';
 // ingeval van editen bestaande mededeling
 $function_ex = $_GET['function'];
 $query = "SELECT * FROM `bestuursleden` WHERE Functie='$function_ex';";
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if ($result) {
-	$rows_aff = mysql_affected_rows($link);
+	$rows_aff = mysqli_affected_rows($link);
 	if ($rows_aff > 0) {
-		$row = mysql_fetch_assoc($result);
+		$row = mysqli_fetch_assoc($result);
 		$name = $row['Naam'];
 		$function = $row['Functie'];
 		$mail = $row['Email'];
@@ -42,9 +42,9 @@ if ($_POST['insert']){
 	} else {
 		$query = "INSERT INTO `bestuursleden` (Naam, Functie, Email, MPB) VALUES ('$name', '$function', '$mail', '$mpb');";
 	}
-	$result = mysql_query($query);
+	$result = mysqli_query($link, $query);
 	if (!$result) {
-		die("Invoeren/wijzigen bestuurslid mislukt.". mysql_error());
+		die("Invoeren/wijzigen bestuurslid mislukt.". mysqli_error());
 	} else {
 		echo "<p>Bestuurslid succesvol toegevoegd/gewijzigd.</p>";
 	}

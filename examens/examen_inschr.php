@@ -12,11 +12,7 @@ if (!isset($_GET['delId'])) { // Als uitschrijf-link geklikt, dan geen autorisat
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo 'Fout: database niet gevonden.';
-	exit();
-}
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -31,17 +27,17 @@ if (!mysql_select_db($database, $link)) {
 
 // Uitschrijf-link geklikt
 if (isset($_GET['delId'])) {
-	$qr = mysql_query('SELECT Naam, Datum, Omschrijving 
+	$qr = mysqli_query($link, 'SELECT Naam, Datum, Omschrijving 
 			FROM examen_inschrijvingen 
 			JOIN examens ON examen_inschrijvingen.Ex_ID = examens.ID
 			WHERE UniekeHash = "' . $_GET['delId'] . '"');
-	if (mysql_affected_rows() > 0) {
-		$row = mysql_fetch_assoc($qr);
+	if (mysqli_affected_rows() > 0) {
+		$row = mysqli_fetch_assoc($qr);
 		$message = '<p>Kandidaat ' . $row['Naam'] . ' heeft zich uitgeschreven voor het examen ' . 
 			$row['Omschrijving']  . ' op ' . DBdateToDate($row['Datum']) . '</p>';
 		SendEmail("examens@hunze.nl", "Verwijderde examenaanmelding", $message);
 		SendEmail("instructie@hunze.nl", "Verwijderde examenaanmelding", $message);
-		mysql_query('DELETE FROM examen_inschrijvingen WHERE UniekeHash = "' . $_GET['delId'] . '"');
+		mysqli_query($link, 'DELETE FROM examen_inschrijvingen WHERE UniekeHash = "' . $_GET['delId'] . '"');
 		echo "<p>Uw inschrijving is verwijderd en de Examencommissie is op de hoogte gesteld.<br />
 			U kunt dit scherm nu sluiten.</p>";
 		exit;
@@ -94,16 +90,16 @@ if (isset($_POST['insert'])) {
 	if (!isset($fail) || $fail == false) {
 		$hash = 0;
 		while ($hash == 0) {
-			 $hash = generateHash();
+			 $hash = generateHash($link);
 		}
 		$query = "INSERT INTO `examen_inschrijvingen` (Naam, Graad, Leeftijd, Ex_ID, Email, TelNr, UniekeHash) VALUES ('$name', '$grade', '$age', '$id', '$email', '$telph', '$hash');";
-		$result = mysql_query($query);
+		$result = mysqli_query($link, $query);
 		if (!$result) {
-			die("Inschrijven voor examen mislukt." . mysql_error());
+			die("Inschrijven voor examen mislukt." . mysqli_error());
 		} else {
 			$query2 = "SELECT Datum FROM `examens` WHERE ID='$id';";
-			$result2 = mysql_query($query2);
-			$row2 = mysql_fetch_assoc($result2);
+			$result2 = mysqli_query($link, $query2);
+			$row2 = mysqli_fetch_assoc($result2);
 			$date_db = DBdateToDate($row2['Datum']);
 			
 			// Mail kandidaat, met uitschrijflink
@@ -172,11 +168,11 @@ if ((!isset($_POST['insert']) && !isset($_POST['cancel'])) || !isset($fail) || $
 	echo "<tr><td>Te behalen graad:</td>";
 	echo "<td><select name=\"grade\" />";
 	$query = "SELECT Graden FROM examens WHERE ID='$id';";
-	$grade_result = mysql_query($query);
+	$grade_result = mysqli_query($link, $query);
 	if (!$grade_result) {
-		die("Ophalen van examengraden mislukt.".mysql_error());
+		die("Ophalen van examengraden mislukt.".mysqli_error());
 	} else {
-		if ($row = mysql_fetch_assoc($grade_result)) {
+		if ($row = mysqli_fetch_assoc($grade_result)) {
 			$grades_db = $row[Graden];
 			$grades = split(",", $grades_db);
 			foreach($grades as $curr_grade) {
@@ -230,11 +226,11 @@ if ((!isset($_POST['insert']) && !isset($_POST['cancel'])) || !isset($fail) || $
 </html>
 
 <?php 
-function generateHash() {
+function generateHash($link) {
 	$hash = generateUltraSecretActivationHash('67TYFGTYF%^RYGVNBS^&');
-	$qr = mysql_query(sprintf('SELECT COUNT(*) AS hashCnt FROM examen_inschrijvingen WHERE UniekeHash = "%s"', $hash));
-	if (mysql_affected_rows() > 0) {
-		$row = mysql_fetch_assoc($qr);
+	$qr = mysqli_query($link, sprintf('SELECT COUNT(*) AS hashCnt FROM examen_inschrijvingen WHERE UniekeHash = "%s"', $hash));
+	if (mysqli_affected_rows() > 0) {
+		$row = mysqli_fetch_assoc($qr);
 		if ($row['hashCnt'] > 0) {
 			return 0;
 		}
@@ -259,5 +255,3 @@ function generateUltraSecretActivationHash($salt){
 	}
 	return md5($str);
 }
-
-?>

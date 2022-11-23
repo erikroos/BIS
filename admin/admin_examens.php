@@ -9,11 +9,7 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes' || $_SES
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 
 $mode = isset($_GET['mode']) ? $_GET['mode'] : '';
 if (isset($_GET['id'])) {
@@ -26,13 +22,13 @@ if ($mode == "c" && isset($id)) {
 	} else {
 		$query = "UPDATE examens SET ToonOpSite=1 WHERE ID=" . $id;
 	}
-	mysql_query($query);
+	mysqli_query($link, $query);
 	header('Location: admin_examens.php');
 	exit;
 }
 if ($mode == "d" && isset($id)) {
 	$query = "DELETE FROM examens WHERE ID=" . $id;
-	mysql_query($query);
+	mysqli_query($link, $query);
 	header('Location: admin_examens.php');
 	exit;
 }
@@ -52,14 +48,14 @@ if ($mode == "d" && isset($id)) {
 
 <?php
 $query = "SELECT * FROM examens ORDER BY Datum DESC";
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if (!$result) {
-	die("Ophalen van examens mislukt: " . mysql_error());
+	die("Ophalen van examens mislukt: " . mysqli_error());
 }
 echo "<br><table class=\"basis\" border=\"1\" cellpadding=\"6\" cellspacing=\"0\" bordercolor=\"#AAB8D5\">";
 echo "<tr><th><div style=\"text-align:left\">Datum</div></th><th><div style=\"text-align:left\">Omschrijving</div></th><th><div style=\"text-align:left\">Graden</div></th><th><div style=\"text-align:left\">Quotum</div></th><th><div style=\"text-align:left\">Open voor inschrijving</div></th><th colspan=4></th></tr>";
 $c = 0;
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
 	$id = $row['ID'];
 	$date = $row['Datum'];
 	$date_sh = DBdateToDate($date);

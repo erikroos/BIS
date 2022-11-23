@@ -7,12 +7,10 @@ if (!isset($_SESSION['authorized_bis']) || $_SESSION['authorized_bis'] != 'yes')
 }
 
 include_once("../include_globalVars.php");
+include_once("../include_helperMethods.php");
 include_once("../mail.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	die('Fout: database niet gevonden.');
-}
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -32,13 +30,13 @@ if (!mysql_select_db($database, $link)) {
 <?php
 $openExamens = false;
 $query = "SELECT ID, Datum, Omschrijving, ToonOpSite FROM examens WHERE Datum > '" . $today_db . "' ORDER BY Datum";
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if (!$result) {
-	echo("Ophalen van examendata mislukt: " . mysql_error());
+	echo("Ophalen van examendata mislukt: " . mysqli_error());
 } else {
-	if (mysql_affected_rows($link) > 0) {
+	if (mysqli_affected_rows($link) > 0) {
 		echo "De komende examendata zijn:</p><ul>";
-		while ($row = mysql_fetch_assoc($result)) {
+		while ($row = mysqli_fetch_assoc($result)) {
 			echo '<li>' . $row['Omschrijving'] . ' op ' . strftime('%A %d-%m-%Y', strtotime($row['Datum']));
 			if ($row['ToonOpSite']) {
 				echo ': open voor <a href="examen.php?id=' . $row['ID'] . '">inschrijving</a>';
@@ -60,7 +58,7 @@ Pas wanneer men een T1-'diploma' op zak heeft is het mogelijk elk '&#233;&#233;n
 Met een T2-'diploma' op zak kan men vervolgens alle overige roei- en stuurgraden doen.<br /><br />
 Voor T1 moet men de volgende stof uit het Roei- en Examenreglement beheersen:<br />
 Hoofdstuk 1 en 2 en bijlage A, B, C: 5 basiscommando's (zie beoordelingsschema), E + G<br /><br />
-Voor T2 hoofdstuk 1 en 2 en alle bijlagen behalve H).</p>
+Voor T2 hoofdstuk 1 en 2 en alle bijlagen (behalve H).</p>
 
 <?php if ($examenregels == "hunze") echo"
 <p><strong>Spelregels exameninschrijving</strong><br />

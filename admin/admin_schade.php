@@ -9,12 +9,7 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes' || $_SES
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
-
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -47,9 +42,9 @@ echo "<a href='admin_schade_export.php?mode=" . (isset($mode) ? $mode : "") . "'
 $source = "schades";
 if (isset($mode)) $source .= "_oud";
 $query = "SELECT ".$source.".ID AS ID, Datum, Datum_gew, ".$source.".Naam AS Meldernaam, Boot_ID, boten.Naam AS Bootnaam, Oms_lang, Actiehouder, Prio, Realisatie, Datum_gereed FROM ".$source." LEFT JOIN boten ON ".$source.".Boot_ID=boten.ID ORDER BY " . $sortby . (preg_match("/^Datum/", $sortby) ? " DESC" : "") . ";";
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if (!$result) {
-	die("Ophalen van schades mislukt.". mysql_error());
+	die("Ophalen van schades mislukt.". mysqli_error());
 }
 echo "<br><table class=\"basis\" border=\"1\" cellpadding=\"6\" cellspacing=\"0\" bordercolor=\"#AAB8D5\">";
 echo "<tr><th><div style=\"text-align:left\"><a href='admin_schade.php?sortby=Datum" . (isset($mode) ? ("&mode=" . $mode) : "") . "'>Melddatum</a></div></th>";
@@ -65,7 +60,7 @@ echo "<th><div style=\"text-align:left\">&nbsp;</div></th>";
 if (!isset($mode)) echo "<th><div style=\"text-align:left\">&nbsp;</div></th>";
 echo "</tr>";
 $c = 0;
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
 	$id = $row['ID'];
 	$date = $row['Datum'];
 	$date_sh = DBdateToDate($date);
@@ -106,8 +101,7 @@ while ($row = mysql_fetch_assoc($result)) {
 }
 echo "</table>";
 
-mysql_close($link);
-
+mysqli_close($link);
 ?>
 
 </div>

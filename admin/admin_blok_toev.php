@@ -9,16 +9,16 @@ $fail = false;
 $blok_id = 0;
 if (isset($_GET['id'])) {
 	$blok_id = $_GET['id'];
-	$result = mysql_query(sprintf('SELECT MPB, Datum, Begintijd, Eindtijd, boten.Naam AS Bootnaam, Pnaam 
+	$result = mysqli_query($link, sprintf('SELECT MPB, Datum, Begintijd, Eindtijd, boten.Naam AS Bootnaam, Pnaam 
 			FROM %s
 			JOIN boten ON %s.Boot_ID = boten.ID
 			WHERE Wedstrijdblok = %d 
 			ORDER BY Datum', $opzoektabel, $opzoektabel, $blok_id));
 	if (!$result) {
-		die('Ophalen van informatie mislukt: ' . mysql_error());
+		die('Ophalen van informatie mislukt: ' . mysqli_error());
 	}
 	// uit eerste record kun je alles al halen, behalve -bij meer dan 1 inschrijving- de einddatum
-	$row = mysql_fetch_assoc($result);
+	$row = mysqli_fetch_assoc($result);
 	$mpb = $row['MPB'];
 	$startdate = $row['Datum'];
 	$startdate = DBdateToDate($startdate);
@@ -33,7 +33,7 @@ if (isset($_GET['id'])) {
 	$boat = $row['Bootnaam'];
 	$pname = $row['Pnaam'];
 	$enddate = $row['Datum'];
-	while ($row = mysql_fetch_assoc($result)) {
+	while ($row = mysqli_fetch_assoc($result)) {
 		$enddate = $row['Datum'];
 	}
 	$enddate = DBdateToDate($enddate);
@@ -79,8 +79,8 @@ if (isset($_POST['submit'])) {
 	}
 	// boot
 	$boat_id = $_POST['boat_id'];
-	$result = mysql_query(sprintf('SELECT Naam FROM boten WHERE ID = %d', $boat_id));
-	if ($row = mysql_fetch_assoc($result)) {
+	$result = mysqli_query($link, sprintf('SELECT Naam FROM boten WHERE ID = %d', $boat_id));
+	if ($row = mysqli_fetch_assoc($result)) {
 		$boatname = $row['Naam'];
 	} else {
 		die('Onbekende boot.');
@@ -93,12 +93,12 @@ if (isset($_POST['submit'])) {
 	} else {
 		if ($blok_id) {
 			// wijzigen bestaand blok
-			mysql_query(sprintf('DELETE FROM %s WHERE Wedstrijdblok = %d', $opzoektabel, $blok_id));
+			mysqli_query($link, sprintf('DELETE FROM %s WHERE Wedstrijdblok = %d', $opzoektabel, $blok_id));
 			echo "Bestaande versie van dit wedstrijdblok verwijderd.<br />";
 		} else {
 			// invoeren nieuw blok
-			$result = mysql_query(sprintf('SELECT MAX(Wedstrijdblok) AS MaxId FROM %s', $opzoektabel));
-			if ($row = mysql_fetch_assoc($result)) {
+			$result = mysqli_query($link, sprintf('SELECT MAX(Wedstrijdblok) AS MaxId FROM %s', $opzoektabel));
+			if ($row = mysqli_fetch_assoc($result)) {
 				$blok_id = $row['MaxId'] + 1;
 			} else {
 				$blok_id = 1;
@@ -125,7 +125,7 @@ if (isset($_POST['submit'])) {
 				$end_time_tmp = '23:45';
 			}
 			// Check inschrijving tegen de database
-			$result = mysql_query('SELECT * 
+			$result = mysqli_query($link, 'SELECT * 
 					FROM ' . $opzoektabel . ' 
 					WHERE ((Begintijd >= "' . $start_time_tmp . '" AND Begintijd < "' . $end_time_tmp . '") 
 						OR (Eindtijd > "' . $start_time_tmp . '" AND Eindtijd <= "' . $end_time_tmp . '") 
@@ -135,18 +135,18 @@ if (isset($_POST['submit'])) {
 			if (!$result) {
 				echo 'Het controleren van inschrijving ' . $date_ins . ' is mislukt.<br />';
 			} else {
-				$rows_aff = mysql_affected_rows($link);
+				$rows_aff = mysqli_affected_rows($link);
 				if ($rows_aff > 0) {
 					// Conflicten -> verwijderen en mailtje sturen
-					while ($row = mysql_fetch_assoc($result)) {
+					while ($row = mysqli_fetch_assoc($result)) {
 						$date_sh = strftime('%A %d-%m-%Y', strtotime($row['Datum']));
 						$message = sprintf('Uw inschrijving op %s vanaf %s komt te vervallen omdat "%s" zojuist geblokt is voor een wedstrijd.', $date_sh, substr($row['Begintijd'], 0, 5), $boatname);
 						SendEmail($row['Email'], "Verwijdering inschrijving", $message);
-						mysql_query(sprintf('DELETE FROM %s WHERE Volgnummer = %d', $opzoektabel, $row['Volgnummer']));
+						mysqli_query($link, sprintf('DELETE FROM %s WHERE Volgnummer = %d', $opzoektabel, $row['Volgnummer']));
 					}
 					echo 'Conflicterende inschrijvingen verwijderd en e-mails verstuurd.<br />';
 				}
-				$result2 = mysql_query('INSERT INTO ' . $opzoektabel . ' (Datum, Inschrijfdatum, Begintijd, Eindtijd, Boot_ID, Pnaam, Ploegnaam, MPB, Spits, Wedstrijdblok, Controle) 
+				$result2 = mysqli_query($link, 'INSERT INTO ' . $opzoektabel . ' (Datum, Inschrijfdatum, Begintijd, Eindtijd, Boot_ID, Pnaam, Ploegnaam, MPB, Spits, Wedstrijdblok, Controle) 
 						VALUES ("' . $date_ins_db . '", "' . $today_db . '", "' . $start_time_tmp . '", "' . $end_time_tmp . '", ' . $boat_id . ', "' . $pname . '", "", "' . $mpb . '", 0, ' . $blok_id . ', 0)');
 				$date_ins = strftime('%A %d-%m-%Y', strtotime($date_ins_db));
 				echo 'Inschrijving ' . $date_ins . ' van ' . $start_time_tmp . ' tot ' . $end_time_tmp;
@@ -287,11 +287,11 @@ if ((!isset($_POST['submit']) && !isset($_POST['cancel'])) || $fail) {
 	echo "<td>Boot/ergometer:</td>";
 	echo '<td><select name="boat_id">';
 	$query = 'SELECT ID, Naam, Type FROM boten WHERE Datum_eind IS NULL AND Type <> "soc" ORDER BY Naam';
-	$boats_result = mysql_query($query);
+	$boats_result = mysqli_query($link, $query);
 	if (!$boats_result) {
-		die("Ophalen van vlootinformatie mislukt: " . mysql_error());
+		die("Ophalen van vlootinformatie mislukt: " . mysqli_error());
 	} else {
-		while ($row = mysql_fetch_assoc($boats_result)) {
+		while ($row = mysqli_fetch_assoc($boats_result)) {
 			$curr_boat_id = $row['ID'];
 			echo '<option value="' . $curr_boat_id . '" ';
 			if (isset($boat_id) && $boat_id == $curr_boat_id) {
@@ -319,4 +319,4 @@ if ((!isset($_POST['submit']) && !isset($_POST['cancel'])) || $fail) {
 }
 ?>
 
-<?php include 'admin_footer.php'; ?>
+<?php include 'admin_footer.php';

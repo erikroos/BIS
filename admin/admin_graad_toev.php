@@ -9,12 +9,7 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes') {
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
-
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -33,11 +28,11 @@ echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_gr
 // ingeval van editen bestaande roeigraad
 $id = $_GET['id'];
 $query = "SELECT * FROM `roeigraden` WHERE ID='$id' LIMIT 1;";
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if ($result) {
-	$rows_aff = mysql_affected_rows($link);
+	$rows_aff = mysqli_affected_rows($link);
 	if ($rows_aff > 0) {
-		$row = mysql_fetch_assoc($result);
+		$row = mysqli_fetch_assoc($result);
 		$grade = $row['Roeigraad'];
 		$show = $row['ToonInBIS'];
 		$color = $row['KleurInBIS'];
@@ -67,14 +62,14 @@ if ($_POST['insert']){
 		$query = "UPDATE `roeigraden` SET Roeigraad='$grade', ToonInBIS='$show', KleurInBIS='$color', Examinabel='$exable' WHERE ID='$id';";
 	} else {
 		$query = "SELECT MAX(ID) AS MaxID FROM `roeigraden`;";
-		$result = mysql_query($query);
-		$row = mysql_fetch_assoc($result);
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_assoc($result);
 		$id = $row['MaxID'] + 1;
 		$query = "INSERT INTO `roeigraden` (ID, Roeigraad, ToonInBIS, KleurInBIS, Examinabel) VALUES ('$id', '$grade', '$show', '$color', '$exable');";
 	}
-	$result = mysql_query($query);
+	$result = mysqli_query($link, $query);
 	if (!$result) {
-		die("Invoeren/wijzigen roeigraad mislukt.". mysql_error());
+		die("Invoeren/wijzigen roeigraad mislukt.". mysqli_error());
 	} else {
 		echo "<p>Roeigraad succesvol toegevoegd/gewijzigd.</p>";
 	}
@@ -117,8 +112,7 @@ if ((!$_POST['insert'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
 	echo "</form>";
 }
 
-mysql_close($link);
-
+mysqli_close($link);
 ?>
 
 </div>

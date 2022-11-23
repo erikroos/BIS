@@ -6,9 +6,9 @@ include 'admin_header.php';
 
 <?php
 $id = $_GET['id'];
-$result = mysql_query(sprintf('DELETE FROM %s WHERE Wedstrijdblok = %d', $opzoektabel, $id));
+$result = mysqli_query($link, sprintf('DELETE FROM %s WHERE Wedstrijdblok = %d', $opzoektabel, $id));
 if (!$result) {
-	die("Verwijderen mislukt: " . mysql_error());
+	die("Verwijderen mislukt: " . mysqli_error());
 } else {
 	echo "Wedstrijdblok succesvol verwijderd.";
 }

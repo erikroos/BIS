@@ -9,10 +9,7 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes') {
 include_once('../include_globalVars.php');
 include_once('../include_helperMethods.php');
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	die('Fout: database niet gevonden.');
-}
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 
 $mode = isset($_GET['mode']) ? $_GET['mode'] : '';
 $id = isset($_GET['id']) ? $_GET['id'] : 0;
@@ -23,15 +20,15 @@ if ($mode == "c") {
 	} else {
 		$query = 'UPDATE cursussen SET ToonOpSite=1 WHERE ID=' . $id;
 	}
-	mysql_query($query);
+	mysqli_query($link, $query);
 	header('Location: admin_cursussen.php');
 	exit;
 }
 if ($mode == "d") {
 	$query = 'DELETE FROM cursussen WHERE ID=' . $id;
-	$result = mysql_query($query);
+	$result = mysqli_query($link, $query);
 	if (!$result) {
-		die('Verwijderen van cursus mislukt: ' . mysql_error());
+		die('Verwijderen van cursus mislukt: ' . mysqli_error());
 	}
 	echo "Verwijderen van cursus gelukt.<br>";
 	echo "<a href='admin_cursussen.php'>Terug naar de cursuspagina&gt;&gt;</a>";
@@ -62,14 +59,14 @@ if ($mode == "d") {
 setlocale(LC_TIME, 'nl_NL');
 
 $query = "SELECT * FROM cursussen ORDER BY Startdatum DESC";
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if (!$result) {
-	die('Ophalen van cursussen mislukt: ' . mysql_error());
+	die('Ophalen van cursussen mislukt: ' . mysqli_error());
 }
 echo "<br><table class=\"basis\" border=\"1\" cellpadding=\"6\" cellspacing=\"0\" bordercolor=\"#AAB8D5\">";
 echo "<tr><th><div style=\"text-align:left\">Startdatum</div></th><th><div style=\"text-align:left\">Einddatum</div></th><th><div style=\"text-align:left\">Type</div></th><th><div style=\"text-align:left\">Omschrijving</div></th><th><div style=\"text-align:left\">Mailadres</div></th><th><div style=\"text-align:left\">Quotum</div></th><th><div style=\"text-align:left\">Toon op site?</div></th><th colspan=4></th></tr>";
 $c = 0;
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
 	$id = $row['ID'];
 	$startdate = $row['Startdatum'];
 	$startdate_sh = DBdateToDate($startdate);

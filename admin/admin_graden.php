@@ -9,12 +9,7 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes') {
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
-
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -32,15 +27,15 @@ echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./index.ph
 echo "<p><div><a href='./admin_graad_toev.php'>Roeigraad toevoegen&gt;&gt;</a></div></p>";
 
 $query = "SELECT * from roeigraden ORDER BY ID;";
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if (!$result) {
-	die("Ophalen van roeigraden mislukt.". mysql_error());
+	die("Ophalen van roeigraden mislukt.". mysqli_error());
 }
 echo "<br><table class=\"basis\" border=\"1\" cellpadding=\"6\" cellspacing=\"0\" bordercolor=\"#AAB8D5\">";
 echo "<tr><th><div style=\"text-align:left\">Roeigraad</div></th><th><div style=\"text-align:left\">Zichtbaar in BIS?</div></th><th><div style=\"text-align:left\">Achtergrondkleur in BIS-botentabel</div></th><th><div style=\"text-align:left\">Kan examen in worden gedaan?</div></th><th colspan=2><div style=\"text-align:left\">&nbsp;</div></th></tr>";
 
 $c = 0;
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
 	$id = $row['ID'];
 	$grade = $row['Roeigraad'];
 	$show = $row['ToonInBIS'];
@@ -70,8 +65,7 @@ while ($row = mysql_fetch_assoc($result)) {
 }
 echo "</table>";
 
-mysql_close($link);
-
+mysqli_close($link);
 ?>
 
 </div>

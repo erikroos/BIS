@@ -9,12 +9,7 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes' || $_SES
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
-
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -35,11 +30,11 @@ echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_lo
 $id = $_GET['id'];
 if ($id) {
 	$query = "SELECT * from schades WHERE ID='$id';";
-	$result = mysql_query($query);
+	$result = mysqli_query($link, $query);
 	if (!$result) {
-		die("Ophalen van schade mislukt.". mysql_error());
+		die("Ophalen van schade mislukt.". mysqli_error());
 	}
-	$row = mysql_fetch_assoc($result);
+	$row = mysqli_fetch_assoc($result);
 	$name = $row['Naam'];
 	// bootnaam
 	$boat_id = $row['Boot_ID'];
@@ -47,8 +42,8 @@ if ($id) {
 		$boat = "algemeen";
 	} else {
 		$query2 = "SELECT Naam from boten WHERE ID=$boat_id;";
-		$result2 = mysql_query($query2);
-		$row2 = mysql_fetch_assoc($result2);
+		$result2 = mysqli_query($link, $query2);
+		$row2 = mysqli_fetch_assoc($result2);
 		$boat = $row2['Naam'];
 	}
 	//
@@ -78,9 +73,9 @@ if ($_POST['cancel']){
 
 if ($_POST['delete']){
 	$query = "DELETE FROM `schades` WHERE ID='$id';";
-	$result = mysql_query($query);
+	$result = mysqli_query($link, $query);
 	if (!$result) {
-		die("Verwijderen schade mislukt.". mysql_error());
+		die("Verwijderen schade mislukt.". mysqli_error());
 	} else {
 		echo "<p>Schade succesvol definitief verwijderd.<br>";
 		echo "<a href='admin_schade.php'>Terug naar de werkstroom&gt;&gt;</a></p>";
@@ -106,9 +101,9 @@ if ($_POST['insert']){
 	} else {
 		$query = "INSERT INTO `schades` (Datum, Datum_gew, Naam, Boot_ID, Oms_lang, Feedback, Actie, Actiehouder, Prio, Realisatie, Datum_gereed, Noodrep, Opmerkingen) VALUES ('$today_db', '$today_db', '$name', '$boat_id', '$note', '$feedback', '$action', '$action_holder', '$prio', '$real', '$date_ready', '$repair', '$notes');";
 	}
-	$result = mysql_query($query);
+	$result = mysqli_query($link, $query);
 	if (!$result) {
-		die("Aanmaken/bewerken schade mislukt.". mysql_error());
+		die("Aanmaken/bewerken schade mislukt.". mysqli_error());
 	} else {
 		echo "<p>Schade succesvol aangemaakt/bewerkt.<br>";
 		echo "<a href='admin_schade.php'>Terug naar de werkstroom&gt;&gt;</a></p>";
@@ -133,11 +128,11 @@ if ((!$_POST['insert'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
 	if ($boat_id == 0) echo "selected=\"selected\"";
 	echo ">algemeen</option>";
 	$query = "SELECT ID, Naam FROM boten WHERE Datum_eind IS NULL AND Type<>\"soc\" ORDER BY Naam;";
-	$boats_result = mysql_query($query);
+	$boats_result = mysqli_query($link, $query);
 	if (!$boats_result) {
-		die("Ophalen van vlootinformatie mislukt.". mysql_error());
+		die("Ophalen van vlootinformatie mislukt.". mysqli_error());
 	} else {
-		while ($row = mysql_fetch_assoc($boats_result)) {
+		while ($row = mysqli_fetch_assoc($boats_result)) {
 			$curr_boat_id = $row[ID];
 			$curr_boat = $row[Naam];
 			echo "<option value=".$curr_boat_id." ";
@@ -210,8 +205,7 @@ if ((!$_POST['insert'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
 	echo "<p><em>NB: Verwijderen alleen gebruiken ingeval van bijv. een onzin-melding. Anders de melding na afhandeling via de werkstroom archiveren.</em></p>";
 }
 
-mysql_close($link);
-
+mysqli_close($link);
 ?>
 
 </div>

@@ -9,13 +9,7 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes') {
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
-
-setlocale(LC_TIME, 'nl_NL');
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -53,11 +47,11 @@ echo "<option value=\"geen ploegnaam\"";
 if ($ploeg_te_tonen == "geen ploegnaam") echo "selected=\"selected\"";
 echo ">geen ploegnaam</option>";
 $query = "SELECT DISTINCT Ploegnaam from ".$opzoektabel." WHERE Verwijderd=0 AND Spits>0 ORDER BY Ploegnaam;";
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if (!$result) {
-	die("Ophalen van informatie mislukt.". mysql_error());
+	die("Ophalen van informatie mislukt.". mysqli_error());
 } else {
-	while ($row = mysql_fetch_assoc($result)) {
+	while ($row = mysqli_fetch_assoc($result)) {
 		$ploegnaam = $row['Ploegnaam'];
 		if ($ploegnaam != "") {
 			echo"<option value=\"".$ploegnaam."\" ";
@@ -97,19 +91,19 @@ $query = sprintf('SELECT DISTINCT Spits
 		AND Spits>0 
 		%s 
 		ORDER BY Spits', $opzoektabel, $restrict_query);
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if (!$result) {
-	die("Ophalen van informatie mislukt: " . mysql_error());
+	die("Ophalen van informatie mislukt: " . mysqli_error());
 } else {
-	while ($row = mysql_fetch_assoc($result)) {
+	while ($row = mysqli_fetch_assoc($result)) {
 		$spits_id = $row['Spits'];
 		$query2 = "SELECT MPB, Datum, Begintijd, Eindtijd, Boot_ID, Pnaam, Ploegnaam, Email from ".$opzoektabel." WHERE Verwijderd=0 AND Spits=$spits_id ORDER BY Datum;";
-		$result2 = mysql_query($query2);
+		$result2 = mysqli_query($link, $query2);
 		if (!$result2) {
-			die("Ophalen van informatie mislukt: " . mysql_error());
+			die("Ophalen van informatie mislukt: " . mysqli_error());
 		} else {
 		    // uit eerste record kun je alles al halen, behalve -bij meer dan 1 inschrijving- de einddatum
-			$row2 = mysql_fetch_assoc($result2);
+			$row2 = mysqli_fetch_assoc($result2);
 			$mpb = $row2['MPB'];
 			$startdate = $row2['Datum'];
 			$startdate_sh = strftime('%A %d-%m-%Y', strtotime($startdate));
@@ -119,15 +113,15 @@ if (!$result) {
 			$boat_id = $row2['Boot_ID'];
 			// bootnaam
 			$query_boatname = "SELECT Naam from boten WHERE ID=$boat_id;";
-			$result_boatname = mysql_query($query_boatname);
-			$row_boatname = mysql_fetch_assoc($result_boatname);
+			$result_boatname = mysqli_query($link, $query_boatname);
+			$row_boatname = mysqli_fetch_assoc($result_boatname);
 			$boat = $row_boatname['Naam'];
 			//
 			$pname = $row2['Pnaam'];
 			$name = $row2['Ploegnaam'];
 			$email = $row2['Email'];
 			$enddate = $row2['Datum'];
-			while ($row2 = mysql_fetch_assoc($result2)) {
+			while ($row2 = mysqli_fetch_assoc($result2)) {
 				$enddate = $row2['Datum'];
 			}
 			$enddate_sh = strftime('%A %d-%m-%Y', strtotime($enddate));
@@ -150,8 +144,7 @@ if (!$result) {
 
 echo "</table>";
 
-mysql_close($link);
-
+mysqli_close($link);
 ?>
 
 </div>

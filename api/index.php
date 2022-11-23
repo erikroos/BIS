@@ -71,19 +71,16 @@ function getPass($user) {
 	global $database;
 	
 	// Drupal-DB selecteren
-	$link_drupal = mysql_connect($database_host, $login_database_user, $login_database_pass);
-	if (!mysql_select_db($login_database, $link_drupal)) {
-		echo mysql_error()."<br />";
-	}
+	$link_drupal = getDbLink($database_host, $login_database_user, $login_database_pass, $login_database);
 	
 	$query = "SELECT pass FROM users WHERE name='" . $user . "';";
-	$result = mysql_query($query);
+	$result = mysqli_query($link_drupal, $query);
 	if ($result) {
-		$row = mysql_fetch_assoc($result);
+		$row = mysqli_fetch_assoc($result);
 		$pass_db = $row['pass'];
 	}
 	
-	mysql_close($link_drupal);
+	mysqli_close($link_drupal);
 	return $pass_db;
 }
 
@@ -143,11 +140,7 @@ function getEntityRecords($entity, $date) {
 
 	$records = array();
 	// BIS-DB selecteren
-	$link = mysql_connect($database_host, $database_user, $database_pass);
-	if (!mysql_select_db($database, $link)) {
-		echo "Fout: database niet gevonden.<br>";
-		exit();
-	}
+	$link = getDbLink($database_host, $database_user, $database_pass, $database);
 	// Make sure right reservations table is selected
 	if ($entity == "inschrijvingen" || $entity == "test_inschrijvingen") {
 		$entity = $opzoektabel;
@@ -172,13 +165,13 @@ function getEntityRecords($entity, $date) {
 	}
 	// Perform the actual query
 	$query = "SELECT * FROM " . $entity . $where . ";";
-	$result = mysql_query($query);
+	$result = mysqli_query($link, $query);
 	if ($result) {
-		while ($row = mysql_fetch_assoc($result)) {
+		while ($row = mysqli_fetch_assoc($result)) {
 			array_push($records, $row);
 		}
 	}
-	mysql_close($link);
+	mysqli_close($link);
 	return $records;
 }
 
@@ -240,8 +233,7 @@ function sendResponse($status = 200, $body = '', $content_type = 'text/html')
 	header('Content-type: ' . $content_type);
 
 	// pages with body are easy
-	if($body != '')
-	{
+	if ($body != '') {
 		// send the body
 		echo $body;
 		exit;
@@ -255,8 +247,7 @@ function sendResponse($status = 200, $body = '', $content_type = 'text/html')
 		// this is purely optional, but makes the pages a little nicer to read
 		// for your users.  Since you won't likely send a lot of different status codes,
 		// this also shouldn't be too ponderous to maintain
-		switch($status)
-		{
+		switch ($status) {
 			case 401:
 				$message = 'You must be authorized to view this page.';
 				break;

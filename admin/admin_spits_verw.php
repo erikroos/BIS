@@ -9,12 +9,7 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes') {
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
-
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -32,15 +27,14 @@ echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href=\"./admin_s
 
 $id = $_GET['id'];
 $query = "DELETE FROM ".$opzoektabel." WHERE Spits=$id;";
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if (!$result) {
-	die("Verwijderen mislukt.". mysql_error());
+	die("Verwijderen mislukt.". mysqli_error());
 } else {
 	echo "Repeterend spitsblok succesvol verwijderd.";
 }
 
-mysql_close($link);
-
+mysqli_close($link);
 ?>
 
 </div>

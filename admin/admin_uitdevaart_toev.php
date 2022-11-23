@@ -9,13 +9,7 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes') {
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
-
-setlocale(LC_TIME, 'nl_NL');
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -29,13 +23,12 @@ setlocale(LC_TIME, 'nl_NL');
 <div style="margin-left:10px; margin-top:10px">
 
 <?php
-
 $fail = false;
 
 $boot_id = $_GET['id'];
 $query = "SELECT Naam FROM boten WHERE ID=$boot_id;";
-$result = mysql_query($query);
-$row = mysql_fetch_assoc($result);
+$result = mysqli_query($link, $query);
+$row = mysqli_fetch_assoc($result);
 $name = $row['Naam'];
 
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href=\"./admin_inuitdevaart.php?id=$boot_id\">Terug naar in/uit de vaart van deze boot</a>] [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
@@ -87,9 +80,9 @@ if (isset($_POST['submit'])) {
 		} else {
 			$query = "INSERT INTO uitdevaart (Boot_ID, Startdatum, Reden, Verwijderd) VALUES ('" . $boot_id . "', '" . $startdate_db . "', '" . $reason . "', 0);"; 
 		}
-		$result = mysql_query($query);
+		$result = mysqli_query($link, $query);
 		if (!$result) {
-			die("Invoeren mislukt.". mysql_error());
+			die("Invoeren mislukt.". mysqli_error());
 		} else {
 			echo "Uit de Vaart succesvol ingevoerd.";
 			// mensen mailen die deze boot hadden ingeschreven
@@ -98,9 +91,9 @@ if (isset($_POST['submit'])) {
 				$datepart_query = "AND Datum <= '$enddate_db' ";
 			}
 			$query2 = "SELECT Email, Datum, Begintijd FROM ".$opzoektabel." WHERE Boot_ID = '$boot_id' AND Datum >= '$startdate_db' ".$datepart_query." AND Spits=0 AND Verwijderd=0;";
-			$result2 = mysql_query($query2);
+			$result2 = mysqli_query($link, $query2);
 			if ($result2) {
-				while ($row = mysql_fetch_assoc($result2)) {
+				while ($row = mysqli_fetch_assoc($result2)) {
 					$email_to = $row['Email'];
 					$db_datum = $row['Datum'];
 					$date_tmp = strtotime($db_datum);
@@ -148,18 +141,15 @@ if ((!isset($_POST['submit']) && !isset($_POST['cancel'])) || $fail) {
 	echo "</form>";
 }
 
-mysql_close($link);
-
+mysqli_close($link);
 ?>
 
 </div>
 </body>
 </html>
 
-<script language="javascript">
-
-function changeInfo(){
-	return true;
-}
-
+<script type="javascript">
+    function changeInfo(){
+        return true;
+    }
 </script>

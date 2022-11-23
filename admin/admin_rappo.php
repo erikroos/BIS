@@ -9,11 +9,7 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes') {
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -56,11 +52,11 @@ if ($_POST['submit']) {
 	$start_year = $jaar."-01-01";
 	$end_year = $jaar."-12-31";
 	$query1 = "SELECT boten.ID AS ID, Naam, types.Type AS Type, Roeisoort from boten JOIN types ON boten.Type = types.Type WHERE Datum_start <= '$end_year' AND (Datum_eind IS NULL OR Datum_eind >= '$start_year') ORDER BY Type;";
-	$result1 = mysql_query($query1);
+	$result1 = mysqli_query($link, $query1);
 	if (!$result1) {
-		die("Ophalen van boten mislukt.". mysql_error());
+		die("Ophalen van boten mislukt.". mysqli_error());
 	}
-	while ($row = mysql_fetch_assoc($result1)) {
+	while ($row = mysqli_fetch_assoc($result1)) {
 		$boot_id = $row['ID'];
 		$boot = $row['Naam'];
 		$type = $row['Type'];
@@ -69,11 +65,11 @@ if ($_POST['submit']) {
 		echo "<tr><td><strong>$boot</strong></td><td>$type</td><td>$sort</td>";
 		for ($maand = 1; $maand < 13; $maand++) {
 			$query2 = "SELECT COUNT(*) AS MonthlyTot FROM ".$opzoektabel."_oud WHERE Verwijderd=0 AND Boot_ID='$boot_id' AND DATE_FORMAT(Datum,'%Y')=$jaar AND DATE_FORMAT(Datum,'%c')=$maand;";
-			$result2 = mysql_query($query2);
+			$result2 = mysqli_query($link, $query2);
 			if (!$result2) {
-				die("Tellen van inschrijvingen mislukt.". mysql_error());
+				die("Tellen van inschrijvingen mislukt.". mysqli_error());
 			} else {
-				$row = mysql_fetch_assoc($result2);
+				$row = mysqli_fetch_assoc($result2);
 				$maand_tot = $row['MonthlyTot'];
 				echo "<td>$maand_tot</td>";
 				$tot += $maand_tot;
@@ -86,13 +82,13 @@ if ($_POST['submit']) {
 			FROM uitdevaart 
 			WHERE Boot_ID='$boot_id' 
 			AND ((Startdatum >= '$start_year' AND Startdatum <= '$end_year') OR (Einddatum <= '$end_year' AND Einddatum > '$start_year') OR (Startdatum <= '$start_year' AND (Einddatum = '0000-00-00' OR Einddatum IS NULL)))";
-		$result3 = mysql_query($query3);
+		$result3 = mysqli_query($link, $query3);
 		if (!$result3) {
-			die("Ophalen van uit de vaart-meldingen mislukt.". mysql_error());
+			die("Ophalen van uit de vaart-meldingen mislukt.". mysqli_error());
 		} else {
 			$nr_of_udvs = 0;
 			$tot_duration = 0;
-			while ($row = mysql_fetch_assoc($result3)) {
+			while ($row = mysqli_fetch_assoc($result3)) {
 				$nr_of_udvs++;
 				$end_date = $row['Einddatum'];
 				if ($end_date == '0000-00-00' || $end_date == null) {
@@ -113,7 +109,7 @@ if ($_POST['submit']) {
 	echo "</table>";
 }
 
-mysql_close($link);
+mysqli_close($link);
 ?>
 
 </div>

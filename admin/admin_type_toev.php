@@ -9,11 +9,7 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes') {
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -32,11 +28,11 @@ echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_ty
 // ingeval van editen bestaand boottype
 $type_ex = $_GET['type'];
 $query = "SELECT * FROM `types` WHERE Type='$type_ex' LIMIT 1;";
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if ($result) {
-	$rows_aff = mysql_affected_rows($link);
+	$rows_aff = mysqli_affected_rows($link);
 	if ($rows_aff > 0) {
-		$row = mysql_fetch_assoc($result);
+		$row = mysqli_fetch_assoc($result);
 		$type = $row['Type'];
 		$cat = $row['Categorie'];
 		$sort = $row['Roeisoort'];
@@ -63,9 +59,9 @@ if ($_POST['insert']){
 	} else {
 		$query = "INSERT INTO `types` (Type, Categorie, Roeisoort) VALUES ('$type', '$cat', '$sort');";
 	}
-	$result = mysql_query($query);
+	$result = mysqli_query($link, $query);
 	if (!$result) {
-		die("Invoeren/wijzigen boottype mislukt.". mysql_error());
+		die("Invoeren/wijzigen boottype mislukt.". mysqli_error());
 	} else {
 		echo "<p>Boottype succesvol toegevoegd/gewijzigd.</p>";
 	}
@@ -101,8 +97,7 @@ if ((!$_POST['insert'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
 	echo "</form>";
 }
 
-mysql_close($link);
-
+mysqli_close($link);
 ?>
 
 </div>

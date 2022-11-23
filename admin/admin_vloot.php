@@ -29,7 +29,7 @@ echo "<p><div><a href='./admin_boot_toevoegen.php'>Boot toevoegen&gt;&gt;</a></d
 $query = "SELECT ID, Naam, Gewicht, Type, Roeigraad from boten WHERE Datum_eind IS NULL ORDER BY Naam;";
 $boats_result = mysqli_query($link, $query);
 if (!$boats_result) {
-	die("Ophalen van boten-informatie mislukt.". mysql_error());
+	die("Ophalen van boten-informatie mislukt.". mysqli_error());
 }
 echo "<br><table class=\"basis\" border=\"1\" cellpadding=\"6\" cellspacing=\"0\" bordercolor=\"#AAB8D5\">";
 echo "<tr><th><div style=\"text-align:left\">Naam</div></th><th><div style=\"text-align:left\">Gewicht</div></th><th><div style=\"text-align:left\">Type</div></th><th><div style=\"text-align:left\">Roeigraad</div></th><th><div style=\"text-align:left\">Status</div></th><th colspan=3><div style=\"text-align:left\">Aanpassen</div></th></tr>";

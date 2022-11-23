@@ -9,18 +9,14 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes' || $_SES
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 
 $mode = isset($_GET['mode']) ? $_GET['mode'] : '';
 $id = $_GET['id'];
 
 if ($mode == "d") {
 	$query = "DELETE FROM examen_inschrijvingen WHERE ID=" . $_GET['part_id'];
-	$result = mysql_query($query);
+	$result = mysqli_query($link, $query);
 	header('Location: admin_examinandi.php?id=' . $id);
 	exit;
 }
@@ -39,14 +35,14 @@ if ($mode == "d") {
 
 <?php
 $query = "SELECT * FROM examen_inschrijvingen WHERE Ex_ID=" . $id;
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if (!$result) {
-	die("Ophalen van kandidaten mislukt.". mysql_error());
+	die("Ophalen van kandidaten mislukt.". mysqli_error());
 }
 echo "<table class=\"basis\" border=\"1\" cellpadding=\"6\" cellspacing=\"0\" bordercolor=\"#AAB8D5\">";
 echo "<tr><th><div style=\"text-align:left\">datum</div></th><th><div style=\"text-align:left\">tijd</div></th><th><div style=\"text-align:left\">Naam</div></th><th><div style=\"text-align:left\">10-11</div></th><th><div style=\"text-align:left\">11-12</div></th><th><div style=\"text-align:left\">s-1</div></th><th><div style=\"text-align:left\">s-2</div></th><th><div style=\"text-align:left\">s-3</div></th><th><div style=\"text-align:left\">w-1</div></th><th><div style=\"text-align:left\">w-2</div></th><th><div style=\"text-align:left\">s</div></th><th><div style=\"text-align:left\">S</div></th><th><div style=\"text-align:left\">g-1</div></th><th><div style=\"text-align:left\">g-2</div></th><th><div style=\"text-align:left\">g-3</div></th><th><div style=\"text-align:left\">T-1</div></th><th><div style=\"text-align:left\">T-2</div></th><th><div style=\"text-align:left\">examinator</div></th><th><div style=\"text-align:left\">tel.nr.</div></th><th><div style=\"text-align:left\">email</div></th><th><div style=\"text-align:left\">instr.eis</div></th><th><div style=\"text-align:left\">resultaat</div></th><th><div style=\"text-align:left\">webm</div></th><th><div style=\"text-align:left\">captain</div></th><th></th></tr>";
 $c = 0;
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
 	$part_id = $row['ID'];
 	$name = $row['Naam'];
 	$grade = $row['Graad'];
@@ -107,8 +103,7 @@ while ($row = mysql_fetch_assoc($result)) {
 echo "</table>";
 echo "&nbsp;";
 
-mysql_close($link);
-
+mysqli_close($link);
 ?>
 
 </div>

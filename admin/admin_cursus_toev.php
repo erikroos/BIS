@@ -9,12 +9,7 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes' || $_SES
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
-
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -37,11 +32,11 @@ if ($id && ($id < 0 || !is_numeric($id))) { // check op ID
 	exit();
 }
 $query = "SELECT * FROM `cursussen` WHERE ID='$id';";
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if ($result) {
-	$rows_aff = mysql_affected_rows($link);
+	$rows_aff = mysqli_affected_rows($link);
 	if ($rows_aff > 0) {
-		$row = mysql_fetch_assoc($result);
+		$row = mysqli_fetch_assoc($result);
 		$startdate_db = $row['Startdatum'];
 		$startdate = DBdateToDate($startdate_db);
 		$enddate_db = $row['Einddatum'];
@@ -84,8 +79,8 @@ if ($_POST['insert']){
 	
 	if ($id) {
 		$query = "SELECT COUNT(*) AS NrOfExi FROM `cursus_inschrijvingen` WHERE Ex_ID='$id'";
-		$result = mysql_query($query);
-		$row = mysql_fetch_assoc($result);
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_assoc($result);
 		$nr_of_exi = $row['NrOfExi'];
 		if ($nr_of_exi > $quotum) $fail_msg_quotum = "Het quotum mag niet lager zijn dan het aantal reeds ingeschreven cursisten.";
 	}
@@ -98,9 +93,9 @@ if ($_POST['insert']){
 		} else {
 			$query = "INSERT INTO `cursussen` (Startdatum, Einddatum, Type, Omschrijving, Mailadres, Quotum, ToonOpSite) VALUES ('$startdate_db', '$enddate_db', '$type', '$description', '$email', '$quotum', '1');";
 		}
-		$result = mysql_query($query);
+		$result = mysqli_query($link, $query);
 		if (!$result) {
-			die("Invoeren/wijzigen cursus mislukt.". mysql_error());
+			die("Invoeren/wijzigen cursus mislukt.". mysqli_error());
 		} else {
 			echo "<p>Cursus succesvol toegevoegd/gewijzigd.<br><a href='admin_cursussen.php'>Terug naar de cursuspagina&gt;&gt;</a></p>";
 		}
@@ -152,8 +147,7 @@ if ((!$_POST['insert'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
 	echo "</form>";
 }
 
-mysql_close($link);
-
+mysqli_close($link);
 ?>
 
 </div>
@@ -161,9 +155,7 @@ mysql_close($link);
 </html>
 
 <script language="javascript">
-
-function changeInfo(){
-	return true;
-}
-
+    function changeInfo(){
+        return true;
+    }
 </script>

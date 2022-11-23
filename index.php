@@ -30,7 +30,7 @@ $bisdblink = getDbLink($database_host, $database_user, $database_pass, $database
 $query = "SELECT DISTINCT Categorie FROM types ORDER BY Categorie;";
 $result = mysqli_query($bisdblink, $query);
 if (!$result) {
-	die("Ophalen van categorieën mislukt.". mysql_error());
+	die("Ophalen van categorieën mislukt.". mysqli_error());
 }
 $cat_array = array();
 while ($row = mysqli_fetch_assoc($result)) {
@@ -41,7 +41,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 $query = "SELECT Roeigraad FROM roeigraden WHERE ToonInBIS=1 ORDER BY ID;";
 $result = mysqli_query($bisdblink, $query);
 if (!$result) {
-	die("Ophalen van roeigraden mislukt.". mysql_error());
+	die("Ophalen van roeigraden mislukt.". mysqli_error());
 }
 $grade_array = array();
 while ($row = mysqli_fetch_assoc($result)) {

@@ -26,16 +26,16 @@ if (isset($_POST['boot_te_tonen'])) {
 	<select name="boot_te_tonen">
 		<option value="alle" <?php if ($boot_te_tonen == "alle") echo 'selected="selected"'; ?>>alle</option>
 	<?php
-	$result = mysql_query(sprintf('SELECT DISTINCT boten.Naam AS Bootnaam 
+	$result = mysqli_query($link, sprintf('SELECT DISTINCT boten.Naam AS Bootnaam 
 		FROM %s
 		JOIN boten ON %s.Boot_ID = boten.ID
 		WHERE Verwijderd = 0 
 		AND Wedstrijdblok > 0 
 		ORDER BY Bootnaam', $opzoektabel, $opzoektabel));
 	if (!$result) {
-		die("Ophalen van geblokte boten mislukt: " . mysql_error());
+		die("Ophalen van geblokte boten mislukt: " . mysqli_error());
 	} else {
-		while ($row = mysql_fetch_assoc($result)) {
+		while ($row = mysqli_fetch_assoc($result)) {
 			$bootnaam = $row['Bootnaam'];
 			if ($bootnaam != "") {
 				echo '<option value="' . $bootnaam . '"';
@@ -76,11 +76,11 @@ $query = sprintf('SELECT DISTINCT Wedstrijdblok
 		AND Wedstrijdblok > 0 
 		%s 
 		ORDER BY Wedstrijdblok', $opzoektabel, $opzoektabel, $restrict_query);
-$result = mysql_query($query);
+$result = mysqli_query($link, $query);
 if (!$result) {
-	die("Ophalen van informatie mislukt: " . mysql_error());
+	die("Ophalen van informatie mislukt: " . mysqli_error());
 } else {
-	while ($row = mysql_fetch_assoc($result)) {
+	while ($row = mysqli_fetch_assoc($result)) {
 		$blok_id = $row['Wedstrijdblok'];
 		$query2 = sprintf('SELECT MPB, Pnaam, Datum, Begintijd, Eindtijd, boten.Naam AS Bootnaam
 			FROM %s
@@ -88,15 +88,15 @@ if (!$result) {
 			WHERE Verwijderd = 0 
 			AND Wedstrijdblok = %d 
 			ORDER BY Datum', $opzoektabel, $opzoektabel, $blok_id);
-		$result2 = mysql_query($query2);
+		$result2 = mysqli_query($link, $query2);
 		if (!$result2) {
-			die("Ophalen van informatie mislukt: " . mysql_error());
+			die("Ophalen van informatie mislukt: " . mysqli_error());
 		} else {
 		    // uit eerste record kun je alles al halen, behalve -bij meer dan 1 inschrijving- de einddatum
-			$row2 = mysql_fetch_assoc($result2);
+			$row2 = mysqli_fetch_assoc($result2);
 			$startdate_sh = strftime('%A %d-%m-%Y', strtotime($row2['Datum']));
 			$enddate = $row2['Datum'];
-			while ($row3 = mysql_fetch_assoc($result2)) {
+			while ($row3 = mysqli_fetch_assoc($result2)) {
 				$enddate = $row3['Datum'];
 			}
 			$enddate_sh = strftime('%A %d-%m-%Y', strtotime($enddate));
@@ -118,4 +118,4 @@ if (!$result) {
 
 </table>
 
-<?php include 'admin_footer.php'; ?>
+<?php include 'admin_footer.php';

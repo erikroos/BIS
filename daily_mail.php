@@ -6,11 +6,7 @@ include_once("include_helperMethods.php");
 
 setlocale(LC_TIME, 'nl_NL');
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 
 // mail is sent after 00:05 everyday, so get values for yesterday
 $yday_ts = strtotime('-1 days');
@@ -20,14 +16,14 @@ $yesterday_sh = strftime('%A %d-%m-%Y', $yday_ts);
 for ($i = 1; $i < count($mpb_array); $i++) {
 	$message = "Er waren geen bijzondere inschrijvingen.";
 	$query = "SELECT * FROM $opzoektabel WHERE Verwijderd=0 AND Inschrijfdatum='$yesterday' AND MPB='$mpb_array[$i]';";
-	$result = mysql_query($query);
+	$result = mysqli_query($link, $query);
 	if (!$result) {
 		$message = "Ophalen van inschrijvingen uit de BIS-database mislukt.";
 	} else {
-		$rows_aff = mysql_affected_rows($link);
+		$rows_aff = mysqli_affected_rows($link);
 		if ($rows_aff > 0) {
 			$message = "";
-			while ($row = mysql_fetch_assoc($result)) {
+			while ($row = mysqli_fetch_assoc($result)) {
 				$db_date = $row['Datum'];
 				$date = strtotime($db_date);
 				$date_sh = strftime('%A %d-%m-%Y', $date);
@@ -39,8 +35,8 @@ for ($i = 1; $i < count($mpb_array); $i++) {
 				// bootnaam
 				$boat_id = $row["Boot_ID"];
 				$query2 = "SELECT Naam from boten WHERE ID=$boat_id;";
-				$result2 = mysql_query($query2);
-				$row2 = mysql_fetch_assoc($result2);
+				$result2 = mysqli_query($link, $query2);
+				$row2 = mysqli_fetch_assoc($result2);
 				$boat = $row2['Naam'];
 				//
 				$email = $row["Email"];
@@ -53,6 +49,4 @@ for ($i = 1; $i < count($mpb_array); $i++) {
 	SendEmail($mpb_array_mail[$i], "Te controleren inschrijvingen van $yesterday_sh voor $mpb_array[$i]", $message);
 }
 
-mysql_close($link);
-
-?>
+mysqli_close($link);

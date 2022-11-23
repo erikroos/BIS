@@ -1,10 +1,10 @@
-<?php mysql_close($link); ?>
+<?php mysqli_close($link); ?>
 
 </div>
 </body>
 </html>
 
-<script language="javascript">
+<script type="javascript">
 	function changeInfo(){
 		return true;
 	}

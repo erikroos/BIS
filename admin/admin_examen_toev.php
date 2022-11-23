@@ -9,11 +9,7 @@ if (!isset($_SESSION['authorized']) || $_SESSION['authorized'] != 'yes') {
 include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
-$link = mysql_connect($database_host, $database_user, $database_pass);
-if (!mysql_select_db($database, $link)) {
-	echo "Fout: database niet gevonden.<br>";
-	exit();
-}
+$link = getDbLink($database_host, $database_user, $database_pass, $database);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -38,10 +34,10 @@ if (isset($_GET['id'])) {
 	}
 	$grades = array();
 	$query = "SELECT * FROM `examens` WHERE ID=" . $id;
-	$result = mysql_query($query);
+	$result = mysqli_query($link, $query);
 	if ($result) {
-		if (mysql_affected_rows($link) > 0) {
-			$row = mysql_fetch_assoc($result);
+		if (mysqli_affected_rows($link) > 0) {
+			$row = mysqli_fetch_assoc($result);
 			$date_db = $row['Datum'];
 			$date = DBdateToDate($date_db);
 			$quotum = $row['Quotum'];
@@ -70,12 +66,12 @@ if (isset($_POST['insert'])) {
 	$description = $_POST['description'];
 	$grades_db = '';
 	$query = "SELECT Roeigraad FROM roeigraden WHERE Examinabel=1 ORDER BY ID;";
-	$grade_result = mysql_query($query);
+	$grade_result = mysqli_query($link, $query);
 	if (!$grade_result) {
-		die("Ophalen van examengraden mislukt: " . mysql_error());
+		die("Ophalen van examengraden mislukt: " . mysqli_error());
 	} else {
 		$first_time = false;
-		while ($row = mysql_fetch_assoc($grade_result)) {
+		while ($row = mysqli_fetch_assoc($grade_result)) {
 			$curr_grade = $row['Roeigraad'];
 			if (array_key_exists($curr_grade, $_POST) && $_POST[$curr_grade] == "true") {
 				if ($first_time == false) {
@@ -93,8 +89,8 @@ if (isset($_POST['insert'])) {
 	}
 	if ($id) {
 		$query = "SELECT COUNT(*) AS NrOfExi FROM `examen_inschrijvingen` WHERE Ex_ID=" . $id;
-		$result = mysql_query($query);
-		$row = mysql_fetch_assoc($result);
+		$result = mysqli_query($link, $query);
+		$row = mysqli_fetch_assoc($result);
 		$nr_of_exi = $row['NrOfExi'];
 		if ($nr_of_exi > $quotum) {
 			$fail_msg_quotum = "Het quotum mag niet lager zijn dan het aantal reeds ingeschreven kandidaten.";
@@ -109,9 +105,9 @@ if (isset($_POST['insert'])) {
 		} else {
 			$query = "INSERT INTO `examens` (Datum, Omschrijving, Graden, Quotum, ToonOpSite) VALUES ('$date_db', '$description', '$grades_db', '$quotum', '1');";
 		}
-		$result = mysql_query($query);
+		$result = mysqli_query($link, $query);
 		if (!$result) {
-			die("Invoeren/wijzigen examen mislukt: " . mysql_error());
+			die("Invoeren/wijzigen examen mislukt: " . mysqli_error());
 		} else {
 			echo "<p>Examen succesvol toegevoegd/gewijzigd.<br><a href='admin_examens.php'>Terug naar de examenpagina&gt;&gt;</a></p>";
 		}
@@ -138,11 +134,11 @@ if ((!isset($_POST['insert']) && !isset($_POST['delete']) && !isset($_POST['canc
 	// te behalen graden
 	echo "<tr><td>Te behalen graden:</td>";
 	$query = "SELECT Roeigraad FROM roeigraden WHERE Examinabel=1 ORDER BY ID;";
-	$grade_result = mysql_query($query);
+	$grade_result = mysqli_query($link, $query);
 	if (!$grade_result) {
-		die("Ophalen van examengraden mislukt: " . mysql_error());
+		die("Ophalen van examengraden mislukt: " . mysqli_error());
 	} else {
-		while ($row = mysql_fetch_assoc($grade_result)) {
+		while ($row = mysqli_fetch_assoc($grade_result)) {
 			$curr_grade = $row['Roeigraad'];
 			echo "<td><input type='checkbox' name='" . $curr_grade . "' value='true' ";
 			if (isset($grades) && in_array($curr_grade, $grades)) {
@@ -168,8 +164,7 @@ if ((!isset($_POST['insert']) && !isset($_POST['delete']) && !isset($_POST['canc
 	echo "</form>";
 }
 
-mysql_close($link);
-
+mysqli_close($link);
 ?>
 
 </div>
