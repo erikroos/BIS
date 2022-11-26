@@ -42,8 +42,8 @@ while ($row = mysqli_fetch_assoc($result)) {
 	echo "<td><div style=\"text-align:left\">$type</div></td>";
 	echo "<td><div style=\"text-align:left\">$cat</div></td>";
 	echo "<td><div style=\"text-align:left\">$sort</div></td>";
-	echo "<td><div><a href=\"./admin_type_toev.php?type=$type\">Wijzigen</a></div></td>";
-	echo "<td><div style=\"text-align:left\"><a href='admin_type_verw.php?type=$type'>Verwijderen</a></div></td>";
+	echo "<td><div><a href=\"./admin_type_toev.php?type=" . urlencode($type) . "\">Wijzigen</a></div></td>";
+	echo "<td><div style=\"text-align:left\"><a href='admin_type_verw.php?type=" . urlencode($type) . "'>Verwijderen</a></div></td>";
 	echo "</tr>";
 }
 echo "</table>";

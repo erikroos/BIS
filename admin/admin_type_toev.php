@@ -22,39 +22,34 @@ $link = getDbLink($database_host, $database_user, $database_pass, $database);
 <div style="margin-left:10px; margin-top:10px">
 
 <?php
-
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_types.php'>Terug naar boottypemenu</a>] [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
 // ingeval van editen bestaand boottype
-$type_ex = $_GET['type'];
-$query = "SELECT * FROM `types` WHERE Type='$type_ex' LIMIT 1;";
-$result = mysqli_query($link, $query);
-if ($result) {
-	$rows_aff = mysqli_affected_rows($link);
-	if ($rows_aff > 0) {
-		$row = mysqli_fetch_assoc($result);
-		$type = $row['Type'];
-		$cat = $row['Categorie'];
-		$sort = $row['Roeisoort'];
-	}
+if (isset($_GET['type'])) {
+    $type_ex = $_GET['type']; // no need to decode
+    $query = "SELECT * FROM `types` WHERE Type='$type_ex' LIMIT 1;";
+    $result = mysqli_query($link, $query);
+    if ($result) {
+        $rows_aff = mysqli_affected_rows($link);
+        if ($rows_aff > 0) {
+            $row = mysqli_fetch_assoc($result);
+            $type = $row['Type'];
+            $cat = $row['Categorie'];
+            $sort = $row['Roeisoort'];
+        }
+    }
 }
 
-// init
-if (!$_POST['cancel'] && !$_POST['insert']) {
-	$fail = FALSE;
-}
-
-// knop gedrukt
-if ($_POST['cancel']){
+// Annuleren gedrukt
+if (isset($_POST['cancel'])) {
 	unset($_POST['type'], $_POST['cat'], $_POST['sort'], $type, $cat, $sort);
-	$fail = FALSE;
 }
 
-if ($_POST['insert']){
+if (isset($_POST['insert'])) {
 	$type = $_POST['type'];
 	$cat = $_POST['cat'];
 	$sort = $_POST['sort'];
-	if ($type_ex) {
+	if (isset($type_ex)) {
 		$query = "UPDATE `types` SET Type='$type', Categorie='$cat', Roeisoort='$sort' WHERE Type='$type_ex';";
 	} else {
 		$query = "INSERT INTO `types` (Type, Categorie, Roeisoort) VALUES ('$type', '$cat', '$sort');";
@@ -68,26 +63,26 @@ if ($_POST['insert']){
 }
 
 // Formulier
-if ((!$_POST['insert'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
+if (!isset($_POST['insert']) && !isset($_POST['delete']) && !isset($_POST['cancel'])) {
 	echo "<p><b>Boottype invoeren/wijzigen</b></p>";
-	echo "<form name='form' action=\"$REQUEST_URI\" method=\"post\">";
+	echo "<form name='form' action=\"". $_SERVER['REQUEST_URI'] . "\" method=\"post\">";
 	echo "<table>";
 	
 	// naam
 	echo "<tr><td>Type:</td>";
-	echo "<td><input type=\"text\" name=\"type\" value=\"$type\" size=10 /></td>";
+	echo "<td><input type=\"text\" name=\"type\" value=\"" . (isset($type) ? $type : '') . "\" size=10 /></td>";
 	echo "</tr>";
 	
 	// categorie
 	echo "<tr><td>Categorie:</td>";
-	echo "<td><input type=\"text\" name=\"cat\" value=\"$cat\" size=40 /></td>";
+	echo "<td><input type=\"text\" name=\"cat\" value=\"" . (isset($cat) ? $cat : '') . "\" size=40 /></td>";
 	echo "</tr>";
 	
 	echo "<tr><td colspan=2><em>Meerdere types kunnen deel uitmaken van dezelfde categorie</em></td></tr>";
 	
 	// roeisoort
 	echo "<tr><td>Roeisoort (boord/scull):</td>";
-	echo "<td><input type=\"text\" name=\"sort\" value=\"$sort\" size=10 /></td>";
+	echo "<td><input type=\"text\" name=\"sort\" value=\"" . (isset($sort) ? $sort : '') . "\" size=10 /></td>";
 	echo "</tr>";
 	
 	// knoppen

@@ -22,17 +22,15 @@ $link = getDbLink($database_host, $database_user, $database_pass, $database);
 <div style="margin-left:10px; margin-top:10px">
 
 <?php
-
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_types.php'>Terug naar boottypemenu</a>] [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
-$type = $_GET['type'];
-
+$type = $_GET['type']; // no need to decode
 $query = "DELETE FROM `types` WHERE Type='$type';";
 $result = mysqli_query($link, $query);
 if (!$result) {
-	die("Verwijderen boottype mislukt.". mysqli_error());
+	die("Verwijderen boottype $type mislukt.". mysqli_error());
 } else {
-	echo "Verwijderen boottype gelukt.<br>";
+	echo "Verwijderen boottype $type gelukt.<br>";
 }
 
 mysqli_close($link);
