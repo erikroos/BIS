@@ -34,7 +34,7 @@ if (isset($_GET['id'])) {
 	$query = "SELECT MPB, Datum, Begintijd, Eindtijd, Boot_ID, Pnaam, Ploegnaam, Email from ".$opzoektabel." WHERE Spits=$spits_id ORDER BY Datum;";
 	$result = mysqli_query($link, $query);
 	if (!$result) {
-		die("Ophalen van informatie mislukt.". mysqli_error());
+		die("Ophalen van informatie mislukt: ". mysqli_error());
 	} else {
 		// uit eerste record kun je alles al halen, behalve -bij meer dan 1 inschrijving- de einddatum
 		$row = mysqli_fetch_assoc($result);
@@ -180,9 +180,9 @@ if (isset($_POST['submit'])) {
 					$date_ins = strftime('%A %d-%m-%Y', strtotime($date_ins_db));
 					echo 'Inschrijving ' . $date_ins;
 					if ($result2) {
-						echo 'geslaagd.';
+						echo ' geslaagd.';
 					} else {
-						echo 'mislukt.';
+						echo ' mislukt.';
 					}
 					echo '<br />';
 				}
@@ -234,7 +234,7 @@ if ((!isset($_POST['submit']) && !isset($_POST['cancel'])) || $fail) {
 	// einddatum
 	echo "<td>Einddatum (dd-mm-jjjj):</td>";
 	echo '<td><input type="text" name="enddate" id="enddate" size="8" maxlength="10" value="' . (isset($enddate) ? $enddate : '') . '">';
-	echo "&nbsp;<a href=\"javascript:show_calendar('form.enddate'); return true;\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='../res/kalender.gif' alt='kalender' width='19' height='17' border='0'></a></td>";
+	echo "&nbsp;<a href=\"javascript:show_calendar('form.enddate');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='../res/kalender.gif' alt='kalender' width='19' height='17' border='0'></a></td>";
 	if (isset($fail_msg_enddate)) {
 		echo '<td><em>' . $fail_msg_enddate . '</em></td>';
 	}
@@ -370,7 +370,7 @@ mysqli_close($link);
 </html>
 
 <script type="javascript">
-    function changeInfo(){
+    function changeInfo() {
         return true;
     }
 </script>

@@ -17,7 +17,7 @@ if (isset($_GET['id'])) {
 	if (!$result) {
 		die('Ophalen van informatie mislukt: ' . mysqli_error());
 	}
-	// uit eerste record kun je alles al halen, behalve -bij meer dan 1 inschrijving- de einddatum
+	// uit eerste record kun je alles al halen, behalve -bij meer dan 1 inschrijving- de einddatum en -tijd
 	$row = mysqli_fetch_assoc($result);
 	$mpb = $row['MPB'];
 	$startdate = $row['Datum'];
@@ -26,15 +26,16 @@ if (isset($_GET['id'])) {
 	$start_time_fields = explode(":", $start_time);
 	$start_time_hrs = $start_time_fields[0];
 	$start_time_mins = $start_time_fields[1];
-	$end_time = $row['Eindtijd'];
-	$end_time_fields = explode(":", $end_time);
-	$end_time_hrs = $end_time_fields[0];
-	$end_time_mins = $end_time_fields[1];
 	$boat = $row['Bootnaam'];
 	$pname = $row['Pnaam'];
 	$enddate = $row['Datum'];
 	while ($row = mysqli_fetch_assoc($result)) {
 		$enddate = $row['Datum'];
+		// eindtijd
+		$end_time = $row['Eindtijd'];
+		$end_time_fields = explode(":", $end_time);
+		$end_time_hrs = $end_time_fields[0];
+		$end_time_mins = $end_time_fields[1];
 	}
 	$enddate = DBdateToDate($enddate);
 }
@@ -163,7 +164,7 @@ if (isset($_POST['submit'])) {
 }
 
 // HET FORMULIER
-if ((!isset($_POST['submit']) && !isset($_POST['cancel'])) || $fail) {
+if (!isset($_POST['submit']) && !isset($_POST['cancel'])) {
 	echo "<p>Invoeren/bewerken wedstrijdblok</p>";
 	echo '<form name="form" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
 	echo "<table><tr>";
@@ -242,7 +243,7 @@ if ((!isset($_POST['submit']) && !isset($_POST['cancel'])) || $fail) {
 	// einddatum
 	echo "<td>Einddatum (dd-mm-jjjj):</td>";
 	echo '<td><input type="text" name="enddate" id="enddate" size="8" maxlength="10" value="' . (isset($enddate) ? $enddate : '') . '">';
-	echo "&nbsp;<a href=\"javascript:show_calendar('form.enddate'); return true;\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='../res/kalender.gif' alt='kalender' width='19' height='17' border='0'></a></td>";
+	echo "&nbsp;<a href=\"javascript:show_calendar('form.enddate');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='../res/kalender.gif' alt='kalender' width='19' height='17' border='0'></a></td>";
 	if (isset($fail_msg_enddate)) {
 		echo '<td><em>' . $fail_msg_enddate . '</em></td>';
 	}

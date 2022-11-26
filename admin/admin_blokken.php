@@ -92,12 +92,14 @@ if (!$result) {
 		if (!$result2) {
 			die("Ophalen van informatie mislukt: " . mysqli_error());
 		} else {
-		    // uit eerste record kun je alles al halen, behalve -bij meer dan 1 inschrijving- de einddatum
+		    // uit eerste record kun je alles al halen, behalve -bij meer dan 1 inschrijving- de einddatum en -tijd
 			$row2 = mysqli_fetch_assoc($result2);
 			$startdate_sh = strftime('%A %d-%m-%Y', strtotime($row2['Datum']));
 			$enddate = $row2['Datum'];
+            $endtime = $row2['Eindtijd'];
 			while ($row3 = mysqli_fetch_assoc($result2)) {
 				$enddate = $row3['Datum'];
+                $endtime = $row3['Eindtijd'];
 			}
 			$enddate_sh = strftime('%A %d-%m-%Y', strtotime($enddate));
 			echo '<tr>';
@@ -106,7 +108,7 @@ if (!$result) {
 			echo '<td>' . $startdate_sh . '</td>';
 			echo '<td>' . $row2['Begintijd'] . '</td>';
 			echo '<td>' . $enddate_sh . '</td>';
-			echo '<td>' . $row2['Eindtijd'] . '</td>';
+			echo '<td>' . $endtime . '</td>';
 			echo '<td>' . $row2['Bootnaam'] . '</td>';
 			echo '<td><a href="./admin_blok_toev.php?id=' . $blok_id . '">Wijzigen</a></td>';
 			echo '<td><a href="./admin_blok_verw.php?id=' . $blok_id . '">Verwijderen</a></td>';
