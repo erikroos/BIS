@@ -26,39 +26,35 @@ $link = getDbLink($database_host, $database_user, $database_pass, $database);
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_mededeling.php'>Terug naar mededelingen-menu</a>] [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
 // ingeval van editen bestaande mededeling
-$id = $_GET['id'];
-if ($id && ($id < 0 || !is_numeric($id))) { // check op ID
-	echo "Er is iets misgegaan.";
-	exit();
-}
-$query = "SELECT * FROM `mededelingen` WHERE ID='$id';";
-$result = mysqli_query($link, $query);
-if ($result) {
-	$rows_aff = mysqli_affected_rows($link);
-	if ($rows_aff > 0) {
-		$row = mysqli_fetch_assoc($result);
-		$name = $row['Bestuurslid'];
-		$summary = $row['Betreft'];
-		$note = $row['Mededeling'];
-	}
-}
-
-// init
-if (!$_POST['cancel'] && !$_POST['insert']) {
-	$fail = FALSE;
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    if ($id && ($id < 0 || !is_numeric($id))) { // check op ID
+        echo "Er is iets misgegaan.";
+        exit();
+    }
+    $query = "SELECT * FROM `mededelingen` WHERE ID='$id';";
+    $result = mysqli_query($link, $query);
+    if ($result) {
+        $rows_aff = mysqli_affected_rows($link);
+        if ($rows_aff > 0) {
+            $row = mysqli_fetch_assoc($result);
+            $name = $row['Bestuurslid'];
+            $summary = $row['Betreft'];
+            $note = $row['Mededeling'];
+        }
+    }
 }
 
-// knop gedrukt
-if ($_POST['cancel']){
+// Annuleren gedrukt
+if (isset($_POST['cancel'])) {
 	unset($_POST['name'], $_POST['summary'], $_POST['note'], $name, $summary, $note);
-	$fail = FALSE;
 }
 
-if ($_POST['insert']){
+if (isset($_POST['insert'])) {
 	$name = $_POST['name'];
 	$summary = addslashes($_POST['summary']);
 	$note = addslashes($_POST['note']);
-	if ($id) {
+	if (isset($id)) {
 		$query = "UPDATE `mededelingen` SET Datum='$today_db', Bestuurslid='$name', Betreft='$summary', Mededeling='$note' WHERE ID='$id';";
 	} else {
 		$max1 = 1;
@@ -80,31 +76,31 @@ if ($_POST['insert']){
 	}
 	$result = mysqli_query($link, $query);
 	if (!$result) {
-		die("Invoeren mededeling mislukt.". mysqli_error());
+		die("Invoeren mededeling mislukt: ". mysqli_error());
 	} else {
 		echo "<p>Mededeling succesvol toegevoegd/gewijzigd.</p>";
 	}
 }
 
 // Formulier
-if ((!$_POST['insert'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
+if (!isset($_POST['insert']) && !isset($_POST['delete']) && !isset($_POST['cancel'])) {
 	echo "<p><b>Bestuursmededeling invoeren</b></p>";
-	echo "<form name='form' action=\"$REQUEST_URI\" method=\"post\">";
+	echo "<form name='form' action=\"" . $_SERVER['REQUEST_URI'] . "\" method=\"post\">";
 	echo "<table>";
 	
 	// naam
 	echo "<tr><td>Naam:</td>";
-	echo "<td><input type=\"text\" name=\"name\" value=\"$name\" size=50 /></td>";
+	echo "<td><input type=\"text\" name=\"name\" value=\"" . (isset($name) ? $name : '') . "\" size=50 /></td>";
 	echo "</tr>";
 	
 	// betreft
 	echo "<tr><td>Betreft:</td>";
-	echo "<td><input type=\"text\" name=\"summary\" value=\"$summary\" size=45 /></td>";
+	echo "<td><input type=\"text\" name=\"summary\" value=\"" . (isset($summary) ? $summary : '') . "\" size=45 /></td>";
 	echo "</tr>";
 	
 	// mededeling
 	echo "<tr><td>Mededeling (max. 1000 tekens):</td>";
-	echo "<td><textarea name=\"note\" rows=4 cols=50/>$note</textarea></td>";
+	echo "<td><textarea name=\"note\" rows=4 cols=50/>" . (isset($note) ? $note : '') . "</textarea></td>";
 	echo "</tr>";
 	
 	// knoppen

@@ -23,7 +23,7 @@ $link = getDbLink($database_host, $database_user, $database_pass, $database);
 
 <?php
 
-$mode = $_GET['mode'];
+$mode = isset($_GET['mode']) ? $_GET['mode'] : false;
 
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./index.php'>Terug naar admin-menu</a>] [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 echo "<p><div><a href='./admin_mededeling_toev.php'>Mededeling toevoegen&gt;&gt;</a></div></p>";
@@ -39,7 +39,7 @@ if ($mode) $source .= "_oud";
 $query = "SELECT * from ".$source." ORDER BY Datum DESC;";
 $result = mysqli_query($link, $query);
 if (!$result) {
-	die("Ophalen van mededelingen mislukt.". mysqli_error());
+	die("Ophalen van mededelingen mislukt: ". mysqli_error());
 }
 echo "<br><table class=\"basis\" border=\"1\" cellpadding=\"6\" cellspacing=\"0\" bordercolor=\"#AAB8D5\">";
 echo "<tr><th><div style=\"text-align:left\">Datum</div></th><th><div style=\"text-align:left\">Bestuurslid</div></th><th><div style=\"text-align:left\">Betreft</div></th><th><div style=\"text-align:left\">Mededeling</div></th><th><div style=\"text-align:left\">&nbsp;</div></th>";

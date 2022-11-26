@@ -26,19 +26,19 @@ $link = getDbLink($database_host, $database_user, $database_pass, $database);
 <?php
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./index.php'>Terug naar admin-menu</a>] [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
-if (!$_POST['submit']) {
+if (!isset($_POST['submit'])) {
 	echo '<form name="form" action="' . $_SERVER['REQUEST_URI'] . '" method="post">';
 	// jaar
 	echo "<p>Jaar (jjjj): ";
-	echo "<input type=\"text\" name=\"jaar\" value=\"$jaar\" size=\"4\" /></p>";
+	echo "<input type=\"text\" name=\"jaar\" value=\"$theyear\" size=\"4\" /></p>";
 	echo "<p><input type=\"submit\" name=\"submit\" value=\"Toon rapport\" /></p>";
 	echo "</form>";
 }
 
-if ($_POST['submit']) {
+if (isset($_POST['submit'])) {
 	$jaar = $_POST['jaar'];
 
-	echo "<p><strong>Gebruikstotalen voor het jaar ".$jaar."</strong></p>";
+	echo "<p><strong>Gebruikstotalen voor het jaar $jaar</strong></p>";
 	echo "<p><em>Klik op een kolomkop om de tabel op die kolom te sorteren. Eerste keer klikken: oplopend; tweede keer: aflopend.</em></p>";
 	echo "<p><em>Let op: het totaal aantal dagen uit de vaart kan ingeval van overlappende uit-de-vaart-periodes hoger zijn dan in werkelijkheid.</em></p>";
 	echo "<table class=\"sortable\" id=\"jaarrapport\" border=\"1\" cellpadding=\"6\" cellspacing=\"0\" style=\"bordercolor:#AAB8D5\">";

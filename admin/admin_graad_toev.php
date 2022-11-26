@@ -26,39 +26,35 @@ $link = getDbLink($database_host, $database_user, $database_pass, $database);
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_graden.php'>Terug naar roeigradenmenu</a>] [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
 // ingeval van editen bestaande roeigraad
-$id = $_GET['id'];
-$query = "SELECT * FROM `roeigraden` WHERE ID='$id' LIMIT 1;";
-$result = mysqli_query($link, $query);
-if ($result) {
-	$rows_aff = mysqli_affected_rows($link);
-	if ($rows_aff > 0) {
-		$row = mysqli_fetch_assoc($result);
-		$grade = $row['Roeigraad'];
-		$show = $row['ToonInBIS'];
-		$color = $row['KleurInBIS'];
-		$exable = $row['Examinabel'];
-	} else {
-		$color = "#FFFF99"; // standaard geel kleurtje
-	}
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $query = "SELECT * FROM `roeigraden` WHERE ID='$id' LIMIT 1;";
+    $result = mysqli_query($link, $query);
+    if ($result) {
+        $rows_aff = mysqli_affected_rows($link);
+        if ($rows_aff > 0) {
+            $row = mysqli_fetch_assoc($result);
+            $grade = $row['Roeigraad'];
+            $show = $row['ToonInBIS'];
+            $color = $row['KleurInBIS'];
+            $exable = $row['Examinabel'];
+        } else {
+            $color = "#FFFF99"; // standaard geel kleurtje
+        }
+    }
 }
 
-// init
-if (!$_POST['cancel'] && !$_POST['insert']) {
-	$fail = FALSE;
-}
-
-// knop gedrukt
-if ($_POST['cancel']){
+// Annuleren gedrukt
+if (isset($_POST['cancel'])) {
 	unset($_POST['grade'], $_POST['show'], $_POST['color'], $_POST['exable'], $grade, $show, $color, $exable);
-	$fail = FALSE;
 }
 
-if ($_POST['insert']){
+if (isset($_POST['insert'])) {
 	$grade = $_POST['grade'];
-	$show = $_POST['show'];
+	$show = isset($_POST['show']) ? $_POST['show'] : 0;
 	$color = $_POST['color'];
-	$exable = $_POST['exable'];
-	if ($id) {
+	$exable = isset($_POST['exable']) ? $_POST['exable'] : 0;
+	if (isset($id)) {
 		$query = "UPDATE `roeigraden` SET Roeigraad='$grade', ToonInBIS='$show', KleurInBIS='$color', Examinabel='$exable' WHERE ID='$id';";
 	} else {
 		$query = "SELECT MAX(ID) AS MaxID FROM `roeigraden`;";
@@ -69,39 +65,39 @@ if ($_POST['insert']){
 	}
 	$result = mysqli_query($link, $query);
 	if (!$result) {
-		die("Invoeren/wijzigen roeigraad mislukt.". mysqli_error());
+		die("Invoeren/wijzigen roeigraad $grade mislukt.". mysqli_error());
 	} else {
-		echo "<p>Roeigraad succesvol toegevoegd/gewijzigd.</p>";
+		echo "<p>Roeigraad $grade succesvol toegevoegd/gewijzigd.</p>";
 	}
 }
 
 // Formulier
-if ((!$_POST['insert'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
+if (!isset($_POST['insert']) && !isset($_POST['delete']) && !isset($_POST['cancel'])) {
 	echo "<p><b>Roeigraad invoeren/wijzigen</b></p>";
-	echo "<form name='form' action=\"$REQUEST_URI\" method=\"post\">";
+	echo "<form name='form' action=\"". $_SERVER['REQUEST_URI'] . "\" method=\"post\">";
 	echo "<table>";
 	
 	// naam
 	echo "<tr><td>Roeigraad:</td>";
-	echo "<td><input type=\"text\" name=\"grade\" value=\"$grade\" size=10 /></td>";
+	echo "<td><input type=\"text\" name=\"grade\" value=\"" . (isset($grade) ? $grade : '') . "\" size=10 /></td>";
 	echo "</tr>";
 	
 	// functie
 	echo "<tr><td>Zichtbaar in BIS?</td>";
 	echo "<td><input type=\"checkbox\" name=\"show\" value=1 ";
-	if ($show == 1) echo "CHECKED";
+	if (isset($show) && $show == 1) echo "checked";
 	echo "/></td>";
 	echo "</tr>";
 	
 	// mail
 	echo "<tr><td>Achtergrondkleur in BIS-botentabel:</td>";
-	echo "<td><input type=\"text\" name=\"color\" value=\"$color\" size=7 /></td>";
+	echo "<td><input type=\"text\" name=\"color\" value=\"" . (isset($color) ? $color : '') . "\" size=7 /></td>";
 	echo "</tr>";
 	
 	// MPB
 	echo "<tr><td>Kan examen in worden gedaan?</td>";
 	echo "<td><input type=\"checkbox\" name=\"exable\" value=1 ";
-	if ($exable == 1) echo "CHECKED";
+	if (isset($exable) && $exable == 1) echo "checked";
 	echo "/></td>";
 	echo "</tr>";
 	
