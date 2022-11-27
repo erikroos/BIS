@@ -37,7 +37,7 @@ if ($mode == "d") {
 $query = "SELECT * FROM examen_inschrijvingen WHERE Ex_ID=" . $id;
 $result = mysqli_query($link, $query);
 if (!$result) {
-	die("Ophalen van kandidaten mislukt.". mysqli_error());
+	die("Ophalen van kandidaten mislukt: ". mysqli_error());
 }
 echo "<table class=\"basis\" border=\"1\" cellpadding=\"6\" cellspacing=\"0\" bordercolor=\"#AAB8D5\">";
 echo "<tr><th><div style=\"text-align:left\">datum</div></th><th><div style=\"text-align:left\">tijd</div></th><th><div style=\"text-align:left\">Naam</div></th><th><div style=\"text-align:left\">10-11</div></th><th><div style=\"text-align:left\">11-12</div></th><th><div style=\"text-align:left\">s-1</div></th><th><div style=\"text-align:left\">s-2</div></th><th><div style=\"text-align:left\">s-3</div></th><th><div style=\"text-align:left\">w-1</div></th><th><div style=\"text-align:left\">w-2</div></th><th><div style=\"text-align:left\">s</div></th><th><div style=\"text-align:left\">S</div></th><th><div style=\"text-align:left\">g-1</div></th><th><div style=\"text-align:left\">g-2</div></th><th><div style=\"text-align:left\">g-3</div></th><th><div style=\"text-align:left\">T-1</div></th><th><div style=\"text-align:left\">T-2</div></th><th><div style=\"text-align:left\">examinator</div></th><th><div style=\"text-align:left\">tel.nr.</div></th><th><div style=\"text-align:left\">email</div></th><th><div style=\"text-align:left\">instr.eis</div></th><th><div style=\"text-align:left\">resultaat</div></th><th><div style=\"text-align:left\">webm</div></th><th><div style=\"text-align:left\">captain</div></th><th></th></tr>";

@@ -23,7 +23,6 @@ $link = getDbLink($database_host, $database_user, $database_pass, $database);
 <div style="margin-left:10px; margin-top:10px">
 
 <?php
-
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_examens.php'>Terug naar examen-menu</a>] [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
 if (isset($_GET['id'])) {
@@ -43,20 +42,15 @@ if (isset($_GET['id'])) {
 			$quotum = $row['Quotum'];
 			$description = $row['Omschrijving'];
 			$grades_db = $row['Graden'];
-			$grades = split(",", $grades_db);
+			$grades = preg_split("/,/", $grades_db);
 		}
 	}
 }
 
-// init
-if (!isset($_POST['cancel']) && !isset($_POST['insert'])) {
-	$fail = false;
-}
-
-// knop gedrukt
+// Annuleren gedrukt
 if (isset($_POST['cancel'])) {
 	unset($_POST['date'], $_POST['quotum'], $_POST['description'], $date, $quotum, $description);
-	$fail = false;
+    $fail = false;
 	echo "<p>Invoer examen geannuleerd.<br><a href='admin_examens.php'>Terug naar de examenpagina&gt;&gt;</a></p>";
 }
 
@@ -87,7 +81,7 @@ if (isset($_POST['insert'])) {
 	if ($quotum <= 0 || !is_numeric($quotum)) {
 		$fail_msg_quotum = "U dient een aantal groter dan 0 op te geven.";
 	}
-	if ($id) {
+	if (isset($id)) {
 		$query = "SELECT COUNT(*) AS NrOfExi FROM `examen_inschrijvingen` WHERE Ex_ID=" . $id;
 		$result = mysqli_query($link, $query);
 		$row = mysqli_fetch_assoc($result);
@@ -100,7 +94,7 @@ if (isset($_POST['insert'])) {
 	if (isset($fail_msg_quotum)) {
 		$fail = true;
 	} else{
-		if ($id) {
+		if (isset($id)) {
 			$query = "UPDATE `examens` SET Datum='$date_db', Omschrijving='$description', Graden='$grades_db', Quotum='$quotum' WHERE ID='$id';";
 		} else {
 			$query = "INSERT INTO `examens` (Datum, Omschrijving, Graden, Quotum, ToonOpSite) VALUES ('$date_db', '$description', '$grades_db', '$quotum', '1');";
@@ -123,7 +117,7 @@ if ((!isset($_POST['insert']) && !isset($_POST['delete']) && !isset($_POST['canc
 	// datum
 	echo "<tr><td>Datum (dd-mm-jjjj):</td>";
 	echo "<td><input type='text' name='date' id='date' size='8' maxlength='10' value='" . (isset($date) ? $date : '') . "'>";
-	echo "&nbsp;<a href=\"javascript:show_calendar('form.date');return true;\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='../res/kalender.gif' alt='kalender' width='19' height='17' border='0'></a></td>";
+	echo "&nbsp;<a href=\"javascript:show_calendar('form.date');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='../res/kalender.gif' alt='kalender' width='19' height='17' border='0'></a></td>";
 	echo "</tr>";
 	
 	// omschrijving
