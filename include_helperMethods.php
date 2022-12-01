@@ -28,17 +28,14 @@ function DBdateToDate($yyyymmdd) {
 // Controlefuncties
 
 function CheckEmail($email_to_check) {
-	//trim verwijdert returns etc.
 	$email_to_check = trim($email_to_check);
-	// check syntax
-	if (preg_match("/^[0-9a-z]([-_.~]?[0-9a-z])*@[0-9a-z]([-.]?[0-9a-z])*\\.[a-z]{2,4}$/i", $email_to_check))
-	{
+	if (preg_match("/^[0-9a-z]([-_.~]?[0-9a-z])*@[0-9a-z]([-.]?[0-9a-z])*\\.[a-z]{2,4}$/i", $email_to_check)) {
 		// pak domeinnaam
-		list ($username, $domain) = explode('@', $email_to_check);
+		//list ($username, $domain) = explode('@', $email_to_check);
 		// kijk of er MX records in de DNS staan
-		if (!checkdnsrr($domain, 'MX')) {
-			return false;
-		}
+		//if (!checkdnsrr($domain, 'MX')) {
+		//	return false;
+		//}
 		return true;
 	}
 	return false;

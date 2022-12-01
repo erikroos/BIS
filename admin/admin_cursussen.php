@@ -24,16 +24,6 @@ if ($mode == "c") {
 	header('Location: admin_cursussen.php');
 	exit;
 }
-if ($mode == "d") {
-	$query = 'DELETE FROM cursussen WHERE ID=' . $id;
-	$result = mysqli_query($link, $query);
-	if (!$result) {
-		die('Verwijderen van cursus mislukt: ' . mysqli_error());
-	}
-	echo "Verwijderen van cursus gelukt.<br>";
-	echo "<a href='admin_cursussen.php'>Terug naar de cursuspagina&gt;&gt;</a>";
-	exit;
-}
 ?>
 
 <!DOCTYPE html>
@@ -48,16 +38,28 @@ if ($mode == "d") {
 <body>
 <div class="maindiv">
 
-<p>
-	<strong>Welkom in de Admin-sectie van BIS</strong>
-	[<a href='./admin_logout.php'>Uitloggen</a>]
-</p>
-<p>Instructiecommissie</p>
+    <p>
+        <strong>Welkom in de Admin-sectie van BIS</strong>
+        [<a href='./admin_logout.php'>Uitloggen</a>]
+    </p>
+    <p>Instructiecommissie</p>
+
+<?php
+if ($mode == "d") {
+	$query = 'DELETE FROM cursussen WHERE ID=' . $id;
+	$result = mysqli_query($link, $query);
+	if (!$result) {
+		die('Verwijderen van cursus mislukt: ' . mysqli_error());
+	}
+	echo "Verwijderen van cursus gelukt.<br>";
+	echo "<a href='admin_cursussen.php'>Terug naar de cursuspagina&gt;&gt;</a>";
+	exit;
+}
+?>
+
 <p><a href='admin_cursus_toev.php'>Maak een nieuwe cursus aan&gt;&gt;</a></p>
 
 <?php
-setlocale(LC_TIME, 'nl_NL');
-
 $query = "SELECT * FROM cursussen ORDER BY Startdatum DESC";
 $result = mysqli_query($link, $query);
 if (!$result) {

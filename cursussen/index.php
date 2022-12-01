@@ -76,7 +76,7 @@ mysqli_close($link);
 	}
 	
 	function changeInfo(){
-        var httpObject = getHTTPObject();
+        httpObject = getHTTPObject();
 		if (httpObject != null) {
 			httpObject.open("GET", "show_course.php?id=" + document.getElementById("course").value, true);
 			httpObject.onreadystatechange = setOutput;

@@ -7,6 +7,7 @@ if (!isset($_SESSION['authorized_bis']) || $_SESSION['authorized_bis'] != 'yes')
 }
 
 include_once("../include_globalVars.php");
+include_once("../include_helperMethods.php");
 include_once("../mail.php");
 
 $link = getDbLink($database_host, $database_user, $database_pass, $database);

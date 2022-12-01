@@ -23,8 +23,7 @@ $link = getDbLink($database_host, $database_user, $database_pass, $database);
 
 <?php
 
-$sortby = $_GET['sortby'];
-if (!$sortby) $sortby = "Datum";
+$sortby = isset($_GET['sortby']) ? $_GET['sortby'] : "Datum";
 
 if (isset($_GET['mode'])) $mode = $_GET['mode'];
 
@@ -46,7 +45,12 @@ if (!$result) {
 	die("Ophalen van schades mislukt.". mysqli_error());
 }
 echo "<br><table class=\"basis\" border=\"1\" cellpadding=\"6\" cellspacing=\"0\" bordercolor=\"#AAB8D5\">";
-echo "<tr><th><div style=\"text-align:left\"><a href='admin_schade_gebouw.php?sortby=Datum'>Melddatum</a></div></th><th><div style=\"text-align:left\"><a href='admin_schade_gebouw.php?sortby=Datum_gew'>Laatst gew.</a></div></th><th><div style=\"text-align:left\">Naam melder</div></th><th><div style=\"text-align:left\">Omschrijving</div></th><th><div style=\"text-align:left\">Actiehouder</div></th><th><div style=\"text-align:left\"><a href='admin_schade_gebouw.php?sortby=Prio'>Prio</a></div></th><th><div style=\"text-align:left\"><a href='admin_schade_gebouw.php?sortby=Realisatie'>Real. (%)</a></div></th><th><div style=\"text-align:left\">Gereed</div></th><th><div style=\"text-align:left\">&nbsp;</div></th>";
+echo "<tr><th><div style=\"text-align:left\"><a href='admin_schade_gebouw.php?sortby=Datum" . (isset($mode) ? '&mode=' . $mode : '') . "'>Melddatum</a></div></th>";
+echo "<th><div style=\"text-align:left\"><a href='admin_schade_gebouw.php?sortby=Datum_gew" . (isset($mode) ? '&mode=' . $mode : '') . "'>Laatst gew.</a></div></th>";
+echo "<th><div style=\"text-align:left\">Naam melder</div></th><th><div style=\"text-align:left\">Omschrijving</div></th><th><div style=\"text-align:left\">Actiehouder</div></th>";
+echo "<th><div style=\"text-align:left\"><a href='admin_schade_gebouw.php?sortby=Prio" . (isset($mode) ? '&mode=' . $mode : '') . "'>Prio</a></div></th>";
+echo "<th><div style=\"text-align:left\"><a href='admin_schade_gebouw.php?sortby=Realisatie" . (isset($mode) ? '&mode=' . $mode : '') . "'>Real. (%)</a></div></th>";
+echo "<th><div style=\"text-align:left\">Gereed</div></th><th><div style=\"text-align:left\">&nbsp;</div></th>";
 if (!isset($mode)) echo "<th><div style=\"text-align:left\">&nbsp;</div></th>";
 echo "</tr>";
 $c = 0;

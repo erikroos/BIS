@@ -22,13 +22,12 @@ $link = getDbLink($database_host, $database_user, $database_pass, $database);
 <div style="margin-left:10px; margin-top:10px">
 
 <?php
-
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
 $id = $_GET['id'];
-$mode = $_GET['mode'];
 
-if ($mode) {
+if (isset($_GET['mode'])) {
+    $mode = $_GET['mode'];
 	$source = "schades_gebouw_oud";
 	$target = "schades_gebouw";
 } else {
@@ -39,15 +38,15 @@ if ($mode) {
 $query = "INSERT INTO ".$target." SELECT * FROM ".$source." WHERE ID='$id';";
 $result = mysqli_query($link, $query);
 if (!$result) {
-	die("(De)archiveren mislukt.". mysqli_error());
+	die("(De)archiveren mislukt: ". mysqli_error());
 } else {
 	$query2 = "DELETE FROM ".$source." WHERE ID='$id';";
 	$result2 = mysqli_query($link, $query2);
 	if (!$result2) {
-		die("De)archiveren mislukt.". mysqli_error());
+		die("De)archiveren mislukt: ". mysqli_error());
 	} else {
 		echo "Schade succesvol ge(de)archiveerd.<br>";
-		echo "<a href='admin_schade_gebouw.php?mode=$mode'>Terug naar de werkstroom&gt;&gt;</a></p>";
+		echo "<a href='admin_schade_gebouw.php" . (isset($mode) ? "?mode=" . $mode : '') . "'>Terug naar de werkstroom&gt;&gt;</a></p>";
 	}
 }
 

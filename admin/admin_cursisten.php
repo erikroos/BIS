@@ -25,15 +25,15 @@ $link = getDbLink($database_host, $database_user, $database_pass, $database);
 
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_cursussen.php'>Terug naar cursus-menu</a>] [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
-$mode = $_GET['mode'];
 $id = $_GET['id'];
-$part_id = $_GET['part_id'];
+$mode = isset($_GET['mode']) ? $_GET['mode'] : 'v';
+if (isset($_GET['part_id'])) $part_id = $_GET['part_id'];
 
-if ($mode == "d" && $part_id) {
+if ($mode == "d" && isset($part_id)) {
 	$query = "DELETE FROM cursus_inschrijvingen WHERE ID='$part_id';";
 	$result = mysqli_query($link, $query);
 	if (!$result) {
-		die("Verwijderen van deelnemer mislukt.". mysqli_error());
+		die("Verwijderen van deelnemer mislukt: ". mysqli_error());
 	}
 	echo "Verwijderen van deelnemer gelukt.<br />";
 	echo "<a href='admin_cursisten.php?id=$id'>Terug naar de deelnemerspagina&gt;&gt;</a>";

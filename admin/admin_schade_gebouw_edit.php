@@ -23,12 +23,11 @@ $link = getDbLink($database_host, $database_user, $database_pass, $database);
 <div style="margin-left:10px; margin-top:10px">
 
 <?php
-
 echo "<p><strong>Welkom in de Admin-sectie van BIS</strong> [<a href='./admin_logout.php'>Uitloggen</a>]</p>";
 
 // reeds ingevulde waardes ophalen (indien aanwezig)
-$id = $_GET['id'];
-if ($id) {
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
 	$query = "SELECT * from schades_gebouw WHERE ID='$id';";
 	$result = mysqli_query($link, $query);
 	if (!$result) {
@@ -48,30 +47,24 @@ if ($id) {
 	$notes = $row['Opmerkingen'];
 }
 
-// init
-if (!$_POST['cancel'] && !$_POST['insert'] && !$_POST['delete']) {
-	$fail = FALSE;
-}
-
-// knop gedrukt
-if ($_POST['cancel']){
+// Annuleren gedrukt
+if (isset($_POST['cancel'])) {
 	unset($_POST['name'], $_POST['note'], $_POST['feedback'], $_POST['action'],  $_POST['action_holder'], $_POST['prio'], $_POST['real'], $_POST['date_ready_sh'], $_POST['repair'], $_POST['notes'], $name, $boat_id, $note, $feedback, $action, $action_holder, $prio, $real, $date_ready_sh, $repair, $notes);
-	$fail = FALSE;
 	echo "<a href='admin_schade_gebouw.php'>Terug naar de werkstroom&gt;&gt;</a></p>";
 }
 
-if ($_POST['delete']){
+if (isset($_POST['delete'])) {
 	$query = "DELETE FROM `schades_gebouw` WHERE ID='$id';";
 	$result = mysqli_query($link, $query);
 	if (!$result) {
-		die("Verwijderen schade mislukt.". mysqli_error());
+		die("Verwijderen schade mislukt: ". mysqli_error());
 	} else {
 		echo "<p>Schade succesvol definitief verwijderd.<br>";
 		echo "<a href='admin_schade_gebouw.php'>Terug naar de werkstroom&gt;&gt;</a></p>";
 	}
 }
 
-if ($_POST['insert']){
+if (isset($_POST['insert'])) {
 	$name = $_POST['name'];
 	$note = addslashes($_POST['note']);
 	$feedback = addslashes($_POST['feedback']);
@@ -84,14 +77,14 @@ if ($_POST['insert']){
 	if ($real == 100 && $date_ready == "0000-00-00") $date_ready = $today_db;
 	$repair = addslashes($_POST['repair']);
 	$notes = addslashes($_POST['notes']);
-	if ($id) {
+	if (isset($id)) {
 		$query = "UPDATE `schades_gebouw` SET Datum_gew='$today_db', Naam='$name', Oms_lang='$note', Feedback='$feedback', Actie='$action', Actiehouder='$action_holder', Prio='$prio', Realisatie='$real', Datum_gereed='$date_ready', Noodrep='$repair', Opmerkingen='$notes' WHERE ID='$id';";
 	} else {
 		$query = "INSERT INTO `schades_gebouw` (Datum, Datum_gew, Naam, Oms_lang, Feedback, Actie, Actiehouder, Prio, Realisatie, Datum_gereed, Noodrep, Opmerkingen) VALUES ('$today_db', '$today_db', '$name', '$note', '$feedback', '$action', '$action_holder', '$prio', '$real', '$date_ready', '$repair', '$notes');";
 	}
 	$result = mysqli_query($link, $query);
 	if (!$result) {
-		die("Aanmaken/bewerken schade mislukt.". mysqli_error());
+		die("Aanmaken/bewerken schade mislukt: ". mysqli_error());
 	} else {
 		echo "<p>Schade succesvol aangemaakt/bewerkt.<br>";
 		echo "<a href='admin_schade_gebouw.php'>Terug naar de werkstroom&gt;&gt;</a></p>";
@@ -99,34 +92,34 @@ if ($_POST['insert']){
 }
 
 // Formulier
-if ((!$_POST['insert'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
+if (!isset($_POST['insert']) && !isset($_POST['delete']) && !isset($_POST['cancel'])) {
 	echo "<p><b>Schademelding aanmaken/bewerken</b></p>";
-	echo "<form name='form' action=\"$REQUEST_URI\" method=\"post\">";
+	echo "<form name='form' action=\"" . $_SERVER['REQUEST_URI'] . "\" method=\"post\">";
 	echo "<table>";
 	
 	// naam
 	echo "<tr><td>Naam:</td>";
-	echo "<td><input type=\"text\" name=\"name\" value=\"$name\" size=45 /></td>";
+	echo "<td><input type=\"text\" name=\"name\" value=\"" . (isset($name) ? $name : '') . "\" size=45 /></td>";
 	echo "</tr>";
 	
 	// mededeling
 	echo "<tr><td>Omschrijving (max. 1000 tekens):</td>";
-	echo "<td><textarea name=\"note\" rows=4 cols=50/>$note</textarea></td>";
+	echo "<td><textarea name=\"note\" rows=4 cols=50/>" . (isset($note) ? $note : '') . "</textarea></td>";
 	echo "</tr>";
 	
 	// feedback
 	echo "<tr><td>Feedback MatCie aan melder (max. 1000 tekens):</td>";
-	echo "<td><textarea name=\"feedback\" rows=4 cols=50/>$feedback</textarea></td>";
+	echo "<td><textarea name=\"feedback\" rows=4 cols=50/>" . (isset($feedback) ? $feedback : '') . "</textarea></td>";
 	echo "</tr>";
 	
 	// actie
 	echo "<tr><td>Actie (max. 1000 tekens):</td>";
-	echo "<td><textarea name=\"action\" rows=4 cols=50/>$action</textarea></td>";
+	echo "<td><textarea name=\"action\" rows=4 cols=50/>" . (isset($action) ? $action : '') . "</textarea></td>";
 	echo "</tr>";
 	
 	// actiehouder
 	echo "<tr><td>Actiehouder:</td>";
-	echo "<td><input type=\"text\" name=\"action_holder\" value=\"$action_holder\" size=45 /></td>";
+	echo "<td><input type=\"text\" name=\"action_holder\" value=\"" . (isset($action_holder) ? $action_holder : '') . "\" size=45 /></td>";
 	echo "</tr>";
 	
 	// prioriteit
@@ -134,7 +127,7 @@ if ((!$_POST['insert'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
 	echo "<td><select name=\"prio\" />";
 	for ($i = 1; $i < 4; $i++) {
 		echo "<option value=\"".$i."\" ";
-		if ($prio == $i) echo "selected";
+		if (isset($prio) && $prio == $i) echo "selected";
 		echo "/>".$i;
 	}
 	echo "</select></td>";
@@ -142,23 +135,23 @@ if ((!$_POST['insert'] && !$_POST['delete'] && !$_POST['cancel']) || $fail) {
 	
 	// realisatie
 	echo "<tr><td>% gerealiseerd (0-100):</td>";
-	echo "<td><input type=\"text\" name=\"real\" value=\"$real\" size=3 /></td>";
+	echo "<td><input type=\"text\" name=\"real\" value=\"" . (isset($real) ? $real : '') . "\" size=3 /></td>";
 	echo "</tr>";
 	
 	// datum gereed
 	echo "<td>Datum gereed (dd-mm-jjjj):</td>";
-	echo "<td><input type='text' name='date_ready_sh' id='date_ready_sh' size='8' maxlength='10' value='$date_ready_sh'>";
+	echo "<td><input type='text' name='date_ready_sh' id='date_ready_sh' size='8' maxlength='10' value='" . (isset($date_ready_sh) ? $date_ready_sh : '') . "'>";
 	echo "&nbsp;<a href=\"javascript:show_calendar('form.date_ready_sh');\" onmouseover=\"window.status='Kalender';return true;\" onmouseout=\"window.status='';return true;\"><img src='../res/kalender.gif' alt='kalender' width='19' height='17' border='0'></a></td>";
 	echo "</tr><tr>";
 	
 	// noodreparatie
 	echo "<tr><td>Noodreparatie (max. 1000 tekens):</td>";
-	echo "<td><textarea name=\"repair\" rows=4 cols=50/>$repair</textarea></td>";
+	echo "<td><textarea name=\"repair\" rows=4 cols=50/>" . (isset($repair) ? $repair : '') . "</textarea></td>";
 	echo "</tr>";
 	
 	// opmerkingen
 	echo "<tr><td>Opmerkingen (max. 1000 tekens):</td>";
-	echo "<td><textarea name=\"notes\" rows=4 cols=50/>$notes</textarea></td>";
+	echo "<td><textarea name=\"notes\" rows=4 cols=50/>" . (isset($notes) ? $notes : '') . "</textarea></td>";
 	echo "</tr>";
 	
 	// knoppen
