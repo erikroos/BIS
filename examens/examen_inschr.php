@@ -95,7 +95,7 @@ if (isset($_POST['insert'])) {
 		$query = "INSERT INTO `examen_inschrijvingen` (Naam, Graad, Leeftijd, Ex_ID, Email, TelNr, UniekeHash) VALUES ('$name', '$grade', '$age', '$id', '$email', '$telph', '$hash');";
 		$result = mysqli_query($link, $query);
 		if (!$result) {
-			die("Inschrijven voor examen mislukt." . mysqli_error());
+			die("Inschrijven voor examen mislukt: " . mysqli_error());
 		} else {
 			$query2 = "SELECT Datum FROM `examens` WHERE ID='$id';";
 			$result2 = mysqli_query($link, $query2);
@@ -173,8 +173,8 @@ if ((!isset($_POST['insert']) && !isset($_POST['cancel'])) || !isset($fail) || $
 		die("Ophalen van examengraden mislukt.".mysqli_error());
 	} else {
 		if ($row = mysqli_fetch_assoc($grade_result)) {
-			$grades_db = $row[Graden];
-			$grades = split(",", $grades_db);
+			$grades_db = $row['Graden'];
+			$grades = preg_split("/,/", $grades_db);
 			foreach($grades as $curr_grade) {
 				echo "<option value=\"".$curr_grade."\" ";
 				if (isset($grade) && $grade == $curr_grade) {
@@ -229,10 +229,10 @@ if ((!isset($_POST['insert']) && !isset($_POST['cancel'])) || !isset($fail) || $
 function generateHash($link) {
 	$hash = generateUltraSecretActivationHash('67TYFGTYF%^RYGVNBS^&');
 	$qr = mysqli_query($link, sprintf('SELECT COUNT(*) AS hashCnt FROM examen_inschrijvingen WHERE UniekeHash = "%s"', $hash));
-	if (mysqli_affected_rows() > 0) {
+	if (mysqli_affected_rows($link) > 0) {
 		$row = mysqli_fetch_assoc($qr);
 		if ($row['hashCnt'] > 0) {
-			return 0;
+			return 0; // so caller is responsible for calling this function again
 		}
 	}
 	return $hash;
@@ -246,9 +246,7 @@ function generateUltraSecretActivationHash($salt){
 		mt_srand((double)microtime()*1000000);
 		$str .= $charset[mt_rand(0, $count-1)];
 	}
-
 	$str .= $salt . time();
-
 	for($i=0;$i<65;$i++){
 		mt_srand((double)microtime()*1000000);
 		$str .= $charset[mt_rand(0, $count-1)];

@@ -26,15 +26,15 @@ CREATE TABLE `bestuursleden` (
 -- Gegevens worden uitgevoerd voor tabel `bestuursleden`
 -- 
 
-INSERT INTO `bestuursleden` VALUES ('Competitie-toer', 'Karel Engbers', 'composaris@hunze.nl', 1);
-INSERT INTO `bestuursleden` VALUES ('Instructie', 'N.N. (vacature)', 'instructie@hunze.nl', 0);
-INSERT INTO `bestuursleden` VALUES ('Jeugd-junioren', 'N.N. (vacature)', 'junioren@hunze.nl', 0);
-INSERT INTO `bestuursleden` VALUES ('Materiaalcommissaris', 'Karel Engbers', 'materiaal@hunze.nl', 0);
-INSERT INTO `bestuursleden` VALUES ('Penningmeester', 'Rob van der Werff', 'penningmeester@hunze.nl', 0);
-INSERT INTO `bestuursleden` VALUES ('Secretaris', 'Marianne Goorhuis', 'secretaris@hunze.nl', 0);
-INSERT INTO `bestuursleden` VALUES ('Societeit', 'H. Imelman', 'societeit@hunze.nl', 0);
-INSERT INTO `bestuursleden` VALUES ('Voorzitter', 'Gerrit Corbijn van Willenswaard', 'voorzitter@hunze.nl', 0);
-INSERT INTO `bestuursleden` VALUES ('Wedstrijd', 'Gijs Hoogerwerf', 'wedstrijd@hunze.nl', 1);
+INSERT INTO `bestuursleden` VALUES ('Competitie-toer', 'Piet de Bestuurder', 'composaris@test.nl', 1);
+INSERT INTO `bestuursleden` VALUES ('Instructie', 'Piet de Bestuurder', 'instructie@test.nl', 0);
+INSERT INTO `bestuursleden` VALUES ('Jeugd-junioren', 'Piet de Bestuurder', 'junioren@test.nl', 0);
+INSERT INTO `bestuursleden` VALUES ('Materiaalcommissaris', 'Piet de Bestuurder', 'materiaal@test.nl', 0);
+INSERT INTO `bestuursleden` VALUES ('Penningmeester', 'Piet de Bestuurder', 'penningmeester@test.nl', 0);
+INSERT INTO `bestuursleden` VALUES ('Secretaris', 'Piet de Bestuurder', 'secretaris@test.nl', 0);
+INSERT INTO `bestuursleden` VALUES ('Societeit', 'Piet de Bestuurder', 'societeit@test.nl', 0);
+INSERT INTO `bestuursleden` VALUES ('Voorzitter', 'Piet de Bestuurder', 'voorzitter@test.nl', 0);
+INSERT INTO `bestuursleden` VALUES ('Wedstrijd', 'Piet de Bestuurder', 'wedstrijd@test.nl', 1);
 
 -- --------------------------------------------------------
 
@@ -202,10 +202,10 @@ CREATE TABLE `cursussen` (
 -- Gegevens worden uitgevoerd voor tabel `cursussen`
 -- 
 
-INSERT INTO `cursussen` VALUES (42, '2012-05-14', '2012-07-07', 'Cursus skiff-2 - inschrijving gesloten', 'Data onder voorbehoud', 'idvanjoost@hotmail.com', 6, 1);
-INSERT INTO `cursussen` VALUES (43, '2012-09-03', '2012-11-03', 'Cursus skiff-2', 'Data onder voorbehoud', 'idvanjoost@hotmail.com', 8, 1);
-INSERT INTO `cursussen` VALUES (44, '2012-05-14', '2012-07-07', 'Cursus skiff-1 - inschrijving gesloten', '', 'skiff1@hunze.nl', 6, 1);
-INSERT INTO `cursussen` VALUES (45, '2012-09-03', '2012-11-03', 'Cursus skiff-1', '', 'skiff1@hunze.nl', 6, 1);
+INSERT INTO `cursussen` VALUES (42, '2012-05-14', '2012-07-07', 'Cursus skiff-2 - inschrijving gesloten', 'Data onder voorbehoud', 'test@test.nl', 6, 1);
+INSERT INTO `cursussen` VALUES (43, '2012-09-03', '2012-11-03', 'Cursus skiff-2', 'Data onder voorbehoud', 'test@test.nl', 8, 1);
+INSERT INTO `cursussen` VALUES (44, '2012-05-14', '2012-07-07', 'Cursus skiff-1 - inschrijving gesloten', '', 'test@test.nl', 6, 1);
+INSERT INTO `cursussen` VALUES (45, '2012-09-03', '2012-11-03', 'Cursus skiff-1', '', 'test@test.nl', 6, 1);
 
 -- --------------------------------------------------------
 
@@ -221,6 +221,7 @@ CREATE TABLE `examen_inschrijvingen` (
   `Leeftijd` varchar(100) collate latin1_german1_ci NOT NULL,
   `Email` varchar(45) collate latin1_german1_ci NOT NULL,
   `TelNr` varchar(20) collate latin1_german1_ci NOT NULL,
+  `UniekeHash` varchar(255) collate latin1_german1_ci NOT NULL
   PRIMARY KEY  (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=641 DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=641 ;
 
@@ -425,10 +426,10 @@ CREATE TABLE `schades` (
 -- Gegevens worden uitgevoerd voor tabel `schades`
 -- 
 
-INSERT INTO `schades` VALUES (768, '2011-10-01', '2012-05-07', 'michiel van dongen', 97, 'kras in huid SB bij 7-plaats', 'Wordt tzt bijgewerkt', '', 'Matcie', 2, 0, '0000-00-00', '', '');
-INSERT INTO `schades` VALUES (815, '2011-11-12', '2012-05-07', 'Simone Steenbeek', 97, 'Beschadiging lak op de boeg.', 'Wordt tzt bijgewerkt', 'Het zou mooi zijn om het puntje nog even wit te spuiten.', 'Stefan', 2, 90, '0000-00-00', 'Aangestipt met epoxy', '');
-INSERT INTO `schades` VALUES (873, '2012-03-31', '2012-05-07', 'willem larmoyeur', 64, 'Water is niet goed uit de achterpunt te krijgen. Er is geen ontwateringsgat op het laagste punt (bijvoorbeeld bovenop het houten dekje bij het voetenboord). Doordat er altijd water blijft staan begint het hier al te rotten.', 'Wordt op matavond juni bekeken.', '', 'Matcie', 2, 0, '0000-00-00', '', '');
-INSERT INTO `schades` VALUES (874, '2012-03-31', '2012-04-15', 'Simone Steenbeek', 43, 'Bij schoonmaken van de Kemphaan een plek opgemerkt waar zich twee scheurtjes in de lak bevinden die aan het inwateren zijn. Deze plek zit midden onder de boot in de laklaag. ', 'Boot was niet lek. Dit betrof een oude garantiereparatie van Wiersma. Door inspectie nu is deze reparatie weer opengemaakt en is de boot nu opnieuw geimpregneerd met epoxy. 15/4: BOOT IS TIJDELIJK VOORZIEN VAN NIEUWE VERFLAAG. MOET NOG EEN KEER OPNIEUW GESCHUURD EN GESPOTEN WORDEN MET JUISTE KLEUR. TOT DIE TIJD MAG ER IN GEVAREN WORDEN.', '', 'Theo', 2, 99, '0000-00-00', '', '');
+INSERT INTO `schades` VALUES (768, '2011-10-01', '2012-05-07', 'Test Testsma', 97, 'kras in huid SB bij 7-plaats', 'Wordt tzt bijgewerkt', '', 'Matcie', 2, 0, '0000-00-00', '', '');
+INSERT INTO `schades` VALUES (815, '2011-11-12', '2012-05-07', 'Test Testsma', 97, 'Beschadiging lak op de boeg.', 'Wordt tzt bijgewerkt', 'Het zou mooi zijn om het puntje nog even wit te spuiten.', 'Stefan', 2, 90, '0000-00-00', 'Aangestipt met epoxy', '');
+INSERT INTO `schades` VALUES (873, '2012-03-31', '2012-05-07', 'Test Testsma', 64, 'Water is niet goed uit de achterpunt te krijgen. Er is geen ontwateringsgat op het laagste punt (bijvoorbeeld bovenop het houten dekje bij het voetenboord). Doordat er altijd water blijft staan begint het hier al te rotten.', 'Wordt op matavond juni bekeken.', '', 'Matcie', 2, 0, '0000-00-00', '', '');
+INSERT INTO `schades` VALUES (874, '2012-03-31', '2012-04-15', 'Test Testsma', 43, 'Bij schoonmaken van de Kemphaan een plek opgemerkt waar zich twee scheurtjes in de lak bevinden die aan het inwateren zijn. Deze plek zit midden onder de boot in de laklaag. ', 'Boot was niet lek. Dit betrof een oude garantiereparatie van Wiersma. Door inspectie nu is deze reparatie weer opengemaakt en is de boot nu opnieuw geimpregneerd met epoxy. 15/4: BOOT IS TIJDELIJK VOORZIEN VAN NIEUWE VERFLAAG. MOET NOG EEN KEER OPNIEUW GESCHUURD EN GESPOTEN WORDEN MET JUISTE KLEUR. TOT DIE TIJD MAG ER IN GEVAREN WORDEN.', '', 'Theo', 2, 99, '0000-00-00', '', '');
 -- --------------------------------------------------------
 
 -- 
@@ -927,90 +928,6 @@ CREATE TABLE `uitdevaart` (
 -- Gegevens worden uitgevoerd voor tabel `uitdevaart`
 -- 
 
-INSERT INTO `uitdevaart` VALUES (1055, 30, '2012-08-12', '2011-12-09', 'Uit de vaart (verhuur Daventria)', 1);
-INSERT INTO `uitdevaart` VALUES (1056, 32, '2012-08-12', '2011-12-09', 'Uit de vaart (verhuur Daventria)', 1);
-INSERT INTO `uitdevaart` VALUES (1057, 32, '2012-08-18', '2011-12-09', 'Uit de vaart (verhuur Daventria)', 1);
-INSERT INTO `uitdevaart` VALUES (1058, 30, '2012-08-18', '2011-12-09', 'Uit de vaart (Verhuur Daventria)', 1);
-INSERT INTO `uitdevaart` VALUES (1059, 77, '2012-08-18', '2011-12-09', 'Uit de vaart (Verhuur Daventria)', 1);
-INSERT INTO `uitdevaart` VALUES (1060, 30, '2012-09-18', '2012-09-18', 'Uit de vaart (Verhuur Daventria)', 0);
-INSERT INTO `uitdevaart` VALUES (1061, 32, '2012-09-18', '2012-09-18', 'Uit de vaart (Verhuur Daventria)', 0);
-INSERT INTO `uitdevaart` VALUES (1062, 77, '2012-09-18', '2012-09-18', 'Uit de vaart (Verhuur Daventria)', 0);
-INSERT INTO `uitdevaart` VALUES (1063, 37, '2012-01-01', '2012-01-06', 'Uit de vaart (Snippe)', 1);
-INSERT INTO `uitdevaart` VALUES (1064, 34, '2012-01-04', '2012-01-07', 'Uit de vaart: groot onderhoud', 1);
-INSERT INTO `uitdevaart` VALUES (1065, 6, '2012-01-04', '2012-01-07', 'Uit de vaart: reparatie lakschades', 1);
-INSERT INTO `uitdevaart` VALUES (1066, 39, '2012-01-04', '2012-01-09', 'Uit de vaart: groot onderhoud', 1);
-INSERT INTO `uitdevaart` VALUES (1067, 64, '2012-01-04', '2012-01-09', 'Uit de vaart: reparatie waterkering', 1);
-INSERT INTO `uitdevaart` VALUES (1068, 37, '2012-01-07', '2012-01-08', 'Uit de vaart', 1);
-INSERT INTO `uitdevaart` VALUES (1069, 4, '2012-01-09', '2012-01-12', 'Uit de vaart: reparatie puntje', 1);
-INSERT INTO `uitdevaart` VALUES (1070, 30, '2012-09-08', '2012-09-08', 'Uit de vaart (verhuur RV De Dragt)', 0);
-INSERT INTO `uitdevaart` VALUES (1071, 12, '2011-09-08', '2012-01-27', 'Uit de vaart (verhuur RV De Dragt)', 1);
-INSERT INTO `uitdevaart` VALUES (1072, 12, '2012-09-08', '2012-09-08', 'Uit de vaart (verhuur RV De Dragt)', 0);
-INSERT INTO `uitdevaart` VALUES (1073, 35, '2012-02-19', '2012-03-09', 'Uit de vaart (uitleen KNRB)', 1);
-INSERT INTO `uitdevaart` VALUES (1074, 4, '2012-03-16', '2012-03-19', 'Uit de vaart (Head of the River Amstel)', 1);
-INSERT INTO `uitdevaart` VALUES (1075, 9, '2012-03-09', '2012-03-19', 'Uit de vaart (Heineken en Head)', 1);
-INSERT INTO `uitdevaart` VALUES (1076, 49, '2012-03-16', '2012-03-19', 'Uit de vaart (Head of the River Amstel)', 1);
-INSERT INTO `uitdevaart` VALUES (1077, 92, '2012-03-09', '2012-03-19', 'Uit de vaart (Heineken en Head)', 1);
-INSERT INTO `uitdevaart` VALUES (1078, 93, '2012-03-16', '2012-03-19', 'Uit de vaart (Head of the River Amstel)', 1);
-INSERT INTO `uitdevaart` VALUES (1079, 97, '2012-03-16', '2012-03-19', 'Uit de vaart (Head of the River Amstel)', 1);
-INSERT INTO `uitdevaart` VALUES (1080, 32, '2012-09-08', '2012-09-08', 'Uit de vaart (verhuur RV De Dragt)', 0);
-INSERT INTO `uitdevaart` VALUES (1081, 30, '2012-05-14', '2012-05-15', 'Uit de vaart (Verhuur Dorster Ruderverrein)', 0);
-INSERT INTO `uitdevaart` VALUES (1082, 32, '2012-05-14', '2012-05-15', 'Uit de vaart (verhuur Dorster Ruderverrein)', 0);
-INSERT INTO `uitdevaart` VALUES (1083, 30, '2012-05-17', '2012-03-14', 'Uit de vaart (Verhuur Dorster Ruderverrein)', 1);
-INSERT INTO `uitdevaart` VALUES (1084, 32, '2012-05-17', '2012-05-19', 'Uit de vaart (verhuur Dorster Ruderverrein)', 0);
-INSERT INTO `uitdevaart` VALUES (1085, 78, '2012-05-14', '2012-05-11', 'Uit de vaart (verhuur Dorster Ruderverrein)', 1);
-INSERT INTO `uitdevaart` VALUES (1086, 23, '2012-05-14', '2012-05-11', 'Uit de vaart (verhuur Dorster Ruderverrein)', 1);
-INSERT INTO `uitdevaart` VALUES (1087, 30, '2012-05-18', '2012-05-19', 'Uit de vaart (verhuur Dorster Ruderverrein)', 0);
-INSERT INTO `uitdevaart` VALUES (1088, 12, '2012-05-17', '2012-05-19', 'Uit de vaart (verhuur Dorster Ruderverrein)', 0);
-INSERT INTO `uitdevaart` VALUES (1089, 78, '2012-05-17', '2012-05-11', 'Uit de vaart (verhuur Dorster Ruderverrein)', 1);
-INSERT INTO `uitdevaart` VALUES (1090, 23, '2012-05-17', '2012-04-16', 'Uit de vaart (verhuur Dorster Ruderverrein)', 1);
-INSERT INTO `uitdevaart` VALUES (1091, 30, '2012-07-19', '2012-07-19', 'Uit de vaart (verhuur Vada)', 0);
-INSERT INTO `uitdevaart` VALUES (1092, 32, '2012-07-19', '2012-07-19', 'Uit de vaart (verhuur Vada)', 0);
-INSERT INTO `uitdevaart` VALUES (1093, 23, '2012-07-19', '2012-07-19', 'Uit de vaart (verhuur Vada)', 0);
-INSERT INTO `uitdevaart` VALUES (1094, 78, '2012-07-19', '2012-07-19', 'Uit de vaart (verhuur Vada)', 0);
-INSERT INTO `uitdevaart` VALUES (1095, 6, '2012-03-30', '2012-04-02', 'Uit de vaart (Skiffhead en Tweehead)', 1);
-INSERT INTO `uitdevaart` VALUES (1096, 10, '2012-03-30', '2012-04-02', 'Uit de vaart (skiffhead en Tweehead)', 1);
-INSERT INTO `uitdevaart` VALUES (1097, 21, '2012-03-30', '2012-04-02', 'Uit de vaart (Skiffhead en Tweehead)', 1);
-INSERT INTO `uitdevaart` VALUES (1098, 29, '2012-03-30', '2012-04-02', 'Uit de vaart (Skiffhead en Tweehead)', 1);
-INSERT INTO `uitdevaart` VALUES (1099, 95, '2012-03-30', '2012-04-02', 'Uit de vaart (Skiffhead en Tweehead)', 1);
-INSERT INTO `uitdevaart` VALUES (1100, 100, '2012-03-30', '2012-04-02', 'Uit de vaart (Skiffhead en Tweehead)', 1);
-INSERT INTO `uitdevaart` VALUES (1101, 39, '2012-03-30', '2012-04-02', 'Uit de vaart (Skiffhead en Tweehead)', 1);
-INSERT INTO `uitdevaart` VALUES (1102, 40, '2012-03-30', '2012-04-02', 'Uit de vaart (Skiffhead en Tweehead)', 1);
-INSERT INTO `uitdevaart` VALUES (1103, 25, '2012-03-30', '2012-03-26', 'Uit de vaart (Skiffhead en Tweehead)', 1);
-INSERT INTO `uitdevaart` VALUES (1104, 79, '2012-03-30', '2012-04-02', 'Uit de vaart (Skiffhead en Tweehead)', 1);
-INSERT INTO `uitdevaart` VALUES (1105, 53, '2012-03-30', '2012-04-02', 'Uit de vaart (Skiffhead en Tweehead)', 1);
-INSERT INTO `uitdevaart` VALUES (1106, 30, '2012-05-17', '2012-05-17', 'Uit de vaart (Verhuur Dorster Ruderverrein)', 0);
-INSERT INTO `uitdevaart` VALUES (1107, 12, '2012-05-22', '2012-05-30', 'Uit de vaart (Vogalonga)', 0);
-INSERT INTO `uitdevaart` VALUES (1108, 30, '2012-05-22', '2012-05-30', 'Uit de vaart (Vogalonga)', 0);
-INSERT INTO `uitdevaart` VALUES (1109, 43, '2012-04-03', '2012-04-15', 'Uit de vaart (reparatie)', 1);
-INSERT INTO `uitdevaart` VALUES (1110, 12, '2012-05-14', '2012-05-15', 'Uit de vaart (verhuur Dorster Ruderverrein)', 0);
-INSERT INTO `uitdevaart` VALUES (1111, 100, '2012-04-20', '2012-04-23', 'Uit de vaart (Hollandia)', 1);
-INSERT INTO `uitdevaart` VALUES (1112, 39, '2012-04-20', '2012-04-23', 'Uit de vaart (Hollandia)', 1);
-INSERT INTO `uitdevaart` VALUES (1113, 10, '2012-04-20', '2012-04-23', 'Uit de vaart (Hollandia)', 1);
-INSERT INTO `uitdevaart` VALUES (1114, 95, '2012-04-20', '2012-04-23', 'Uit de vaart (Hollandia)', 1);
-INSERT INTO `uitdevaart` VALUES (1115, 53, '2012-04-20', '2012-04-23', 'Uit de vaart (Hollandia)', 1);
-INSERT INTO `uitdevaart` VALUES (1116, 35, '2012-04-20', '2012-04-23', 'Uit de vaart (Hollandia)', 1);
-INSERT INTO `uitdevaart` VALUES (1117, 46, '2012-04-20', '2012-04-23', 'Uit de vaart (Hollandia)', 1);
-INSERT INTO `uitdevaart` VALUES (1118, 79, '2012-04-20', '2012-04-23', 'Uit de vaart (Nereus Carpit Noctem)', 1);
-INSERT INTO `uitdevaart` VALUES (1119, 65, '2012-05-05', '2012-05-05', 'Uit de vaart (verhuur Wetterwille)', 1);
-INSERT INTO `uitdevaart` VALUES (1120, 45, '2012-05-05', '2012-05-05', 'Uit de vaart (verhuur Wetterwille)', 1);
-INSERT INTO `uitdevaart` VALUES (1121, 37, '2012-04-28', '2012-04-28', 'Uit de vaart (Hart van Holland Marathon)', 1);
-INSERT INTO `uitdevaart` VALUES (1122, 38, '2012-04-28', '2012-04-28', 'Uit de vaart (Hart van Holland marathon)', 1);
-INSERT INTO `uitdevaart` VALUES (1123, 67, '2012-04-25', '0000-00-00', 'Uit de vaart (gebroken huid)', 0);
-INSERT INTO `uitdevaart` VALUES (1124, 38, '2012-05-18', '2012-05-21', 'Uit de vaart (Elfstedentocht)', 0);
-INSERT INTO `uitdevaart` VALUES (1125, 37, '2012-05-18', '2012-05-21', 'Uit de vaart (Elfstedentocht)', 0);
-INSERT INTO `uitdevaart` VALUES (1126, 21, '2012-05-04', '2012-05-06', 'Uit de vaart (Bremen Regatta)', 1);
-INSERT INTO `uitdevaart` VALUES (1127, 71, '2012-05-04', '2012-05-06', 'Uit de vaart (Bremen Regatta)', 1);
-INSERT INTO `uitdevaart` VALUES (1128, 91, '2012-05-04', '2012-05-06', 'Uit de vaart (Bremen Regatta)', 1);
-INSERT INTO `uitdevaart` VALUES (1129, 2, '2012-05-04', '2012-05-06', 'Uit de vaart (Bremen Regatta)', 1);
-INSERT INTO `uitdevaart` VALUES (1130, 34, '2012-05-04', '2012-05-06', 'Uit de vaart (Bremen Regatta)', 1);
-INSERT INTO `uitdevaart` VALUES (1131, 43, '2012-05-04', '2012-05-06', 'Uit de vaart (Bremen Regatta)', 1);
-INSERT INTO `uitdevaart` VALUES (1132, 73, '2012-05-04', '2012-05-06', 'Uit de vaart (Bremen Regatta)', 1);
-INSERT INTO `uitdevaart` VALUES (1133, 75, '2012-05-04', '2012-05-06', 'Uit de vaart (Bremen Regatta)', 1);
-INSERT INTO `uitdevaart` VALUES (1134, 87, '2012-05-18', '2012-05-21', 'Uit de vaart (Elfstedentocht)', 0);
-INSERT INTO `uitdevaart` VALUES (1135, 87, '2012-05-21', '0000-00-00', 'Uit de vaart (boord geriggerd)', 0);
-INSERT INTO `uitdevaart` VALUES (1136, 38, '2012-05-04', '2012-05-20', 'Uit de vaart (scull geriggerd)', 0);
-INSERT INTO `uitdevaart` VALUES (1137, 23, '2012-05-17', '2012-05-19', 'Uit de vaart (Dorster Ruderverrein)', 0);
-INSERT INTO `uitdevaart` VALUES (1138, 65, '2012-05-17', '2012-05-19', 'Uit de vaart (Verhuur Dorster Ruderverrein)', 0);
 INSERT INTO `uitdevaart` VALUES (1139, 78, '2012-05-18', '2012-05-19', 'Uit de vaart (Elfstedentocht)', 0);
 
 CREATE TABLE `users` (

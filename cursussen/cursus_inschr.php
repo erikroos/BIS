@@ -10,8 +10,6 @@ include_once("../include_globalVars.php");
 include_once("../include_helperMethods.php");
 
 $link = getDbLink($database_host, $database_user, $database_pass, $database);
-
-setlocale(LC_TIME, 'nl_NL');
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -22,43 +20,44 @@ setlocale(LC_TIME, 'nl_NL');
 </head>
 <body>
 <div style="margin-left:10px; margin-top:10px">
+
 <?php
-
-$id = $_GET['id'];
-$query = "SELECT * FROM cursussen WHERE ID='$id';";
-$result = mysqli_query($link, $query);
-if (!$result) {
-	die("Ophalen van cursusgegevens mislukt." . mysqli_error());
-} else {
-	$rows_aff = mysqli_affected_rows($link);
-	if ($rows_aff > 0) {
-		$row = mysqli_fetch_assoc($result);
-		$startdate = $row['Startdatum'];
-		$startdate_sh = strtotime($exstartdate);
-		$type = $row['Type'];
-		$description = $row['Omschrijving'];
-		$org_email = $row['Mailadres'];
-	} else {
-		die("Ophalen van cursusgegevens mislukt.");
-	}
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $query = "SELECT * FROM cursussen WHERE ID='$id';";
+    $result = mysqli_query($link, $query);
+    if (!$result) {
+        die("Ophalen van cursusgegevens mislukt." . mysqli_error());
+    } else {
+        $rows_aff = mysqli_affected_rows($link);
+        if ($rows_aff > 0) {
+            $row = mysqli_fetch_assoc($result);
+            $startdate = $row['Startdatum'];
+            $startdate_sh = strtotime($startdate);
+            $type = $row['Type'];
+            $description = $row['Omschrijving'];
+            $org_email = $row['Mailadres'];
+        } else {
+            die("Ophalen van cursusgegevens mislukt.");
+        }
+    }
 }
+
 $skiff2 = false;
-if (preg_match("/skiff-2/", $type) || preg_match("/Skiff-2/", $type) || preg_match("/skiff 2/", $type) || preg_match("/Skiff 2/", $type)) $skiff2 = true;
-
-// init
-if (!$_POST['cancel'] && !$_POST['insert']) {
-	$fail = FALSE;
+if (isset($type) && (preg_match("/skiff-2/", $type) || preg_match("/Skiff-2/", $type) || preg_match("/skiff 2/", $type) || preg_match("/Skiff 2/", $type))) {
+    $skiff2 = true;
 }
 
-// knop gedrukt
-if ($_POST['cancel']){
+$fail = false;
+
+// Annuleren gedrukt
+if (isset($_POST['cancel'])) {
 	unset($_POST['name'], $_POST['demand'], $_POST['email'], $_POST['telph'], $name, $demand, $email, $telph);
-	$fail = FALSE;
 	echo "<p>U wordt niet aangemeld.<br>";
 	echo "<a href='index.php'>Terug naar het cursusscherm&gt;&gt;</a></p>";
 }
 
-if ($_POST['insert']){
+if (isset($_POST['insert'])) {
 	$name = $_POST['name'];
 	$demand = $_POST['demand'];
 	$email = $_POST['email'];
@@ -67,8 +66,8 @@ if ($_POST['insert']){
 	if (!CheckName($name)) {
 		$fail_msg_name = "U dient een geldige voor- en achternaam op te geven. Let op: de apostrof (') wordt niet geaccepteerd.";
 	}
-	if ($skiff2 && !$demand) {
-		$fail_msg_demand = "U dient op te geven hoe u aan de instructie-eis voldaan heeft.";
+	if ($skiff2 && empty($demand)) {
+		$fail_msg_demand = "Bij skiff-2 dient u op te geven hoe u aan de instructie-eis voldaan heeft.";
 	}
 	if (!$telph || !$email) {
 		$fail_msg_contact = "U dient zowel een telefoonnummer als een e-mailadres op te geven.";
@@ -81,13 +80,15 @@ if ($_POST['insert']){
 		}
 	}
 	
-	if ($fail_msg_name || $fail_msg_demand || $fail_msg_contact || $fail_msg_telph || $fail_msg_email) $fail = TRUE;
+	if (isset($fail_msg_name) || isset($fail_msg_demand) || isset($fail_msg_contact) || isset($fail_msg_telph) || isset($fail_msg_email)) {
+        $fail = true;
+    }
 	
 	if (!$fail) {
 		$query = "INSERT INTO `cursus_inschrijvingen` (Naam, Demand, Ex_ID, Email, TelNr) VALUES ('$name', '$demand', '$id', '$email', '$telph');";
 		$result = mysqli_query($link, $query);
 		if (!$result) {
-			die("Inschrijven voor cursus mislukt." . mysqli_error());
+			die("Inschrijven voor cursus mislukt: " . mysqli_error());
 		} else {
 			$intro = "Beste cursist,<br /><br />Bedankt voor uw aanmelding. Wij hebben onderstaande gegevens ontvangen en nemen z.s.m. per email contact met u op. U ontvangt dan nadere informatie omtrent de cursus.<br /><br />Met vriendelijke groet,<br />De Instructiecommissie<br /><br />KGR De Hunze<br />Praediniussingel 32<br />9711 AG Groningen<br /><br />www.hunze.nl<br /><br />";
 			$message = "Naam: ".$name."<br>";
@@ -102,9 +103,13 @@ if ($_POST['insert']){
 			if ($telph) $message .= "Telefoonnummer: ".$telph."<br />";
 			if ($email) $message .= "E-mailadres: ".$email."<br />";
 			// Verstuur naar cursist zelf
-			if ($email) SendEmail($email, "Bevestiging cursusaanmelding", $intro.$message);
+			if ($email) {
+                SendEmail($email, "Bevestiging cursusaanmelding", $intro.$message);
+            }
 			// Verstuur naar organisatie
-			if ($org_email != "instructie@hunze.nl") SendEmail($org_email, "Nieuwe cursusaanmelding", $message);
+			if ($org_email != "instructie@hunze.nl") {
+                SendEmail($org_email, "Nieuwe cursusaanmelding", $message);
+            }
 			SendEmail("instructie@hunze.nl", "Nieuwe cursusaanmelding", $message);
 			echo "<p>Hartelijk dank voor uw aanmelding! Deze is doorgegeven aan het betreffende lid van de Instructiecommissie.<br />Als u zelf een e-mailadres had opgegeven, krijgt u een kopie van uw inschrijving via e-mail.<br />";
 			echo "<a href='index.php'>Terug naar het cursusscherm&gt;&gt;</a></p>";
@@ -113,23 +118,23 @@ if ($_POST['insert']){
 }
 
 // Formulier
-if ((!$_POST['insert'] && !$_POST['cancel']) || $fail) {
+if ((!isset($_POST['insert']) && !isset($_POST['cancel'])) || $fail) {
 	echo "<p><b>Aanmeldformulier voor ".$type." beginnend op ".strftime('%A %d-%m-%Y', $startdate_sh)."&nbsp;".$description;
-	echo "<form name='form' action=\"$REQUEST_URI\" method=\"post\">";
+	echo "<form name='form' action=\"" . $_SERVER['REQUEST_URI'] . "\" method=\"post\">";
 	echo "<table>";
 	
 	// naam
 	echo "<tr><td>Naam:</td>";
-	echo "<td><input type=\"text\" name=\"name\" value=\"$name\" size=45 /></td>";
-	if ($fail_msg_name) echo "<td><em>$fail_msg_name</em></td>";
+	echo "<td><input type=\"text\" name=\"name\" value=\"" . (isset($name) ? $name : '') . "\" size=45 /></td>";
+	if (isset($fail_msg_name)) echo "<td><em>$fail_msg_name</em></td>";
 	echo "</tr>";
 	
 	// tegenprestatie (alleen bij skiff-2)
 	if ($skiff2) {
 		echo "<tr><td colspan=3><em>Om deel te kunnen nemen aan de cursus skiff-2, dient u instructie gegeven te hebben.<br />Omschrijf a.u.b. kort welke instructie u hebt gegeven, wanneer en bij wie.</em></td></tr>";
 		echo "<tr><td>Instructie-eis:</td>";
-		echo "<td><input type=\"text\" name=\"demand\" value=\"$demand\" size=\"100\" maxlength=\"100\" /></td>";
-		if ($fail_msg_demand) echo "<td><em>$fail_msg_demand</em></td>";
+		echo "<td><input type=\"text\" name=\"demand\" value=\"" . (isset($demand) ? $demand : '') . "\" size=\"100\" maxlength=\"100\" /></td>";
+		if (isset($fail_msg_demand)) echo "<td><em>$fail_msg_demand</em></td>";
 		echo "</tr>";
 	}
 	
@@ -137,18 +142,18 @@ if ((!$_POST['insert'] && !$_POST['cancel']) || $fail) {
 	
 	// telefoonnr.
 	echo "<tr><td>Telefoonnummer (10 cijfers, met streepje):</td>";
-	echo "<td><input type=\"text\" name=\"telph\" value=\"$telph\" size=11 /></td>";
-	if ($fail_msg_contact) {
+	echo "<td><input type=\"text\" name=\"telph\" value=\"" . (isset($telph) ? $telph : '') . "\" size=11 /></td>";
+	if (isset($fail_msg_contact)) {
 		echo "<td><em>$fail_msg_contact</em></td>";
 	} else {
-		if ($fail_msg_telph) echo "<td><em>$fail_msg_telph</em></td>";
+		if (isset($fail_msg_telph)) echo "<td><em>$fail_msg_telph</em></td>";
 	}
 	echo "</tr>";
 	
 	// e-mail
 	echo "<tr><td>E-mailadres:</td>";
-	echo "<td><input type=\"text\" name=\"email\" value=\"$email\" size=45 /></td>";
-	if ($fail_msg_email) echo "<td><em>$fail_msg_email</em></td>";
+	echo "<td><input type=\"text\" name=\"email\" value=\"" . (isset($email) ? $email : '') . "\" size=45 /></td>";
+	if (isset($fail_msg_email)) echo "<td><em>$fail_msg_email</em></td>";
 	echo "</tr>";
 	
 	// knoppen
