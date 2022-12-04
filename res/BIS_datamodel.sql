@@ -221,7 +221,7 @@ CREATE TABLE `examen_inschrijvingen` (
   `Leeftijd` varchar(100) collate latin1_german1_ci NOT NULL,
   `Email` varchar(45) collate latin1_german1_ci NOT NULL,
   `TelNr` varchar(20) collate latin1_german1_ci NOT NULL,
-  `UniekeHash` varchar(255) collate latin1_german1_ci NOT NULL
+  `UniekeHash` varchar(255) collate latin1_german1_ci NOT NULL,
   PRIMARY KEY  (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=641 DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=641 ;
 
@@ -313,6 +313,7 @@ CREATE TABLE `inschrijvingen_oud` (
   `Email` text collate latin1_german1_ci NOT NULL,
   `MPB` text collate latin1_german1_ci NOT NULL,
   `Spits` int(11) NOT NULL default '0',
+  `Wedstrijdblok` int(11) NOT NULL default '0',
   `Controle` tinyint(2) NOT NULL default '0',
   `Verwijderd` tinyint(2) NOT NULL default '0',
   PRIMARY KEY  (`Volgnummer`)
